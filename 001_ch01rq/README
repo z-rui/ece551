@@ -1,0 +1,109 @@
+This is a "reading quiz" (as are other assignments of the form xx_chxxrq).
+You should read Chapter 1, watch the videos in it, and make sure you understand
+the material in it (which may require re-reading all or part of it,
+asking questions, etc), BEFORE attempting this quiz.  This quiz will check
+your basic understanding of the material before you move on to other,
+more in-depth exercises.
+
+Note that you should NOT do these quizzes by flipping through the book
+to find the answers.  You should read the chapter and engage with the material
+until you think you understand it.  Then you should do these quizzes
+to check your basic understanding without referring to the book.
+
+
+For this quiz (and others), place your answers to the following questions
+in a file called "answers.txt".  You should put one answer per line,
+and can just list the letter.  You may put a number before it if you
+want--the grader will look at the first letter of each line as your answers.
+When you are done, add, commit, and push the file with git before
+running "grade 001_ch01rq".   [Note: you can actually just run "grade"
+with no arguments if you are in the directory for the assignment
+you want to grade.]
+
+1. What does chapter one identify as the key aspect of programming?
+
+A. Accurate syntax.
+B. Memorization of language features and library functions.
+C. Metacognition.
+D. Well-trained minions.
+
+
+2. What is an algorithm?
+
+A. A clear set of steps to solve any instance of a particular class
+   of problems.
+B. A mathematical function that helps you solve a specific problem.
+C. An American politician who warns about climate change.
+D. The output of a program.
+
+3. What is the disciplined fashion for algorithm development proposed by AoP?
+
+A. Start coding an example immediately.
+B. Work an instance of the problem, write down your steps,
+   generalize the steps, and test the steps.
+C. Work an instance of the problem, generalize the steps, test a new example,
+   compare the example outcome to your predictions
+D. Work five instances of the problem, translate these into mathematical form.
+
+
+4. If you are unable to complete Step 1 of the Seven Steps,
+   which of the following could be a viable path forward?
+
+A. Consult reference material for your programming language to find
+   more useful library functions
+B. Ask a mathematician to help you find the function which describes
+   a sequence of numbers
+C. Gain more domain knowledge for the particular problem's domain
+D. Skip Step 1 and move on to writing code.
+
+5. What are parameters?
+
+A. The assumed conditions under which an algorithm is written.  If these
+   are not met, the algorithm will not function properly.
+B. Lines of code, such as "if" which let the program make decisions.
+C. Symbolic placeholders in an algorithm for the values which
+   specify what particular instance of the problem is being solved.
+D. Invariant of an algorithm which describe mathematical relationships
+   between variables that are always guaranteed to be true at particular
+   places in the code.
+
+6. What is the purpose of Step 4 of the Seven Steps?
+
+A. Ensure sufficient test cases for Step 6.
+B. Find anything which was not generalized correctly prior to writing code.
+C. Pre-create hypotheses for Step 7.
+D. Identify which programming language constructs and library functions to use.
+
+7. What is the problem that AoP identifies with the PB&J example
+
+A. Embarrassing students in class makes them less likely to continue with
+   programming
+B. The example would not type-check in a programming language.
+C. The example solve one specific problem, rather than a general class
+   of problems.
+D. The example is usually presented in a way that exaggerates the
+   computer’s discretion to misinterpret instructions.
+
+
+8. Why will you work with many numerical/mathematical problems/examples?
+
+A. Computers can only operate on numbers.
+B. Math problems are easier to write.
+C. Math-based problems are inherently more precise than word-based problems.
+D. People usually use computers for numerical calculation.
+
+9. What are corner cases?
+
+A. Combinations of parameter values that require special handling.
+B. Patterns that are difficult to find due to their non-linear nature.
+C. Syntax errors that crash the program.
+D. Triangular storage units.
+
+10. If you were writing a sandwich making algorithm, how would you
+    deal with someone trying to use it to make a battleship sandwich?
+
+A. You should explicitly check for such errors
+B. This input does not have the correct type, so the algorithm does not
+   need to handle it
+C. Ignore the oddity, and follow the algorithm you wrote for normal cases
+D. Ensure your algorithm will use "common sense".
