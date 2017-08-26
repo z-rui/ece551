@@ -1,0 +1,42 @@
+This problem is just for you to practice using
+the assignment submission system.
+
+(0) First, look at your grades
+  
+     view-grades
+
+  You will see that this assignment (000_submit) is available, and has no grade yet.
+  You may also want to try running
+
+    status
+  
+  which will tell you what gradings/releases are in progress, as
+  well as information about assignments due soon.
+
+  Now do the "assignment".
+(1) Create a file called "myNetID.txt"  (inside this directory)
+(2) Write one line, containing your netID in that file
+(3) Add it to git
+  git add myNetID.txt
+(4) Commit it to git
+  git commit 
+(5) Push your commits to the remote repository (i.e., turn it in)
+  git push
+(6) Grade the assignment
+  grade 000_submit
+(7) See what grade you got
+  view-grades
+ 
+  It may take a minute for your assignment to be graded (in which case, please be patient)
+  Once it is graded, and you have passed, you will see that there is another assignment listed
+  (001_ch01rq) with no grade---passing assignments releases other assignments.
+
+(8) Obtain the new assignment, and your detailed grade reports by pulling from git
+
+  git pull
+
+   You should get a file called "grade.txt" which will contain details about your score 
+   (there isn't much to say for this assignment).
+   You should also have another directory 001_ch01rq (cd ../001_ch01rq) which is your
+   reading quiz for chapter 1.  Now go do that assignment.
+
