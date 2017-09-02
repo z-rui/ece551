@@ -1,0 +1,11 @@
+In the loop with i = 0, a = 5
+In the loop with i = 1, a = 7
+a = 21
+x = 2
+In anotherFuncion(2,9)
+a is 2, b is 9
+a is 2, b is 9
+a is 2, b is 8
+a is 3, b is 6
+b = 325
+x = 2
