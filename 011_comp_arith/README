@@ -1,0 +1,17 @@
+Suppose that the int type is 32 bits, and you have:
+
+int x = 5;
+double d = 2.4;
+char c = 'a';
+
+Determine the type and value of each of the following expressions,
+and write them in answers.txt.  The first is done for you
+
+1. x - 2
+2. x + d
+3. x / 2
+4. d + x / 3
+5. c + x
+6. x + 0xFFFFFFFF
+7. x + 0x7FFFFFFF
+8. d + c
