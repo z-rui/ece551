@@ -1,0 +1,12 @@
+Perform the following conversions. Use 8-bits for all numbers.
+
+1. Convert the decimal number 42 to binary
+2. Convert the decimal number 42 to hexadecimal
+3. Convert the signed hexadecimal number 0xC4 to decimal
+4. Convert the unsigned hexadecimal number 0xC4 to decimal
+5. Convert 'z' to its decimal representation (hint: man ascii)
+6. Convert 0x54 to the character it corresponds to
+
+
+Write your answers one per line in a file called answers.txt, 
+and turn it in for grading
