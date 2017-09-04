@@ -1,0 +1,11 @@
+Create a file called mytypes.c, and write declarations for the following types in it:
+
+(1) A struct for a complex number, called _complex_num_t, which has a double
+  for the real part (called real_part) and a double for the imaginary part (called imaginary_part).
+  Then, create a typedef for this struct which makes complex_num_t an alias for struct _complex_num_t.
+(2) An enum for animals, called _animal_t which enumerates the following constsants:
+    CAT FISH SNAKE DOG HORSE
+   Create a typedef for this enum which makes animal_t an alias for enum _animal_t
+
+Find a partner who is on the same problem, and check each other's syntax. Then
+submit your mytypes.c file.
