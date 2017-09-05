@@ -1,0 +1,97 @@
+As always, read and understand Chapter 4, then answer these questions
+in "answers.txt".
+
+1. If you struggle with Step 3, which of the following is a good strategy?
+     1. Repeat Steps 1 and 2 with more examples.
+     2. Make a table
+     3. Skip Step 3 and start writing code
+A. 1, 2, and 3
+B. 1 and 2
+C. 1 and 3
+D. 2 and 3
+E. 1 only
+F. 2 only
+G. 3 only
+H. None of these
+
+2. When you have almost-similar steps,  it is important to find the pattern
+   that lets you express them as repetition of the same step.
+   Which of the following is NOT a reason why this is important?
+
+A. Repetition will let you avoid testing your algorithm.
+B. Repetition will let you generalize over how many times those steps are executed.
+C. Repetition will let you express the code as a loop.
+D. None of the above (all are reasons).
+
+
+3. What percent of your time spent creating code should be spent planning?
+
+A. 15%
+B. 40%
+C. 65%
+D. 90%
+
+4. Why should you draw a picture/diagram as you solve a problem?
+
+A. Incorporating different avenues of processing brings more concentration.
+B. Creative problem solving can only be done visually.
+C. Clear and precise pictures allow you to visualize the state of the problem
+   as you manipulate it.
+D. Pictures slow down your thought process, allowing you to think more deeply.
+
+5. Which of the following are the two important considerations described
+   for Step 2?
+
+     I.   What to name your functions
+     II.  How you represent your problem with numbers.
+     III. The names, types, and scopes of the variables you will use.
+     IV.  What exactly you did, in a step-by-step-fashion.
+
+A. I an II
+B. I and III
+C. I and IV
+D. II and III
+E. II and IV
+F. III and IV
+
+
+6. In the example of an algorithm to sum a list of numbers,
+   why was the previous_total initialized to 0?
+
+A. Because you always initialize a variable to 0.
+B. Because you initialize a variable to 0 whenever you are using it
+   to compute on a list of items.
+C. Because zero is the identity element for addition.
+D. Because zero times any other number is zero.
+
+7. What is a good rule of thumb for when to abstract code out into
+   a separate function?
+
+A. When you encounter a step in your algorithm which cannot be directly
+   and easily translated into one or two lines of code.
+B. When your code has exceeded 50 statements.
+C. When the cyclomatic complexity of the code exceeds 100.
+D. When you have declared more than 20 variables.
+
+8. What is "top down design"?
+
+A. Developing the algorithm and then writing code.
+B. Starting from the big picture of the code, and then developing test cases.
+C. Taking code given to you by your boss or technical lead, and making it work.
+D. Generating sub-problems to solve as you encounter complex steps in the
+   higher-level problem.
+
+9. When is switch-case preferable to if-else?
+
+A. When there are more than 3 possible choices.
+B. When you are evaluating conditions on strings.
+C. When making a decision based on many possible numeric values.
+D. When you do not need to use any short-circuiting boolean operators.
+
+10. What code construct is the most appropriate translation for
+    algorithmic steps which call for updating the values of variables?
+
+A. Conditional Statements.
+B. Loops.
+C. Return Statements.
+D. Assignment Statements.
