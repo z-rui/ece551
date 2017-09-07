@@ -1,0 +1,12 @@
+After you and your partner have convinced yourselves that both of you
+have written correct code, execute your partner's code by hand, 
+with the following main function:
+
+int main(void) {
+ squares(4, 2, 1, 4);
+ return 0;
+}
+
+Write your output in a file called "answer.txt".   When you are done,
+submit that file.
+
