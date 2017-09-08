@@ -1,0 +1,80 @@
+As always, read and understand Chapter 5, then answer these questions 
+in "answers.txt".
+
+1. What does the compiler do?
+
+A. Determines if a program is bug-free or not.
+B. Converts a program from human-readable source code to machine-readable
+   instructions.
+C. Generates test cases to cover infrequent cases.
+D. Ensures that results from running the program are replicable.
+
+2. What is a function prototype?
+
+A. A declaration which informs the compilers of the name, return type,
+   and parameter types of a function which is defined elsewhere.
+B. An implementation of a function suitable for inclusion in a library.
+C. A function which is used by many different programs.
+D. A part of the preprocessor which handles #define directives.
+
+3. What tool is useful for building large programs with many source files?
+
+A. make
+B. emacs
+C. gcc
+D. valgrind
+
+
+4. Which part of the compiler combines object files, libraries, 
+   and startup code to make an executable binary?
+
+A. preprocessor
+B. parser
+C. assembler
+D. linker
+
+5. What is in an object file?
+
+A. The source code in an object-oriented programming language.
+B. Java Object Descriptors.
+C. Machine-executable instructions.
+D. A description of which objects are required to assemble the code.
+
+6. Which header file defines EXIT_SUCCESS and EXIT_FAILURE?
+
+A. stdio.h
+B. stdlib.h
+C. stdint.h
+D. unistd.h
+
+7. What is the return value from main used for?
+
+A. It is always ignored.  You always put "return EXIT_SUCCESS;"
+B. The compiler checks it to see if there were any errors.
+C. Valgrind examines it to determine which variables were uninitialized.
+D. It informs the program which ran this program of its success or failure.
+
+
+8. What does the -o option to gcc do?
+
+A. Specifies that gcc should only make an object file.
+B. Specifies the name of the output that gcc should produce.
+C. Specifies an advanced/unusual option by name.
+D. Specifies the language standard to use.
+
+9. If your code needs to make references to the largest value
+   an integer can hold, why should you use INT_MAX rather than
+   writing 214783647?
+
+A. Portability
+B. Reduce risk of mistakes
+C. Readability
+D. All of the above.
+
+10. If you have multiple compiler errors, what difficulties might you
+    encounter in trying to fix the later errors?
+
+A. Fixing compiler errors is hard in general.
+B. The compiler may be confused by the earlier errors.
+C. The compiler only gives line numbers for the first error.
+D. None of the above.
