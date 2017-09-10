@@ -1,0 +1,87 @@
+As always, read and understand Chapter 6, then answer these questions
+in "answers.txt".
+
+1. What is the goal of testing?
+
+A. To show that a program has no errors ("bugs") in it.
+B. To fix problems that have been identified with a program.
+C. To identify errors in a program. 
+D. None of the above.
+
+2. What is the goal of debugging?
+
+A. To show that a program has no errors ("bugs") in it.
+B. To fix problems that have been identified with a program.
+C. To identify errors in a program. 
+D. None of the above.
+
+3. How should you approach debugging?
+
+A. Guess and check.
+B. Mutate and validate.
+C. Apply the scientific method.
+D. None of the above.
+
+
+4. How does the number of paths through a control flow graph grow?
+
+A. Logarithmically with the number of conditionals.
+B. Linearly with the number of conditionals.
+C. Quadratically with the number of conditionals.
+D. Exponentially with the number of conditionals.
+
+
+5. How does a "debugger" (such as gdb) fit into the debugging process?
+
+A. It automatically identifies the most common problems.
+B. It contains reference material on compiler errors. 
+C. It helps you to gather information and test hypotheses.
+D. It generates hypotheses for you from the information at hand.
+
+
+6. What is a breakpoint?
+
+A. A debugger construct which causes execution to stop on a particular line
+B. A debugger construct which causes execution to stop when a particular 
+   location changes.
+C. A debugger construct which causes execution to stop when the program
+   would otherwise crash.
+D. A debugger construct which causes execution to stop when a particular
+   line of output is generated.
+
+7. What is a watchpoint?
+
+A. A debugger construct which causes execution to stop on a particular line
+B. A debugger construct which causes execution to stop when a particular 
+   location changes.
+C. A debugger construct which causes execution to stop when the program
+   would otherwise crash.
+D. A debugger construct which causes execution to stop when a particular
+   line of output is generated.
+
+
+8. What does an "assert" statement do?
+
+A. Checks that you have obtained statement coverage with your test cases.
+B. Prints a message that its argument is true at that point in the program.
+C. Informs the debugger of a logical property of the program.
+D. Causes the program to crash if its argument is false.
+
+
+9. What is required for a hypothesis to be testable?
+
+A. It must analyze a finite class of input conditions.
+B. It must make specific predictions about the program's behavior
+   on some category of inputs.
+C. It must describe the behavior of error and non-error inputs.
+D. It must be formed from careful analysis of all paths through the 
+   control flow graph.
+
+10. What does "fail fast" mean?
+
+A. It means that you run your test cases that identify errors first.
+B. It means that your program crashes quickly after the erroneous code.
+C. It means that you give up quickly on a task if it is beyond your skill level.
+D. It means that your program exhibits any errors early in the development cycle.
+
+
