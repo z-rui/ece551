@@ -1,0 +1,14 @@
+Grading at 09/10/2017:02:57:12.857299
+For commit ID 9f9fbe471c5225a394d6d04e7085fee2e71a1f64
+Attempting to compile rectangle.c
+Tring to run rectangle
+Your file matched the expected output
+removing your main() and replacing it with out own to run more tests...
+#################################################
+testcase1:
+testcase1 passed
+#################################################
+testcase2:
+testcase2 passed
+
+Overall Grade: A
