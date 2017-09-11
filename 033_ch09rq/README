@@ -1,0 +1,122 @@
+As always, read and understand Chapter 9, then answer these questions
+in "answers.txt".
+
+1. If you write
+ 
+  int p[4];
+
+Then the highest valid index in p is
+
+A. 0
+B. 1
+C. 2
+D. 3
+E. 4
+F. 5
+
+
+2. If arr is an array, then arr[x] is 
+   equivalent to
+
+
+A. *arr + x
+B. arr + *x
+C. arr + x
+D. *(arr + x)
+E. None of the above
+
+3. If arr is an array, then &arr[x] is 
+   equivalent to
+
+
+A. *arr + x
+B. arr + *x
+C. arr + x
+D. *(arr + x)
+E. None of the above
+
+4. What is a dangling pointer?
+
+A. A pointer to an uninitialized value.
+B. A pointer which has been cast to an inappropriate type.
+C. A pointer whose type has more *s than required.
+D. A pointer to something whose memory has been deallocated.
+E. A pointer to an array with insufficient space for the data
+   it needs to store.
+F. None of the above.
+
+5. Suppose that p is a dangling pointer, and you do
+
+     *p = 3;
+
+   What will happen?
+
+A. The program will crash immediately.
+B. Something's value will change, but it is difficult to say what.
+C. The compiler will give you an error.
+D. Nothing bad will happen. 
+
+6. What is the most correct type to use for the size or index
+   of an array?
+
+A. int
+B. unsigned int
+C. long
+D. unsigned long
+E. size_t
+F. None of the above
+
+7. Suppose you had a function
+
+  int myFunction(int * array) {
+   //some code
+  }
+
+How can myFunction determine the number of elements in array?
+
+A. sizeof(array)
+B. sizeof(array)/sizeof(array[0])
+C. Call the appropriate C library function.
+D. None of the above.
+
+8. Suppose the array parameter were instead declared int[] array:
+
+  int myFunction(int array[]) {
+   //some code
+  }
+
+In this situation, how can myFunction determine the number of elements in array?
+
+A. sizeof(array)
+B. sizeof(array)/sizeof(array[0])
+C. Call the appropriate C library function.
+D. None of the above.
+
+9. Suppose I wrote
+
+ int data[] = {2,5,7,9};
+ int * p = &data[1];
+ p++;
+
+What is the value of *p after this code fragment?
+
+A. 2
+B. 5
+C. 7
+D. 9
+E. This code does not compile.
+F. This code will crash.
+G. The behavior is undefined.
+H. None of the above.
+
+10. What happens if you write:
+
+
+ int data[6]  = {0, 1, 2} ;
+
+A. The compiler will give you an error.
+B. The compiler will warn you, and leave elements 3,4, and 5 uninitialized.
+C. Elements 3, 4, and 5 will be uninitialized (but the compiler will not warn you).
+D. Elements 3, 4, and 5 will be initialized to 0.
+E. Elements 3, 4, and 5 will be initialized to 0, 1, and 2 respectively.
+F. None of the above.
