@@ -1,0 +1,86 @@
+As always, read and understand Chapter 7, then answer these questions
+in "answers.txt".
+
+1. What is memorization?
+
+A. Introducing cat pictures into the algorithm
+B. Converting between head an tail recursion
+C. Keeping a table of previously computed values
+D. Converting a loop into a recursive algorithm
+E. A common typo for memorization.
+
+2. Why do some people  think recursions is slow?
+
+A. Recursion is inherently  slow, but computers are fast enough that
+   it is not a serious hindrance.
+B. Naive recursive algorithms duplicate significant amounts of work.
+C. The mathematical complexity is generally higher than an equivalent
+   iterative solution.
+D. Storing and retrieving the answers for each step of the algorithm's execution is slow.
+
+3. What is a base case?
+
+A. The pre-specified white box test cases and their answers.
+B. The case that you work by hand when you develop the algorithm.
+C. The inputs for which the algorithm can give an answer without calling itself.
+D. The most numerous types of inputs, which are the ones that are answered
+   with reference to itself.
+
+4. In a purely functional programming language, there is no such thing
+   as changing an existing variable, so instead of iteration, a programmer
+   in a functional language uses:
+
+A. Head recursion
+B. Tail recursion
+C. Goto recursion
+D. Inverse Stack recursion
+
+5. What conditions are required of the data you are working on
+   to be able to ensure that a recursive algorithm terminates?
+
+A. It must be only natural numbers
+B. It must be natural numbers or strings.
+C. It must be totally ordered.
+D. It must be well ordered.
+
+
+6. If your data meets the conditions described in the previous question,
+   how would you go about showing that your recursive algorithm always terminat\
+es?
+
+A. Show that you always subtract a positive number from the argument
+   in every recursive call.
+B. Show that you have a base case in your algorithm.
+C. Show that every recursive call passes an argument which is "less than"
+   the argument received by the current call under the ordering you have chosen.
+D. Apply Godel's Incompleteness Theorem to the problem at hand.
+
+7. Which of the following terms describes a pair of functions (e.g., f and g) where
+   f calls g, and g also calls f?
+
+A. Tail recursion
+B. Mutual recursion
+C. Pairwise induction
+D. Strong induction
+
+8. Which of the following is an advantage of tail recursion, compared to head recursion?
+
+A. It requires passing fewer parameters.
+B. The return type of the recursive function can be void.
+C. The recursive calls do not require the creation of additional frames.
+D. Tail recursive functions generally do not require "helper functions" while
+   head recursive functions generally do require them.
+
+9. If you write recursive functions that do not terminate, then you would
+    best appreciate which of the following corny programming jokes?
+
+A.  There are 10 types of people in the world: those who understand binary,
+    and those who do not.
+B.  A string walks into a bar.  The bar tender says "What will you have?"
+    The string says "I'll have a beer.2#$ASNDF234l;akjsdfasdfasdfasdf".
+    The string's friend says "You'll have to pardon my friend, he's missing
+    his null terminator."
+C.  Why did the programmer get stuck in the shower?
+    The shampoo bottle said "Lather, rinse, repeat."
+D.  All you have to do to write a working recursive function is write a
+    working recursive function.
