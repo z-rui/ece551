@@ -1,7 +1,7 @@
-unsigned power(unsigned base, unsigned exponent)
+unsigned power(unsigned x, unsigned y)
 {
-	if (exponent == 0U) {
+	if (y == 0U) {
 		return 1;
 	}
-	return base * power(base, exponent-1);
+	return x * power(x, y-1);
 }
