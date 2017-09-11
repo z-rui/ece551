@@ -1,0 +1,9 @@
+Grading at 09/11/2017:18:05:38.760707
+For commit ID 400589ebca8706472cca83aa10de041cf23eabd3
+Attempting to compile test.c
+gcc -Wall -g -o test test.c
+compiled
+Your file matched the expected output
+Your output matched what we expected
+
+Overall Grade: PASSED
