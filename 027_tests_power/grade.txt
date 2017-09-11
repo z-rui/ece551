@@ -1,0 +1,65 @@
+Grading at 09/11/2017:17:03:34.162432
+For commit ID f18e23197b8eb1f73909d55534e4eb024ede1c0b
+**Testing broken implementation 10 **
+-------------------------------------
+
+Found a bug in power(3,3) !!
+
+**Testing broken implementation 11 **
+-------------------------------------
+
+Found a bug in power(4294967295,1) !!
+
+**Testing broken implementation 1 **
+-------------------------------------
+
+Found a bug in power(0,1) !!
+
+**Testing broken implementation 2 **
+-------------------------------------
+
+Found a bug in power(0,1) !!
+
+**Testing broken implementation 3 **
+-------------------------------------
+
+Found a bug in power(0,0) !!
+
+**Testing broken implementation 4 **
+-------------------------------------
+
+Found a bug in power(4294967295,1) !!
+
+**Testing broken implementation 5 **
+-------------------------------------
+
+Found a bug in power(3,3) !!
+
+**Testing broken implementation 6 **
+-------------------------------------
+
+Found a bug in power(0,1) !!
+
+**Testing broken implementation 7 **
+-------------------------------------
+
+Found a bug in power(0,1) !!
+
+**Testing broken implementation 8 **
+-------------------------------------
+
+Found a bug in power(3,3) !!
+
+**Testing broken implementation 9 **
+-------------------------------------
+
+Found a bug in power(3,3) !!
+
+**Testing correct implementation **
+-------------------------------------
+
+
+All tests were ok.
+
+
+Overall Grade: PASSED
