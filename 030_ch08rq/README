@@ -1,0 +1,162 @@
+s always, read and understand Chapter 8, then answer these questions
+in "answers.txt".
+
+1. Why does the naive_swap function fail?
+
+A. The function is recursive without a base case.
+B. The function uses variables x and y but the caller users variables a and b.
+C. The printf() statement does not print the correct variables.
+D. The function only changes variables only within its own frame.
+
+2. What is a pointer’s value?
+
+A. The value of the lvalue to which it points.
+B. The address of the lvalue to which it points.
+C. The previous value of the lvalue to which it points.
+D. The start of the frame containing the lvalue to which it points.
+
+3. What &x evaluate to *conceptually*?
+
+A. An arrow pointing at the box for x.
+B. The value in the box at the end of the arrow in x's box.
+C. The value of x.
+D. None of the above.
+
+4. What does &x evaluate to *numerically*?
+
+A. The first 32 bits of x.
+B. A platform-dependent number of bits from the start of x.
+C. The address of x.
+D. The contents of memory at address x.
+
+5. For &x to be legal, what must be true of x?
+
+A. x must be a constant.
+B. x must be an rvalue.
+C. x must be an lvalue.
+D. x must be an int.
+
+6. What does dereferencing a pointer mean *conceptually*?
+
+A. Releasing the memory held by a pointer.
+B. Following the arrow to the box at its end.
+C. Changing where the arrow points.
+D. Getting a pointer to something.
+
+7. What is a unary operator?
+
+A. An operator that is used only once before being recycled.
+B. An operator that takes one bit of space.
+C. An operator that takes only one operand.
+D. An operator that combines multiple values into a single value.
+
+8. When the swap function is changed to take pointers
+   as its parameters, what fundamentally changes about the code?
+
+
+A. Nothing: The way the code functions is essentially unchanged.
+B. Using pointers expands the scope of the swap function.
+C. The swap function now takes locations as parameters instead of values.
+D. The frame of swap is no longer destroyed when it returns, allowing main
+   to view the altered values.
+
+For questions 9--12, refer to "Figure 8.2: Data with Addresses." in AOP.
+
+9. What would &c2 evaluate to numerically?
+
+A. 92
+B. 94
+C. 96
+D. 98
+E. 100
+F. 102
+G. 104
+H. 106
+I. 108
+
+10. What is the value of *y?
+
+A. 0
+B. 5
+C. 83
+D. 97
+E. 109
+F. 104
+G. 101
+
+11.  What is the type of &y?
+
+A. void
+B. int
+C. int *
+D. int **
+E. int ***
+F. None of the above.
+
+12. What is the value of &y numerically?
+
+A. 92
+B. 94
+C. 96
+D. 98
+E. 100
+F. 102
+G. 104
+H. 106
+I. 108
+
+13. For conceptual drawings, we draw pointers as
+    arrows pointing at boxes.  However, some boxes
+    have an arrow with a flat head ( -----| ) that
+    does not  point at another box.  What value
+    does this flat-headed arrow indicate?
+
+A. void.
+B. The address of the start of the frame.
+C. The address of the start of a the function.
+D. A pointer to an unknown location.
+E. '\0'.
+F. NULL.
+G. None of the above.
+
+14. x->y is syntactic sugar for which of the following?
+
+A. *(x.y)
+B. x.*y
+C. (*x).y
+D. x.y**
+E. None of the above
+
+
+15. What does "const int x;" mean?
+
+A. x is an integer which should be constantly evaluated.
+B. x is an integer whose value may never be changed.
+C. x is an integer whose value is constantly changing.
+D. None of the above.
+
+16. What does it mean to say "x and *p are aliases".
+
+A. x and *p have the same value.
+B. x and *p are both stealth variables.
+C. x and *p are two names for the same box.
+D. x and *p reside in the same frame.
+E. None of the above.
+
+17. Suppose we have a platform with 64-bit doubles, and 32-bit ints.
+    We write the following (horrible) code:
+
+    double d = 3.14159;
+    int * p = (int*) &d;
+    *p = 42;
+    printf("%f\n", d);
+
+What would you expect the behavior to be?
+
+A.  It would print 42.0
+B.  It would crash on the second line (int * p = (int*) &d;)
+C.  It would crash on the third line (*p = 42;)
+D.  It would print something near 3.14159, but with some of 
+    the least significant digits altered.
+E.  None of the above.
+
