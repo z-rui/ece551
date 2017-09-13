@@ -1,11 +1,22 @@
-Grading at 09/13/2017:17:33:41.427767
-For commit ID e09cdf7b1c1d6fd06e8900d003b4fa1711a91ff5
+Grading at 09/13/2017:17:44:41.437379
+For commit ID 3860a4f34012e807f5aab358823eac8d449916a8
 Attempting to compile arrayMax.c 
-arrayMax.c: In function ‘arrayMax’:
-arrayMax.c:11:13: error: ‘p’ undeclared (first use in this function)
-       max = p;
-             ^
-arrayMax.c:11:13: note: each undeclared identifier is reported only once for each function it appears in
-The code did not compile!
+#################################################
+testcase1:
+Your file did not match the expected ouput
+Your output did not match what we expected.
+Removing your main() and replacing it with our own to run more tests...
+#################################################
+testcase2:
+array size:0 was Correct
+#################################################
+testcase3:
+array size:1 was Incorrect
+#################################################
+testcase4:
+array size:100 was Incorrect
+#################################################
+testcase5:
+array size:5000 was Incorrect
 
 Overall Grade: F
