@@ -1,0 +1,13 @@
+For this assignment, you will be writing testcases for
+your next assignment (as usual, the instructions for that assignment
+can be found in next-README).
+
+As usual, one correct and many broken implementations can be found
+in /usr/local/ece551/subseq.
+
+As with power, these are provided as compiled object files, and you
+should write a C program (in test-subseq.c) whose main function tests
+the maxSeq function. As before, it should exit with EXIT_SUCCESS if all
+tests pass, and EXIT_FAILURE if any test fails.  We have provided
+run_all.sh to help you run your test cases against all implementations.
+
