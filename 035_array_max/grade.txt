@@ -1,0 +1,11 @@
+Grading at 09/13/2017:17:33:41.427767
+For commit ID e09cdf7b1c1d6fd06e8900d003b4fa1711a91ff5
+Attempting to compile arrayMax.c 
+arrayMax.c: In function ‘arrayMax’:
+arrayMax.c:11:13: error: ‘p’ undeclared (first use in this function)
+       max = p;
+             ^
+arrayMax.c:11:13: note: each undeclared identifier is reported only once for each function it appears in
+The code did not compile!
+
+Overall Grade: F
