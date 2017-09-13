@@ -8,7 +8,7 @@ int * arrayMax(int * array, int n) {
     return NULL;
   for (i = 1; i < n; n++) {
     if (array[i] > *max)
-      max = p;
+      max = &array[i];
   }
   return max;
 }
