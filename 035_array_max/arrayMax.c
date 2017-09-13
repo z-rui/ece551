@@ -2,7 +2,15 @@
 #include <stdlib.h>
 
 int * arrayMax(int * array, int n) {
-  return NULL;
+  int i;
+  int *max;
+  if (n == 0)
+    return NULL;
+  for (i = 1; i < n; n++) {
+    if (array[i] > *max)
+      max = p;
+  }
+  return max;
 }
 
 void doTest(int * array, int n) {
@@ -43,3 +51,5 @@ int main(void) {
   
   return EXIT_SUCCESS;
 }
+
+// vim: sw=2:ts=2:et
