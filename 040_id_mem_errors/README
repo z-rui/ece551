@@ -1,0 +1,31 @@
+Examine the provided "broken.c" file, which has some errors in it.  
+(Hint: you might execute it by hand)
+Find, and list these errors in a file called "answer.txt".
+The format of your answer file should be one line per error with
+the line number, followed by a space, followed by one of the following
+phrases describing the error:
+
+  return dangling pointer
+  use of dangling pointer
+  index out of bounds
+  use of uninitialized value
+  
+The errors should be listed in the order that you encounter them during
+the execution of the program.  If you use an illegal value, after you note
+the error, you may assume it evaluated to 0 to continue executing your code.
+
+For example, your answer.txt might  look like this (although this is,
+of course, not the correct answer):
+
+2 return dangling pointer
+4 use of dangling pointer
+7 index out of bounds
+9 use of uninitialized value
+8 index out of bounds
+
+Note that a correct answer will have 6 lines and use every type of
+error listed above at least once.
+
+Submit your answer.txt file
+
+
