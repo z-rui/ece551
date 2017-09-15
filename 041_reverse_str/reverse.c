@@ -5,6 +5,13 @@
 void reverse(char * str) {
   size_t i, j;
 
+  if (!str) {
+    // I don't know if this is a corner case ...
+    // passing NULL to a function expecting a string is bad
+    // obviously strlen() does not check for this ...
+    return;
+  }
+
   i = 0;
   j = strlen(str);
 
