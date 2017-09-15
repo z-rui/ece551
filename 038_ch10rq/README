@@ -1,0 +1,256 @@
+As always, read and understand Chapter 10, then answer these questions
+in "answers.txt".
+
+1. Consider the following loop, which iterates over a string s,
+   but has a condition missing:
+
+ while( /* SOMETHING MISSING */ ) {
+    //do some stuff with *s
+    s++;
+ }
+
+What condition should go in place of /* SOMETHING MISSING */ to
+make the loop iterate over every character of the string?
+
+A. s != NULL
+B. s != '\0'
+C. s != ""
+D. *s != NULL
+E. *s != '\0'
+F. *s != ""
+G. &s != NULL
+H. &s != '\0'
+I. &s != ""
+
+2. If you have
+
+
+   /* SOME TYPE */  s = "A string literal";
+
+ what is the proper type for s (where /* SOME TYPE */ is)?
+
+A. char
+B. const char
+C. int
+D. char *
+E. const char *
+F. char * const
+G. int *
+H. const int *
+I. int * const
+J. const char * const *
+
+3. Suppose you did not pick the most correct type to replace /* SOME TYPE */
+   above, but instead, you picked a type which compiled and permitted the follo\
+wing
+   line of code:
+
+  *s = 'B';
+
+What would happen when this code executed?
+
+A. s would now point at the string "B string literal".
+B. s would now point at the string "B".
+C. s would now point "A string literalB".
+D. The program would crash.
+
+4. How should you see if two strings (s1 and s2) have the same contents?
+
+A. s1 == s2
+B. s1[0] == s2[0]
+C. *s1 == *s2
+D. !strcmp(s1, s2)
+E. None of the above
+
+5. What does s1 = s2; do?
+
+A. Makes s1 be a copy of s2
+B. Copies the first letter of s2 into the first letter of s1.
+C. Makes s1 be a copy of s2, but only if s1 already points at enough
+   space to hold all characters in s2. Otherwise, behavior is undefined.
+D. Makes s1 point at the same memory location as s2.
+E. It is not legal: will give a compiler error.
+F. It will cause the program to crash.
+
+6.  Suppose we had a function readStringFromUser(), which
+    reads a string from the user, and we do
+
+char * s = readStringFromUser();
+int x = (int) s;
+printf("%d\n", x);
+
+You compile and run the code, and the user types in "42"
+
+Which of the following will it print?
+
+A. 42
+B. -42
+C. 0
+D. None of the above.
+
+
+For the next 3 questions, suppose you declared :
+
+int myMatrix[3][4] = { {0, 1, 2, 3},
+                       {4, 5, 6, 7},
+                       {8, 9, 10, 11} };
+
+7. What is the value of myMatrix[1][2] ?
+
+A. 0
+B. 1
+C. 2
+D. 3
+E. 4
+F. 5
+G. 6
+H. 7
+I. 8
+J. 9
+K. 10
+L. 11
+
+8. If you did
+
+int * p = myMatrix[2];
+
+then what would be the value of p[1] ?
+
+A. 0
+B. 1
+C. 2
+D. 3
+E. 4
+F. 5
+G. 6
+H. 7
+I. 8
+
+J. 9
+K. 10
+L. 11
+
+9. If sizeof(int) is 4 bytes, and sizeof(int*) is 8 bytes,
+   how much memory does myMatrix occupy (that is, what
+   is sizeof(myMatrix) )?
+
+A.   4 bytes.
+B.   8 bytes.
+C.  24 bytes.
+D.  32 bytes.
+E.  48 bytes.
+F.  64 bytes.
+G.  72 bytes.
+H. 108 bytes.
+I. 144 bytes.
+
+
+For the next three questions, suppose you instead declared:
+  int m0[4] = {0, 1, 2, 3};
+  int m1[4] = {4, 5, 6, 7};
+  int m2[4] = {8, 9, 10, 11};
+  int * myMatrix[3] = { m0, m1, m2 };
+
+0. Again, assuming sizeof(int) is 4 bytes, and sizeof(int*) is 8 bytes,
+    how much memory does myMatrix *alone* occupy (that is, what
+    is sizeof(myMatrix)) ?
+
+A.   4 bytes.
+B.   8 bytes.
+C.  24 bytes.
+D.  32 bytes.
+E.  48 bytes.
+F.  64 bytes.
+G.  72 bytes.
+H. 108 bytes.
+I. 144 bytes.
+
+11. How much total space is used to store myMatrix
+    and the data it points to? (that is, what is
+    sizeof(myMatrix) + sizeof(m0) + sizeof(m1) +
+    sizeof(m2)) ?
+
+A.   4 bytes.
+B.   8 bytes.
+C.  24 bytes.
+D.  32 bytes.
+E.  48 bytes.
+F.  64 bytes.
+G.  72 bytes.
+H. 108 bytes.
+I. 144 bytes.
+
+12. Which of the following is true this newer declaration of
+    myMatrix which is not true of the declaration used in
+    questions 7--9?
+
+A. myMatrix[0][0] is an lvalue.
+B. myMatrix[0] is an lvalue.
+C. myMatrix is an lvalue.
+D. myMatrix[0][0] is an rvalue.
+E. myMatrix[0] is an rvalue.
+F. myMatrix is an rvalue.
+G. None of the above.
+
+13. A program's instructions are stored in memory as
+
+A. Numbers
+B. Symbolic identifiers
+C. Assembler mnemonics
+D. None of the above
+
+14. Which of the following declares g to be a pointer
+    to a function which returns a double, and takes two
+    ints as parameters?
+
+A. double funptr(int,int) g;
+B. funptr(int,int)->double g;
+C. double g(int, int);
+D. double (*g) (int,int);
+E. None of the above.
+
+15. If you declared p as a function pointer
+    of an appropriate type, and did
+
+  p = main
+
+where would p point?
+
+A. At the first variable in main's frame.
+B. At the first string literal used by main.
+C. At the first instruction in main.
+D. At the first argument passed to main.
+
+6. You learned about the qsort function, which
+    takes a function pointer as one of its
+    parameters.  What does qsort use this
+    parameter for?
+A. It calls the passed in function to find
+   each element in the array it supposed to sort.
+B. It calls the passed in function to compare
+   pairs of elements from the array it is supposed to sort.
+C. It calls the passed in function to move
+   an element to a new position in the array.
+D. None of the above.
+
+
+17. You learned that buffer overflows are a
+    a common form of security vulnerability.
+    Which fundamental principle that you have
+    learned all along is at the heart of how these work?
+
+A. Plan first, then code
+B. Debugging is the scientific method in action.
+C. Everything is a number.
+D. Abstraction is the key to large scale design.
+E. None of the above.
+
+18. Naming your child
+      Robert'); DROP TABLE Students; --
+    is an example of
+
+A. A buffer overflow attack
+B. A format string attack
+C. An SQL injection attack
+D. An ill-formed function pointer attack
+E. A recursive function without a base case.
