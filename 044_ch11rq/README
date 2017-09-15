@@ -1,0 +1,115 @@
+As always, read and understand Chapter 11, then answer these questions
+in "answers.txt".
+
+1. How does a program interact with "the outside world"?
+
+A. It writes to/reads from the terminal's memory.
+B. It makes a system call.
+C. It sets errno appropriately.
+D. It calls getopt.
+
+2. How do you declare main if you want to access the program's 
+   command line arguments?
+
+A. int main(int argc, char argv)
+B. int main(int argc, char * argv)
+C. int main(int argc, char ** argv)
+D. int main(int argc, char *** argv)
+E. None of the above
+
+3. What is in argv[0] ?
+
+A. The name of the command shell.
+B. The name of the program.
+C. A pointer to main.
+D. A pointer to the environment.
+
+4. What does fork() do?
+
+A. Splits a data stream into two parts.
+B. Checkpoints the program state so you can restore it later.
+C. Executes both branches of an if statement.
+D. Creates a copy of the current process.
+E. None of the above.
+
+For the next 3 questions, suppose you did
+
+   FILE * f = fopen("myfile.txt", "r");
+
+(and that fopen does not return NULL).
+
+5. Which of the following operations could you succesfully do 
+   with f?
+     1. fgets
+     2. fprintf
+     3. fclose
+
+A.  1, 2, and 3 would all work.
+B.  1 and 2 only
+C.  1 and 3 only
+D.  2 and 3 only
+E.  1 only
+F.  2 only
+G.  3 only
+H.  None would work
+
+6. What is f's current position immediately after
+   this call to fopen?
+
+A. Undefined.
+B. The start of the file.
+C. The end of the file.
+D. strlen("myfile.txt")
+E. strlen("myfile.txt") + 1
+F. None of the above
+
+7. Suppose you have
+
+    x = fgetc(f);
+
+What is the proper type for x?
+
+A. char
+B. unsigned char
+C. const char *
+D. int
+E. unsigned int
+F. int *
+G. size_t
+H. const size_t *
+I. const size_t * const
+
+
+8. When is it ok to use gets()?
+
+A. When you are very sure what length string the user will type.
+B. When you only pass the result to atoi().
+C. When you know that stdin will be redirected from a file.
+D. When you want someone to hack your software, your boss to fire
+   you, and everyone to know you are a terribly incompetent programmer.
+
+9. When you are done reading from/writing to a file, what should you
+   do with it?
+
+A. fprintf
+B. fputc
+C. fputs
+D. fgets
+E. ffinished
+F. fclose
+G. fdone
+H. fterm
+I. ffree
+J. None of the above
+
+10. Unix simplifies interaction with the outside world by
+    (as much as possible) making everything look like a(n)
+
+A. Command Line Argument
+B. Operating System
+C. 32-bit integer
+D. void *
+E. File
+F. malloc/free pair
+G. printf-style format string
+H. None of the above
