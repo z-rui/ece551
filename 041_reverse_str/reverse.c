@@ -3,7 +3,16 @@
 #include <string.h>
 
 void reverse(char * str) {
-  //WRITE ME!
+  size_t i, j;
+
+  i = 0;
+  j = strlen(str);
+
+  while (i + 1 < j) {
+    char temp = str[i];
+    str[i++] = str[--j];
+    str[j] = temp;
+  }
 }
 
 int main(void) {
@@ -21,3 +30,5 @@ int main(void) {
   }
   return EXIT_SUCCESS;
 }
+
+// vim: ts=2:sw=2:et
