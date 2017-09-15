@@ -1,0 +1,117 @@
+Grading at 09/15/2017:01:06:46.233964
+For commit ID 24fb023771ce9f794a9aa8c760d2ce8c2270c903
+**Testing broken implementation 10 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 1
+expect 5, got 5
+expect 4, got 4
+expect 2, got 1
+found a bug !!
+array = {-2147483648, 2147483647}, n = 2
+
+**Testing broken implementation 11 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 2
+found a bug !!
+array = {1}, n = 1
+
+**Testing broken implementation 1 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 2
+found a bug !!
+array = {1, 1}, n = 2
+
+**Testing broken implementation 2 **
+-------------------------------------
+
+expect 0, got 1
+found a bug !!
+array = {}, n = 0
+
+**Testing broken implementation 3 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 1
+expect 5, got 5
+expect 4, got 5
+found a bug !!
+array = {1, 2, 1, 3, 5, 7, 2, 4, 6, 9}, n = 10
+
+**Testing broken implementation 4 **
+-------------------------------------
+
+expect 0, got 1
+found a bug !!
+array = {}, n = 0
+
+**Testing broken implementation 5 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 1
+expect 5, got 5
+expect 4, got 11
+found a bug !!
+array = {1, 2, 1, 3, 5, 7, 2, 4, 6, 9}, n = 10
+
+**Testing broken implementation 6 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 0
+found a bug !!
+array = {1}, n = 1
+
+**Testing broken implementation 7 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 0
+found a bug !!
+array = {1}, n = 1
+
+**Testing broken implementation 8 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 1
+expect 5, got 1
+found a bug !!
+array = {1, 2, 3, 4, 5}, n = 5
+
+**Testing broken implementation 9 **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 1
+expect 5, got 5
+expect 4, got 2
+found a bug !!
+array = {1, 2, 1, 3, 5, 7, 2, 4, 6, 9}, n = 10
+
+**Testing correct implementation **
+-------------------------------------
+
+expect 0, got 0
+expect 1, got 1
+expect 1, got 1
+expect 5, got 5
+expect 4, got 4
+expect 2, got 2
+
+All test programs were handled correctly
+
+Overall Grade: PASSED
