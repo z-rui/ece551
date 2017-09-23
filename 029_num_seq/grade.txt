@@ -1,0 +1,22 @@
+Grading at 09/23/2017:09:20:49.293242
+For commit ID accdbd3a3007a061f350f0ab3be59eefd3153139
+****************testing step1.c*********************
+Attempting to compile step1.c
+gcc: error: step1.c: No such file or directory
+gcc: fatal error: no input files
+compilation terminated.
+The code did not compile!
+****************testing step2.c*********************
+Attempting to compile step2.c
+gcc: error: step2.c: No such file or directory
+gcc: fatal error: no input files
+compilation terminated.
+The code did not compile!
+****************testing step3.c*********************
+Attempting to compile step3.c
+gcc: error: step3.c: No such file or directory
+gcc: fatal error: no input files
+compilation terminated.
+The code did not compile!
+
+Overall Grade: 0
