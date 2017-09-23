@@ -1,22 +1,399 @@
-Grading at 09/23/2017:09:20:49.293242
-For commit ID accdbd3a3007a061f350f0ab3be59eefd3153139
+Grading at 09/23/2017:09:20:52.750737
+For commit ID 042d578b79b9febb12c11914e6083dd3c84a1d9f
 ****************testing step1.c*********************
 Attempting to compile step1.c
-gcc: error: step1.c: No such file or directory
-gcc: fatal error: no input files
-compilation terminated.
-The code did not compile!
+#################################################
+Removing your main() and replacing it with our own to test step1(A)
+student.c: In function ‘main’:
+student.c:60:16: error: implicit declaration of function ‘atoi’ [-Werror=implicit-function-declaration]
+   unsigned x = atoi(argv[1]);
+                ^
+student.c:62:10: error: ‘EXIT_SUCCESS’ undeclared (first use in this function)
+   return EXIT_SUCCESS;
+          ^
+student.c:62:10: note: each undeclared identifier is reported only once for each function it appears in
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+seq1(-99) was Incorrect
+seq1(-3) was Incorrect
+seq1(-1) was Incorrect
+seq1(0) was Incorrect
+seq1(1) was Incorrect
+seq1(4) was Incorrect
+seq1(5) was Incorrect
+seq1(9) was Incorrect
+seq1(99) was Incorrect
+step1(A) grade:0/10
+#################################################
+Removing your seq1 and testing your main...
+temp2.c: In function ‘main’:
+temp2.c:41:2: error: implicit declaration of function ‘check_seq1’ [-Werror=implicit-function-declaration]
+  check_seq1(0);
+  ^
+temp2.c:47:2: error: implicit declaration of function ‘check_printSeq1Range’ [-Werror=implicit-function-declaration]
+  check_printSeq1Range(1, 5);
+  ^
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+You only have 0 test cases
+step1(B) grade:0/5
+#################################################
+Removing your main() and replacing it with our own to test step1(C)
+student.c: In function ‘main’:
+student.c:60:16: error: implicit declaration of function ‘atoi’ [-Werror=implicit-function-declaration]
+   unsigned x = atoi(argv[1]);
+                ^
+student.c:64:10: error: ‘EXIT_SUCCESS’ undeclared (first use in this function)
+   return EXIT_SUCCESS;
+          ^
+student.c:64:10: note: each undeclared identifier is reported only once for each function it appears in
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+printSeq1Range(-99, -100) was Incorrect
+printSeq1Range(-99, -99) was Incorrect
+printSeq1Range(-99, 3) was Incorrect
+printSeq1Range(-99, 4) was Incorrect
+printSeq1Range(-99, 0) was Incorrect
+printSeq1Range(-99, 100) was Incorrect
+printSeq1Range(-3, -100) was Incorrect
+printSeq1Range(-3, -99) was Incorrect
+printSeq1Range(-3, 3) was Incorrect
+printSeq1Range(-3, 4) was Incorrect
+printSeq1Range(-3, 0) was Incorrect
+printSeq1Range(-3, 100) was Incorrect
+printSeq1Range(-1, -100) was Incorrect
+printSeq1Range(-1, -99) was Incorrect
+printSeq1Range(-1, 3) was Incorrect
+printSeq1Range(-1, 4) was Incorrect
+printSeq1Range(-1, 0) was Incorrect
+printSeq1Range(-1, 100) was Incorrect
+printSeq1Range(0, -100) was Incorrect
+printSeq1Range(0, -99) was Incorrect
+printSeq1Range(0, 3) was Incorrect
+printSeq1Range(0, 4) was Incorrect
+printSeq1Range(0, 0) was Incorrect
+printSeq1Range(0, 100) was Incorrect
+printSeq1Range(1, -100) was Incorrect
+printSeq1Range(1, -99) was Incorrect
+printSeq1Range(1, 3) was Incorrect
+printSeq1Range(1, 4) was Incorrect
+printSeq1Range(1, 0) was Incorrect
+printSeq1Range(1, 100) was Incorrect
+printSeq1Range(4, -100) was Incorrect
+printSeq1Range(4, -99) was Incorrect
+printSeq1Range(4, 3) was Incorrect
+printSeq1Range(4, 4) was Incorrect
+printSeq1Range(4, 0) was Incorrect
+printSeq1Range(4, 100) was Incorrect
+printSeq1Range(5, -100) was Incorrect
+printSeq1Range(5, -99) was Incorrect
+printSeq1Range(5, 3) was Incorrect
+printSeq1Range(5, 4) was Incorrect
+printSeq1Range(5, 0) was Incorrect
+printSeq1Range(5, 100) was Incorrect
+printSeq1Range(9, -100) was Incorrect
+printSeq1Range(9, -99) was Incorrect
+printSeq1Range(9, 3) was Incorrect
+printSeq1Range(9, 4) was Incorrect
+printSeq1Range(9, 0) was Incorrect
+printSeq1Range(9, 100) was Incorrect
+printSeq1Range(99, -100) was Incorrect
+printSeq1Range(99, -99) was Incorrect
+printSeq1Range(99, 3) was Incorrect
+printSeq1Range(99, 4) was Incorrect
+printSeq1Range(99, 0) was Incorrect
+printSeq1Range(99, 100) was Incorrect
+step1(C) grade:0/10
+#################################################
+Removing your printSeq1Range and testing your main...
+You only have 0 test cases
+step1(D) grade:0/5
 ****************testing step2.c*********************
 Attempting to compile step2.c
-gcc: error: step2.c: No such file or directory
-gcc: fatal error: no input files
-compilation terminated.
-The code did not compile!
+#################################################
+Removing your main() and replacing it with our own to test step2(A)
+student.c: In function ‘main’:
+student.c:64:16: error: implicit declaration of function ‘atoi’ [-Werror=implicit-function-declaration]
+   unsigned x = atoi(argv[1]);
+                ^
+student.c:66:10: error: ‘EXIT_SUCCESS’ undeclared (first use in this function)
+   return EXIT_SUCCESS;
+          ^
+student.c:66:10: note: each undeclared identifier is reported only once for each function it appears in
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+seq2(-99) was Incorrect
+seq2(-3) was Incorrect
+seq2(-1) was Incorrect
+seq2(0) was Incorrect
+seq2(1) was Incorrect
+seq2(4) was Incorrect
+seq2(5) was Incorrect
+seq2(9) was Incorrect
+seq2(99) was Incorrect
+step2(A) grade:0/13
+#################################################
+Removing your seq2 and testing your main...
+temp2.c: In function ‘main’:
+temp2.c:43:2: error: implicit declaration of function ‘check_seq2’ [-Werror=implicit-function-declaration]
+  check_seq2(0);
+  ^
+temp2.c:48:2: error: implicit declaration of function ‘check_sumSeq2’ [-Werror=implicit-function-declaration]
+  check_sumSeq2(1, 3);
+  ^
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+step2(B) grade: 0/5
+#################################################
+Removing your main() and replacing it with our own to test step2(C)
+student.c: In function ‘main’:
+student.c:64:16: error: implicit declaration of function ‘atoi’ [-Werror=implicit-function-declaration]
+   unsigned x = atoi(argv[1]);
+                ^
+student.c:67:10: error: ‘EXIT_SUCCESS’ undeclared (first use in this function)
+   return EXIT_SUCCESS;
+          ^
+student.c:67:10: note: each undeclared identifier is reported only once for each function it appears in
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+sumSeq2(-99, -100) was Incorrect
+sumSeq2(-99, -99) was Incorrect
+sumSeq2(-99, 3) was Incorrect
+sumSeq2(-99, 4) was Incorrect
+sumSeq2(-99, 0) was Incorrect
+sumSeq2(-99, 100) was Incorrect
+sumSeq2(-3, -100) was Incorrect
+sumSeq2(-3, -99) was Incorrect
+sumSeq2(-3, 3) was Incorrect
+sumSeq2(-3, 4) was Incorrect
+sumSeq2(-3, 0) was Incorrect
+sumSeq2(-3, 100) was Incorrect
+sumSeq2(-1, -100) was Incorrect
+sumSeq2(-1, -99) was Incorrect
+sumSeq2(-1, 3) was Incorrect
+sumSeq2(-1, 4) was Incorrect
+sumSeq2(-1, 0) was Incorrect
+sumSeq2(-1, 100) was Incorrect
+sumSeq2(0, -100) was Incorrect
+sumSeq2(0, -99) was Incorrect
+sumSeq2(0, 3) was Incorrect
+sumSeq2(0, 4) was Incorrect
+sumSeq2(0, 0) was Incorrect
+sumSeq2(0, 100) was Incorrect
+sumSeq2(1, -100) was Incorrect
+sumSeq2(1, -99) was Incorrect
+sumSeq2(1, 3) was Incorrect
+sumSeq2(1, 4) was Incorrect
+sumSeq2(1, 0) was Incorrect
+sumSeq2(1, 100) was Incorrect
+sumSeq2(4, -100) was Incorrect
+sumSeq2(4, -99) was Incorrect
+sumSeq2(4, 3) was Incorrect
+sumSeq2(4, 4) was Incorrect
+sumSeq2(4, 0) was Incorrect
+sumSeq2(4, 100) was Incorrect
+sumSeq2(5, -100) was Incorrect
+sumSeq2(5, -99) was Incorrect
+sumSeq2(5, 3) was Incorrect
+sumSeq2(5, 4) was Incorrect
+sumSeq2(5, 0) was Incorrect
+sumSeq2(5, 100) was Incorrect
+sumSeq2(9, -100) was Incorrect
+sumSeq2(9, -99) was Incorrect
+sumSeq2(9, 3) was Incorrect
+sumSeq2(9, 4) was Incorrect
+sumSeq2(9, 0) was Incorrect
+sumSeq2(9, 100) was Incorrect
+sumSeq2(99, -100) was Incorrect
+sumSeq2(99, -99) was Incorrect
+sumSeq2(99, 3) was Incorrect
+sumSeq2(99, 4) was Incorrect
+sumSeq2(99, 0) was Incorrect
+sumSeq2(99, 100) was Incorrect
+step2(C) grade:0/10
+#################################################
+Removing your sumSeq2 and testing your main...
+You have 0 total test cases (0/2)
+  o 0 tested for an empty range (0/1)
+  o 0 tested for a range of size 1 (0/1)
+  o 0 tested for a larger range (0/1)
+step2(D) grade:0/5
 ****************testing step3.c*********************
 Attempting to compile step3.c
-gcc: error: step3.c: No such file or directory
-gcc: fatal error: no input files
-compilation terminated.
-The code did not compile!
+#################################################
+Removing your main() and replacing it with our own to test step3(A)
+student.c: In function ‘main’:
+student.c:87:16: error: implicit declaration of function ‘atoi’ [-Werror=implicit-function-declaration]
+   unsigned x = atoi(argv[1]);
+                ^
+student.c:90:10: error: ‘EXIT_SUCCESS’ undeclared (first use in this function)
+   return EXIT_SUCCESS;
+          ^
+student.c:90:10: note: each undeclared identifier is reported only once for each function it appears in
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+seq3(-99, -99) was Incorrect
+seq3(-99, -5) was Incorrect
+seq3(-99, 0) was Incorrect
+seq3(-99, 5) was Incorrect
+seq3(-99, 99) was Incorrect
+seq3(-3, -99) was Incorrect
+seq3(-3, -5) was Incorrect
+seq3(-3, 0) was Incorrect
+seq3(-3, 5) was Incorrect
+seq3(-3, 99) was Incorrect
+seq3(-1, -99) was Incorrect
+seq3(-1, -5) was Incorrect
+seq3(-1, 0) was Incorrect
+seq3(-1, 5) was Incorrect
+seq3(-1, 99) was Incorrect
+seq3(0, -99) was Incorrect
+seq3(0, -5) was Incorrect
+seq3(0, 0) was Incorrect
+seq3(0, 5) was Incorrect
+seq3(0, 99) was Incorrect
+seq3(1, -99) was Incorrect
+seq3(1, -5) was Incorrect
+seq3(1, 0) was Incorrect
+seq3(1, 5) was Incorrect
+seq3(1, 99) was Incorrect
+seq3(4, -99) was Incorrect
+seq3(4, -5) was Incorrect
+seq3(4, 0) was Incorrect
+seq3(4, 5) was Incorrect
+seq3(4, 99) was Incorrect
+seq3(5, -99) was Incorrect
+seq3(5, -5) was Incorrect
+seq3(5, 0) was Incorrect
+seq3(5, 5) was Incorrect
+seq3(5, 99) was Incorrect
+seq3(9, -99) was Incorrect
+seq3(9, -5) was Incorrect
+seq3(9, 0) was Incorrect
+seq3(9, 5) was Incorrect
+seq3(9, 99) was Incorrect
+seq3(99, -99) was Incorrect
+seq3(99, -5) was Incorrect
+seq3(99, 0) was Incorrect
+seq3(99, 5) was Incorrect
+seq3(99, 99) was Incorrect
+step3(A) grade:0/14
+#################################################
+Removing your seq3 and testing your main...
+temp2.c: In function ‘main’:
+temp2.c:47:2: error: implicit declaration of function ‘check_seq3’ [-Werror=implicit-function-declaration]
+  check_seq3(0,0);
+  ^
+temp2.c:52:2: error: implicit declaration of function ‘check_countEvenInSeq3Range’ [-Werror=implicit-function-declaration]
+  check_countEvenInSeq3Range(0,2,0,3);
+  ^
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+You have 0 total test cases
+  o You have no test cases where x or y is 0 (0/1)
+  o You have 0 test cases with x Negative and y Negative (0/1)
+  o You have 0 test cases with x Negative and y Positive (0/1)
+  o You have 0 test cases with x Positive and y Negative (0/1)
+  o You have 0 test cases with x Positive and y Positive (0/1)
+step3(B) grade:0/5
+#################################################
+Removing your main() and replacing it with our own to test step3(C)
+student.c: In function ‘main’:
+student.c:87:19: error: implicit declaration of function ‘atoi’ [-Werror=implicit-function-declaration]
+   unsigned xLow = atoi(argv[1]);
+                   ^
+student.c:92:10: error: ‘EXIT_SUCCESS’ undeclared (first use in this function)
+   return EXIT_SUCCESS;
+          ^
+student.c:92:10: note: each undeclared identifier is reported only once for each function it appears in
+cc1: all warnings being treated as errors
+Could not replace your main function to test further
+countEvenInSeq3Range(-99, -100, -5, -99) was Incorrect
+countEvenInSeq3Range(-99, -100, -5, 0) was Incorrect
+countEvenInSeq3Range(-99, -100, -5, 105) was Incorrect
+countEvenInSeq3Range(-99, -100, 0, -99) was Incorrect
+countEvenInSeq3Range(-99, -100, 0, 0) was Incorrect
+countEvenInSeq3Range(-99, -100, 0, 105) was Incorrect
+countEvenInSeq3Range(-99, -100, 20, -99) was Incorrect
+countEvenInSeq3Range(-99, -100, 20, 0) was Incorrect
+countEvenInSeq3Range(-99, -100, 20, 105) was Incorrect
+countEvenInSeq3Range(-99, 0, -5, -99) was Incorrect
+countEvenInSeq3Range(-99, 0, -5, 0) was Incorrect
+countEvenInSeq3Range(-99, 0, -5, 105) was Incorrect
+countEvenInSeq3Range(-99, 0, 0, -99) was Incorrect
+countEvenInSeq3Range(-99, 0, 0, 0) was Incorrect
+countEvenInSeq3Range(-99, 0, 0, 105) was Incorrect
+countEvenInSeq3Range(-99, 0, 20, -99) was Incorrect
+countEvenInSeq3Range(-99, 0, 20, 0) was Incorrect
+countEvenInSeq3Range(-99, 0, 20, 105) was Incorrect
+countEvenInSeq3Range(-99, 100, -5, -99) was Incorrect
+countEvenInSeq3Range(-99, 100, -5, 0) was Incorrect
+countEvenInSeq3Range(-99, 100, -5, 105) was Incorrect
+countEvenInSeq3Range(-99, 100, 0, -99) was Incorrect
+countEvenInSeq3Range(-99, 100, 0, 0) was Incorrect
+countEvenInSeq3Range(-99, 100, 0, 105) was Incorrect
+countEvenInSeq3Range(-99, 100, 20, -99) was Incorrect
+countEvenInSeq3Range(-99, 100, 20, 0) was Incorrect
+countEvenInSeq3Range(-99, 100, 20, 105) was Incorrect
+countEvenInSeq3Range(0, -100, -5, -99) was Incorrect
+countEvenInSeq3Range(0, -100, -5, 0) was Incorrect
+countEvenInSeq3Range(0, -100, -5, 105) was Incorrect
+countEvenInSeq3Range(0, -100, 0, -99) was Incorrect
+countEvenInSeq3Range(0, -100, 0, 0) was Incorrect
+countEvenInSeq3Range(0, -100, 0, 105) was Incorrect
+countEvenInSeq3Range(0, -100, 20, -99) was Incorrect
+countEvenInSeq3Range(0, -100, 20, 0) was Incorrect
+countEvenInSeq3Range(0, -100, 20, 105) was Incorrect
+countEvenInSeq3Range(0, 0, -5, -99) was Incorrect
+countEvenInSeq3Range(0, 0, -5, 0) was Incorrect
+countEvenInSeq3Range(0, 0, -5, 105) was Incorrect
+countEvenInSeq3Range(0, 0, 0, -99) was Incorrect
+countEvenInSeq3Range(0, 0, 0, 0) was Incorrect
+countEvenInSeq3Range(0, 0, 0, 105) was Incorrect
+countEvenInSeq3Range(0, 0, 20, -99) was Incorrect
+countEvenInSeq3Range(0, 0, 20, 0) was Incorrect
+countEvenInSeq3Range(0, 0, 20, 105) was Incorrect
+countEvenInSeq3Range(0, 100, -5, -99) was Incorrect
+countEvenInSeq3Range(0, 100, -5, 0) was Incorrect
+countEvenInSeq3Range(0, 100, -5, 105) was Incorrect
+countEvenInSeq3Range(0, 100, 0, -99) was Incorrect
+countEvenInSeq3Range(0, 100, 0, 0) was Incorrect
+countEvenInSeq3Range(0, 100, 0, 105) was Incorrect
+countEvenInSeq3Range(0, 100, 20, -99) was Incorrect
+countEvenInSeq3Range(0, 100, 20, 0) was Incorrect
+countEvenInSeq3Range(0, 100, 20, 105) was Incorrect
+countEvenInSeq3Range(99, -100, -5, -99) was Incorrect
+countEvenInSeq3Range(99, -100, -5, 0) was Incorrect
+countEvenInSeq3Range(99, -100, -5, 105) was Incorrect
+countEvenInSeq3Range(99, -100, 0, -99) was Incorrect
+countEvenInSeq3Range(99, -100, 0, 0) was Incorrect
+countEvenInSeq3Range(99, -100, 0, 105) was Incorrect
+countEvenInSeq3Range(99, -100, 20, -99) was Incorrect
+countEvenInSeq3Range(99, -100, 20, 0) was Incorrect
+countEvenInSeq3Range(99, -100, 20, 105) was Incorrect
+countEvenInSeq3Range(99, 0, -5, -99) was Incorrect
+countEvenInSeq3Range(99, 0, -5, 0) was Incorrect
+countEvenInSeq3Range(99, 0, -5, 105) was Incorrect
+countEvenInSeq3Range(99, 0, 0, -99) was Incorrect
+countEvenInSeq3Range(99, 0, 0, 0) was Incorrect
+countEvenInSeq3Range(99, 0, 0, 105) was Incorrect
+countEvenInSeq3Range(99, 0, 20, -99) was Incorrect
+countEvenInSeq3Range(99, 0, 20, 0) was Incorrect
+countEvenInSeq3Range(99, 0, 20, 105) was Incorrect
+countEvenInSeq3Range(99, 100, -5, -99) was Incorrect
+countEvenInSeq3Range(99, 100, -5, 0) was Incorrect
+countEvenInSeq3Range(99, 100, -5, 105) was Incorrect
+countEvenInSeq3Range(99, 100, 0, -99) was Incorrect
+countEvenInSeq3Range(99, 100, 0, 0) was Incorrect
+countEvenInSeq3Range(99, 100, 0, 105) was Incorrect
+countEvenInSeq3Range(99, 100, 20, -99) was Incorrect
+countEvenInSeq3Range(99, 100, 20, 0) was Incorrect
+countEvenInSeq3Range(99, 100, 20, 105) was Incorrect
+step3(C) grade:0/13
+#################################################
+Removing your countEvenInSeq3Range and testing your main...
+You had 0 test cases with non-empty ranges (0/4)
+You had 0 test cases with an empty range (0/1)
+step3(D) grade:0/5
 
 Overall Grade: 0
