@@ -1,5 +1,349 @@
-Grading at 09/23/2017:13:20:18.788589
+Grading at 09/24/2017:03:15:35.585593
 For commit ID 042d578b79b9febb12c11914e6083dd3c84a1d9f
-There is no grader for 029 yet
+****************testing step1.c*********************
+Attempting to compile step1.c -> step1
+Looking for int main
+Found on line 41, column 1 
+Checking that main actually returns a value
+Looking for int seq1(int)
+Found on line 12, column 1 
+Looking for void printSeq1Range(int,int) 
+Found on line 17, column 1 
+Removing your main and adding ours
+Attempting to compile removedmain.c -> removedmain
+ - seq1(-93) was Correct
+ - seq1(-5) was Correct
+ - seq1(-1) was Correct
+ - seq1(0) was Correct
+ - seq1(1) was Correct
+ - seq1(3) was Correct
+ - seq1(12) was Correct
+ - seq1(96) was Correct
+#################################################
+Removing your main() and replacing it with our own to test step1(C)
+Attempting to compile removedmain.c -> removedmain
+printSeq1Range(-99, -100) was Correct
+printSeq1Range(-99, -99) was Correct
+printSeq1Range(-99, 1) was Correct
+printSeq1Range(-99, 6) was Correct
+printSeq1Range(-99, 0) was Correct
+printSeq1Range(-99, 100) was Correct
+printSeq1Range(-3, -100) was Correct
+printSeq1Range(-3, -99) was Correct
+printSeq1Range(-3, 1) was Correct
+printSeq1Range(-3, 6) was Correct
+printSeq1Range(-3, 0) was Correct
+printSeq1Range(-3, 100) was Correct
+printSeq1Range(-1, -100) was Correct
+printSeq1Range(-1, -99) was Correct
+printSeq1Range(-1, 1) was Correct
+printSeq1Range(-1, 6) was Correct
+printSeq1Range(-1, 0) was Correct
+printSeq1Range(-1, 100) was Correct
+printSeq1Range(0, -100) was Correct
+printSeq1Range(0, -99) was Correct
+printSeq1Range(0, 1) was Correct
+printSeq1Range(0, 6) was Correct
+printSeq1Range(0, 0) was Correct
+printSeq1Range(0, 100) was Correct
+printSeq1Range(1, -100) was Correct
+printSeq1Range(1, -99) was Correct
+printSeq1Range(1, 1) was Correct
+printSeq1Range(1, 6) was Correct
+printSeq1Range(1, 0) was Correct
+printSeq1Range(1, 100) was Correct
+printSeq1Range(4, -100) was Correct
+printSeq1Range(4, -99) was Correct
+printSeq1Range(4, 1) was Correct
+printSeq1Range(4, 6) was Correct
+printSeq1Range(4, 0) was Correct
+printSeq1Range(4, 100) was Correct
+printSeq1Range(5, -100) was Correct
+printSeq1Range(5, -99) was Correct
+printSeq1Range(5, 1) was Correct
+printSeq1Range(5, 6) was Correct
+printSeq1Range(5, 0) was Correct
+printSeq1Range(5, 100) was Correct
+printSeq1Range(9, -100) was Correct
+printSeq1Range(9, -99) was Correct
+printSeq1Range(9, 1) was Correct
+printSeq1Range(9, 6) was Correct
+printSeq1Range(9, 0) was Correct
+printSeq1Range(9, 100) was Correct
+printSeq1Range(99, -100) was Correct
+printSeq1Range(99, -99) was Correct
+printSeq1Range(99, 1) was Correct
+printSeq1Range(99, 6) was Correct
+printSeq1Range(99, 0) was Correct
+printSeq1Range(99, 100) was Correct
+#################################################
+Removing your seq1/printSeq1Range and testing your main...
+Attempting to compile rmfns.c -> rmfns
+You have 5 test cases for seq1
+You have 6 test cases for printSeq1Range
+Step 1 Summary:
+   Part A (seq1):                    8 / 8 [ 8 pts]
+   Part B+D (main):                  8 / 8 [ 8 pts]
+   Part C (printSeq1Range):        54 / 54 [10 pts]
+   Code compiled without warnings:     Yes [ 2 pts]
+   Main properly returned an int:      Yes [ 2 pts] 
+=================================================
+Step 1 Total:                              30/30     
+=================================================
+****************testing step2.c*********************
+Attempting to compile step2.c -> step2
+Looking for int main
+Found on line 48, column 1 
+Checking that main actually returns a value
+Looking for int seq2(int)
+Found on line 12, column 1 
+Looking for int int sumSeq2(int,int) 
+Found on line 21, column 1 
+#################################################
+Removing your main() and replacing it with our own to test seq (Part A)
+Attempting to compile removedmain.c -> removedmain
+seq2(-97) was Correct
+seq2(-5) was Correct
+seq2(-1) was Correct
+seq2(-3) was Correct
+seq2(0) was Correct
+seq2(1) was Correct
+seq2(5) was Correct
+seq2(7) was Correct
+seq2(22) was Correct
+seq2(104) was Correct
+#################################################
+Removing your seq2/sumSeq2 and testing your main (B+D)...
+Attempting to compile rmfns.c -> rmfns
+For seq2, you only have 4 test cases (1 negative, 2 positive)
+For sumSeq, ou have 5 total test cases (2/2)
+  o 2 tested for an empty range 
+  o 0 tested for a range of size 1 
+  o 3 tested for a larger range 
+#################################################
+Removing your main() and replacing it with our own for sumSeq2(Part C)
+Attempting to compile removedmain.c -> removedmain
+sumSeq2(-100, -99) was Correct
+sumSeq2(-100, -99) was Correct
+sumSeq2(-100, 4) was Correct
+sumSeq2(-100, 5) was Correct
+sumSeq2(-100, 0) was Correct
+sumSeq2(-100, 99) was Correct
+sumSeq2(-3, -99) was Correct
+sumSeq2(-3, -99) was Correct
+sumSeq2(-3, 4) was Correct
+sumSeq2(-3, 5) was Correct
+sumSeq2(-3, 0) was Correct
+sumSeq2(-3, 99) was Correct
+sumSeq2(-1, -99) was Correct
+sumSeq2(-1, -99) was Correct
+sumSeq2(-1, 4) was Correct
+sumSeq2(-1, 5) was Correct
+sumSeq2(-1, 0) was Correct
+sumSeq2(-1, 99) was Correct
+sumSeq2(0, -99) was Correct
+sumSeq2(0, -99) was Correct
+sumSeq2(0, 4) was Correct
+sumSeq2(0, 5) was Correct
+sumSeq2(0, 0) was Correct
+sumSeq2(0, 99) was Correct
+sumSeq2(1, -99) was Correct
+sumSeq2(1, -99) was Correct
+sumSeq2(1, 4) was Correct
+sumSeq2(1, 5) was Correct
+sumSeq2(1, 0) was Correct
+sumSeq2(1, 99) was Correct
+sumSeq2(4, -99) was Correct
+sumSeq2(4, -99) was Correct
+sumSeq2(4, 4) was Correct
+sumSeq2(4, 5) was Correct
+sumSeq2(4, 0) was Correct
+sumSeq2(4, 99) was Correct
+sumSeq2(5, -99) was Correct
+sumSeq2(5, -99) was Correct
+sumSeq2(5, 4) was Correct
+sumSeq2(5, 5) was Correct
+sumSeq2(5, 0) was Correct
+sumSeq2(5, 99) was Correct
+sumSeq2(9, -99) was Correct
+sumSeq2(9, -99) was Correct
+sumSeq2(9, 4) was Correct
+sumSeq2(9, 5) was Correct
+sumSeq2(9, 0) was Correct
+sumSeq2(9, 99) was Correct
+sumSeq2(99, -99) was Correct
+sumSeq2(99, -99) was Correct
+sumSeq2(99, 4) was Correct
+sumSeq2(99, 5) was Correct
+sumSeq2(99, 0) was Correct
+sumSeq2(99, 99) was Correct
+Step 2 Summary:
+   Part A (seq2):                10 / 10 [10 pts]
+   Part B+D (main):               8 / 10 [ 8 pts]
+   Part C (sumSeq):              54 / 54 [10 pts]
+Code compiled without warnings: YES      [ 3 pts]
+=================================================
+Step 2 Total:                              31/33     
+=================================================
+****************testing step3.c*********************
+Attempting to compile step3.c -> step3
+Looking for int main
+Found on line 60, column 1 
+Checking that main actually returns a value
+Looking for int seq3(int,int)
+Found on line 12, column 1 
+Looking for int int countEvenInSeq3Range(int,int,int,int) 
+Found on line 22, column 1 
+#################################################
+Removing your main() and replacing it with our own to test step3(A)
+Attempting to compile removedmain.c -> removedmain
+seq3(-99, -99) was Correct
+seq3(-99, -5) was Correct
+seq3(-99, 0) was Correct
+seq3(-99, 5) was Correct
+seq3(-99, 99) was Correct
+seq3(-3, -99) was Correct
+seq3(-3, -5) was Correct
+seq3(-3, 0) was Correct
+seq3(-3, 5) was Correct
+seq3(-3, 99) was Correct
+seq3(-1, -99) was Correct
+seq3(-1, -5) was Correct
+seq3(-1, 0) was Correct
+seq3(-1, 5) was Correct
+seq3(-1, 99) was Correct
+seq3(0, -99) was Correct
+seq3(0, -5) was Correct
+seq3(0, 0) was Correct
+seq3(0, 5) was Correct
+seq3(0, 99) was Correct
+seq3(1, -99) was Correct
+seq3(1, -5) was Correct
+seq3(1, 0) was Correct
+seq3(1, 5) was Correct
+seq3(1, 99) was Correct
+seq3(4, -99) was Correct
+seq3(4, -5) was Correct
+seq3(4, 0) was Correct
+seq3(4, 5) was Correct
+seq3(4, 99) was Correct
+seq3(5, -99) was Correct
+seq3(5, -5) was Correct
+seq3(5, 0) was Correct
+seq3(5, 5) was Correct
+seq3(5, 99) was Correct
+seq3(9, -99) was Correct
+seq3(9, -5) was Correct
+seq3(9, 0) was Correct
+seq3(9, 5) was Correct
+seq3(9, 99) was Correct
+seq3(99, -99) was Correct
+seq3(99, -5) was Correct
+seq3(99, 0) was Correct
+seq3(99, 5) was Correct
+seq3(99, 99) was Correct
+#################################################
+Removing your seq3/countEvenInSeq3Range and testing your main (B+D)...
+Attempting to compile rmfn.c -> rmfn
+You have 4 total test cases
+  o You have 3 test cases where x or y is 0 (1/1)
+  o You have 0 test cases with x Negative and y Negative (0/1)
+  o You have 0 test cases with x Negative and y Positive (0/1)
+  o You have 0 test cases with x Positive and y Negative (0/1)
+  o You have 1 test cases with x Positive and y Positive (1/1)
+You had 9 test cases with non-empty ranges (4/4)
+You had 4 test cases with an empty range (1/1)
+#################################################
+Removing your main() and replacing it with our own to test step3(C)
+Attempting to compile removedmain.c -> removedmain
+countEvenInSeq3Range(-99, -100, -5, -99) was Correct
+countEvenInSeq3Range(-99, -100, -5, 0) was Correct
+countEvenInSeq3Range(-99, -100, -5, 105) was Correct
+countEvenInSeq3Range(-99, -100, 0, -99) was Correct
+countEvenInSeq3Range(-99, -100, 0, 0) was Correct
+countEvenInSeq3Range(-99, -100, 0, 105) was Correct
+countEvenInSeq3Range(-99, -100, 20, -99) was Correct
+countEvenInSeq3Range(-99, -100, 20, 0) was Correct
+countEvenInSeq3Range(-99, -100, 20, 105) was Correct
+countEvenInSeq3Range(-99, 0, -5, -99) was Correct
+countEvenInSeq3Range(-99, 0, -5, 0) was Correct
+countEvenInSeq3Range(-99, 0, -5, 105) was Correct
+countEvenInSeq3Range(-99, 0, 0, -99) was Correct
+countEvenInSeq3Range(-99, 0, 0, 0) was Correct
+countEvenInSeq3Range(-99, 0, 0, 105) was Correct
+countEvenInSeq3Range(-99, 0, 20, -99) was Correct
+countEvenInSeq3Range(-99, 0, 20, 0) was Correct
+countEvenInSeq3Range(-99, 0, 20, 105) was Correct
+countEvenInSeq3Range(-99, 100, -5, -99) was Correct
+countEvenInSeq3Range(-99, 100, -5, 0) was Correct
+countEvenInSeq3Range(-99, 100, -5, 105) was Correct
+countEvenInSeq3Range(-99, 100, 0, -99) was Correct
+countEvenInSeq3Range(-99, 100, 0, 0) was Correct
+countEvenInSeq3Range(-99, 100, 0, 105) was Correct
+countEvenInSeq3Range(-99, 100, 20, -99) was Correct
+countEvenInSeq3Range(-99, 100, 20, 0) was Correct
+countEvenInSeq3Range(-99, 100, 20, 105) was Correct
+countEvenInSeq3Range(0, -100, -5, -99) was Correct
+countEvenInSeq3Range(0, -100, -5, 0) was Correct
+countEvenInSeq3Range(0, -100, -5, 105) was Correct
+countEvenInSeq3Range(0, -100, 0, -99) was Correct
+countEvenInSeq3Range(0, -100, 0, 0) was Correct
+countEvenInSeq3Range(0, -100, 0, 105) was Correct
+countEvenInSeq3Range(0, -100, 20, -99) was Correct
+countEvenInSeq3Range(0, -100, 20, 0) was Correct
+countEvenInSeq3Range(0, -100, 20, 105) was Correct
+countEvenInSeq3Range(0, 0, -5, -99) was Correct
+countEvenInSeq3Range(0, 0, -5, 0) was Correct
+countEvenInSeq3Range(0, 0, -5, 105) was Correct
+countEvenInSeq3Range(0, 0, 0, -99) was Correct
+countEvenInSeq3Range(0, 0, 0, 0) was Correct
+countEvenInSeq3Range(0, 0, 0, 105) was Correct
+countEvenInSeq3Range(0, 0, 20, -99) was Correct
+countEvenInSeq3Range(0, 0, 20, 0) was Correct
+countEvenInSeq3Range(0, 0, 20, 105) was Correct
+countEvenInSeq3Range(0, 100, -5, -99) was Correct
+countEvenInSeq3Range(0, 100, -5, 0) was Correct
+countEvenInSeq3Range(0, 100, -5, 105) was Correct
+countEvenInSeq3Range(0, 100, 0, -99) was Correct
+countEvenInSeq3Range(0, 100, 0, 0) was Correct
+countEvenInSeq3Range(0, 100, 0, 105) was Correct
+countEvenInSeq3Range(0, 100, 20, -99) was Correct
+countEvenInSeq3Range(0, 100, 20, 0) was Correct
+countEvenInSeq3Range(0, 100, 20, 105) was Correct
+countEvenInSeq3Range(99, -100, -5, -99) was Correct
+countEvenInSeq3Range(99, -100, -5, 0) was Correct
+countEvenInSeq3Range(99, -100, -5, 105) was Correct
+countEvenInSeq3Range(99, -100, 0, -99) was Correct
+countEvenInSeq3Range(99, -100, 0, 0) was Correct
+countEvenInSeq3Range(99, -100, 0, 105) was Correct
+countEvenInSeq3Range(99, -100, 20, -99) was Correct
+countEvenInSeq3Range(99, -100, 20, 0) was Correct
+countEvenInSeq3Range(99, -100, 20, 105) was Correct
+countEvenInSeq3Range(99, 0, -5, -99) was Correct
+countEvenInSeq3Range(99, 0, -5, 0) was Correct
+countEvenInSeq3Range(99, 0, -5, 105) was Correct
+countEvenInSeq3Range(99, 0, 0, -99) was Correct
+countEvenInSeq3Range(99, 0, 0, 0) was Correct
+countEvenInSeq3Range(99, 0, 0, 105) was Correct
+countEvenInSeq3Range(99, 0, 20, -99) was Correct
+countEvenInSeq3Range(99, 0, 20, 0) was Correct
+countEvenInSeq3Range(99, 0, 20, 105) was Correct
+countEvenInSeq3Range(99, 100, -5, -99) was Correct
+countEvenInSeq3Range(99, 100, -5, 0) was Correct
+countEvenInSeq3Range(99, 100, -5, 105) was Correct
+countEvenInSeq3Range(99, 100, 0, -99) was Correct
+countEvenInSeq3Range(99, 100, 0, 0) was Correct
+countEvenInSeq3Range(99, 100, 0, 105) was Correct
+countEvenInSeq3Range(99, 100, 20, -99) was Correct
+countEvenInSeq3Range(99, 100, 20, 0) was Correct
+countEvenInSeq3Range(99, 100, 20, 105) was Correct
+Step 3 Summary:
+   Part A (seq3):                45 / 45 [10 pts]
+   Part B+D (main):               7 / 10 [ 7 pts]
+   Part C (sumSeq):              81 / 81 [14 pts]
+Code compiled without warnings: YES      [ 3 pts]
+=================================================
+Step 3 Total:                              34/37     
+=================================================
 
-Overall Grade: 0
+Overall Grade: 95
