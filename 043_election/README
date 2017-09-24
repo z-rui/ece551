@@ -1,18 +1,179 @@
-This is your second *evaluative* assignment.
-As before, that means that we want you to show
-us what you know/what you can do (as opposed to 
-most assignments, which are to practice and learn from).
+In this assignment, you will be writing a program to process
+"election results." (in quotation marks, because they aren't real).
 
-Accordingly, you may not work with anyone else on this
-assignment.  All work must be your own. 
 
-To proceed, run
+Before you start, take a look at US_States.txt.  This file contains
+51 lines (one for each US State, plus the District of Columbia), describing
+the population and number of electoral votes the state receives
+in the presidential election.
 
-honor-statement 043_election
+For example, the first line is:
 
-which will present you with the rules for this assignment,
-ask you questions to make sure you understand,
-and ask you to sign the honor statement.
+Alabama:4858979:9
+------- ------- -
+  \        \    \  Number of electoral votes for this state
+   \        \    -------------------------------------------
+    \        \ Population of this state in July 2015
+     \       ----------------------------------------
+      \  State's name
+       --------------
 
-Once you have done that, your directory will be
-refreshed with the actual assignment.
+If you look through the rest of the file, you will see that each line
+contains the same format.
+
+There is also a simpler file Simple_States.txt with 4 "states" to help you
+test (so it is easier to figure out the right answer).
+
+**Step 1 [20 points]
+
+Open election.c, and find "parseLine" which takes in a string (i.e.
+a const char *) which will be one line from a file with the same
+format as US_States.txt (that is, "Name:population:electoral votes").
+Note that you do not have to read these lines from the file (we've
+provided code to do that since you will not learn how until Chapter 11).
+There will not be a newline at the end of the string passed in (the
+character after the last digit of the number of electoral votes should
+be '\0').
+
+The parseLine function should fill in a state_t (a struct defined
+in "election.h" with the information about this state, and return it.
+If there are problems with the contents of the string 
+(e.g., improper format),  your program should 
+print an appropriate error message, and call exit(EXIT_FAILURE) to 
+exit the program.
+
+You can test this step by running "make printStates" which will create
+a program (using your parseLine and our code to read the file and
+print the contents of a state_t), you can then run it like this:
+
+./printStates US_States.txt
+
+You should check that it prints the information about each state
+correctly.  You should, of course, use valgrind, and test 
+on more cases than just those provided in US_States.txt.
+
+Once you get this working, be sure to commit to git before proceeding.
+
+**Step 2 [30 points]
+
+Now that you have code to read in the population and electoral votes
+of the States, it is time to write some code to process the outcomes.
+
+We have written code to read in a file (such as USvotes1.txt,
+or SimpleVotes1.txt) which contains the vote counts for "Candidate A" in the
+election (we're going to assume there are only two candidates: A and B) for each state.
+Our code will put these into an array of unsigned ints.  We will then
+pass these to your countElectoralVotes method, along with 
+the array of state_ts that we made from repeatedly calling
+your parseLine method on the file describing population/electoral votes
+(e.g., US_States.txt), and the number of elements in each array (e.g.,
+51).  The items in the array will be in the same order (for
+example, if Alabama is first in your array of state_ts, then
+the vote count for candidate A will be first in the array of vote
+counts).
+
+Your countElectoralVotes method should compute and return the
+total number of electoral votes that Candidate A received in the election.
+For our purposes, Candidate A receives ALL electoral votes for a state
+if Candidate A receives striclty more than 50% of the votes in that State.  
+[Yes, we know that in the US there are a few States with more complex
+rules, but we will ignore them.  We will also ignore the electoral
+complexities of what would happen if a candidate received exactly
+50%, and in this case, just say that Candidate A does not receive
+those electoral votes.  We are also assuming everyone in every State
+votes---while this doesnt happen in a real election, its what we are
+doing here].
+
+To test this portion, you can run "make printEVotes" which will generate
+the "printEVotes" program.  This program takes two arguments, the
+first of which describes the population/electoral votes, and the second
+of which describes the vote counts.  For example, you might run
+
+./printEVotes US_States.txt  USVotes1.txt
+
+As always, valgrind, and test with more cases.  
+Once you get this working, be sure to commit to git before proceeding.
+
+** Step 3 [30 points]
+
+Next, you write printRecounts, which takes the same parameters
+as countElectoralVotes, and prints out a list of which States
+require a recount.  For our purposes, a State will conduct a
+recount whenever Candidate A is within +/-0.5% away from 50%.
+(So, 49.5% or 50.5% each require a recount, but 49.4% or 50.6% do not).
+
+For each state which requires a recount, you should print a line
+of the form:
+
+ "%s requires a recount (Candidate A has %.2f%% of the vote)\n"
+
+where the %s should format the state's name, and the %.2f should
+format the vote percentage received by Candidate A. Note that %%
+just formats a literal percent-sign (%).  For example you might print
+something like this:
+
+Alabama requires a recount (Candidate A has 50.21% of the vote)
+
+
+You can test this step with "make printRecounts" and can run the resulting
+program with the same arguments as the previous step, e.g.:
+
+./printRecounts US_States.txt  USVotes1.txt
+
+As always, valgrind, and test with more cases.  
+Once you get this working, be sure to commit to git before proceeding.
+
+** Step 4 [20 points]
+
+For this step, you will write "printLargestWin" which takes
+the same parameters as the previous two problems, and finds
+out which State Candidate A won the largest percentage of the vote.
+
+Your function should use the following format string:
+
+"Candidate A won %s with %.2f%% of the vote\n"
+
+where the %s should be the name of the state, and the %.2f should
+be the percentage of hte vote won.  For example, it might print
+
+Candidate A won California with 73.24% of the vote
+
+
+To test this step, run "make printLargeWin" which will build printLargeWin.
+The printLargeWin program takes the same two arguments as the previous
+problems. For example, you might run:
+
+./printLargeWin US_States.txt  USVotes1.txt
+
+As always, valgrind, and test with more cases.  
+
+When you have completed this step, and are satisfied with 
+your testing, commit, push, and submit your assignment for grading.
+
+This assignment will not be graded instantly.  It will be graded ONCE
+after the deadline (which is a hard deadline).
+
+
+
+======Reminders about the rules============
+
+ - Your work must be your own!
+ - You may NOT consult with other students about
+    o high level approaches
+    o how to implement your algorithm in code
+    o how to debug your code
+  (Basically, you may not discuss anything 
+   particular to this assignment).
+ - You may NOT look at another student's code,
+   nor show your code to anyone else.
+ - You are responsible for keeping your code
+   private.
+ - You may not look for solutions to this
+   or similar problems online.
+ - You may not use code from any other source.
+
+ + You MAY consult All of Programming 
+ + You MAY consult notes you wrote in your notebook.
+ + You MAY consult the man pages.
+ + You MAY ask the professor or TAs for clarification 
+   on the assignment.
