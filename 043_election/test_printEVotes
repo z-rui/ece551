@@ -45,7 +45,7 @@ test_interesting "X:100:1" "X:"
 test_interesting "X:100:1" "X:50.5"
 test_interesting "X:100:1" "X:10O"
 test_interesting "X:100:1" "X:-50"
-test_interesting "X:100:1" "X:060"
+test_interesting "X:100:1" "X:060"  # this one is valid input, but the spec didn't say 0... is octal #
 
 test_pass "X:100:1" "X:49" "0"
 test_pass "X:100:1" "X:50" "0"
@@ -63,3 +63,14 @@ Y:1:2147483647" \
 "X:1
 Y:1" \
 "4294967294"
+
+test_pass \
+"X:100:1
+Y:101:2
+Z:102:4
+W:103:8" \
+"X:51
+Y:51
+Z:51
+W:51" \
+"3"
