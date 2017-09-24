@@ -1,0 +1,3 @@
+#!/bin/bash
+
+diff <(./printRecounts test_states.txt test_vote.txt) test_ans.txt

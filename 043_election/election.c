@@ -1,6 +1,7 @@
 #include "election.h"
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 //include any other headers you need here...
 
 state_t parseLine(const char * line)
@@ -77,11 +78,41 @@ unsigned int countElectoralVotes(state_t * stateData, uint64_t * voteCounts, siz
 	return count;
 }
 
-void printRecounts(state_t * stateData, 
-		uint64_t * voteCounts, 
-		size_t nStates) {
-	//STEP 3: write me
+void printRecounts(state_t * stateData, uint64_t * voteCounts, size_t nStates)
+{
+	size_t i;
+
+	for (i = 0; i < nStates; i++) {
+		uint64_t pop, vote;
+		uint64_t halfpop, pop_by_200;
+		uint64_t lower, upper;
+
+		pop = stateData[i].population;
+		vote = voteCounts[i];
+
+		/* it's easy to say, e.g., vote >= 0.495 * pop && vote <= 0.505 * pop,
+		 * but uint64_t -> double is not always exact. */
+		halfpop = pop / 2;
+		pop_by_200 = pop / 200; /* 1/200 = 0.5% */
+
+		lower = halfpop - pop_by_200;
+		upper = halfpop + pop_by_200;
+		if (pop % 2 == 1) { /* fix rounding issues */
+			if (pop % 200 < 100) {
+				lower++;
+			} else {
+				upper++;
+			}
+		}
+
+		if (vote >= lower && vote <= upper) {
+			printf("%s requires a recount (Candidate A has %.2f%% of the vote)\n",
+				stateData[i].name, 100.0 * vote / pop);
+		}
+	}
 }
+
+
 void printLargestWin(state_t * stateData, 
 		uint64_t * voteCounts, 
 		size_t nStates) {
