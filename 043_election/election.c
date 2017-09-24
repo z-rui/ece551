@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
+#include <float.h>
 //include any other headers you need here...
 
 state_t parseLine(const char * line)
@@ -68,7 +69,7 @@ unsigned int countElectoralVotes(state_t * stateData, uint64_t * voteCounts, siz
 	size_t i;
 
 	for (i = 0; i < nStates; i++) {
-		/* no 2*x > y (overflow),
+		/* no 2*x > y (potential overflow),
 		 * no x > 0.5*y (insufficient accuracy) */
 		if (voteCounts[i] > stateData[i].population / 2) {
 			count += stateData[i].electoralVotes;
@@ -112,9 +113,21 @@ void printRecounts(state_t * stateData, uint64_t * voteCounts, size_t nStates)
 	}
 }
 
+void printLargestWin(state_t * stateData, uint64_t * voteCounts, size_t nStates)
+{
+	size_t i;
+	size_t largestIdx;
+	long double this_percentage, largest_percentage = 0.0L;
 
-void printLargestWin(state_t * stateData, 
-		uint64_t * voteCounts, 
-		size_t nStates) {
-	//STEP 4: write me
+	/* Doing this while avoiding floating point is too hard.  :( */
+
+	for (i = 0; i < nStates; i++) {
+		this_percentage = (long double) voteCounts[i] / stateData[i].population;
+		if (this_percentage > largest_percentage) {
+			largestIdx = i;
+			largest_percentage = this_percentage;
+		}
+	}
+	printf("Candidate A won %s with %.2f%% of the vote\n",
+		stateData[largestIdx].name, (double) largest_percentage * 100.0);
 }
