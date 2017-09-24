@@ -1,0 +1,46 @@
+#!/bin/bash
+
+prog="./printStates"
+
+test_fail()
+{
+	
+	$prog <(echo "$1") 2> /dev/null
+	if [ $? -eq 0 ]; then
+		echo "The program did not fail for the following input:"
+		echo "$1"
+	fi
+}
+
+test_pass()
+{
+	$prog <(echo "$1")
+	if [ $? -ne 0 ]; then
+		echo "The program did not succeed for the following input:"
+		echo "$1"
+	fi
+}
+
+test_fail ""
+test_fail "a"
+test_fail "a:"
+test_fail "a:1"
+test_fail ":1"
+test_fail ":1:1"
+test_fail "a::1"
+test_fail "a:1:"
+test_fail "a:-1:1"
+test_fail "a:1:-1"
+test_fail "a:1:1:"
+test_fail "a:1:1:1"
+test_fail "a:1:1:garbage"
+test_fail "a:1:1garbage"
+test_fail "a:1garbage:1"
+test_fail "a:a:1"
+test_fail "a:1:a"
+test_fail "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:1:1"
+test_fail "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:1:1"
+
+test_pass "a:1:1
+Abc aBC:4294967296:4294967295
+The quick brown fox jumps over the lazy dog and jumps once more:18446744073709551615:4294967295"

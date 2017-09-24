@@ -1,0 +1,51 @@
+Alabama:1735038
+Alaska:313436
+Arizona:3325094
+Arkansas:1308507
+California:24817606
+Colorado:3130205
+Connecticut:2258607
+Delaware:538287
+District of Columbia:587780
+Florida:10471015
+Georgia:5762233
+Hawaii:1075642
+Idaho:718087
+Illinois:8366124
+Indiana:3226192
+Iowa:1750193
+Kansas:1561429
+Kentucky:1908711
+Louisiana:1979721
+Maine:811267
+Maryland:3977528
+Massachusetts:4267369
+Michigan:6063470
+Minnesota:3000944
+Mississippi:1461859
+Missouri:3133188
+Montana:529680
+Nebraska:874611
+Nevada:1654597
+New Hampshire:740687
+New Jersey:5773350
+New Mexico:1227179
+New York:11606478
+North Carolina:4946744
+North Dakota:395048
+Ohio:6412603
+Oklahoma:1675605
+Oregon:2573854
+Pennsylvania:7750810
+Rhode Island:648153
+South Carolina:2247838
+South Dakota:464524
+Tennessee:3595404
+Texas:13446356
+Utah:1279216
+Vermont:366532
+Virginia:4693965
+Washington:4014135
+West Virginia:822861
+Wisconsin:3406823
+Wyoming:251059
