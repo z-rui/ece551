@@ -3,7 +3,8 @@
 #include <string.h>
 //include any other headers you need here...
 
-state_t parseLine(const char * line) {
+state_t parseLine(const char * line)
+{
 	state_t state;
 	const char *save, *p;
 	size_t namelen;
@@ -59,11 +60,21 @@ error:
 	fprintf(stderr, "%s\n%*s\n", line, (int) (p - line + 1), "^");
 	exit(EXIT_FAILURE);
 }
-unsigned int countElectoralVotes(state_t * stateData, 
-		uint64_t * voteCounts, 
-		size_t nStates) {
-	//STEP 2: write me
-	return 0;
+
+unsigned int countElectoralVotes(state_t * stateData, uint64_t * voteCounts, size_t nStates)
+{
+	unsigned count = 0;
+	size_t i;
+
+	for (i = 0; i < nStates; i++) {
+		/* no 2*x > y (overflow),
+		 * no x > 0.5*y (insufficient accuracy) */
+		if (voteCounts[i] > stateData[i].population / 2) {
+			count += stateData[i].electoralVotes;
+		}
+	}
+
+	return count;
 }
 
 void printRecounts(state_t * stateData, 

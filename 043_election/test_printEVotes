@@ -1,0 +1,65 @@
+#!/bin/bash
+
+prog="./printEVotes"
+tmpfile=`mktemp`
+
+dumpinput()
+{
+	echo "states.txt:"
+	echo "$1"
+	echo
+	echo "votes.txt:"
+	echo "$2"
+	echo
+}
+
+test_interesting()
+{
+	
+	$prog <(echo "$1") <(echo "$2") 2> /dev/null
+	if [ $? -eq 0 ]; then
+		echo "Interestingly, the program did not fail for the following input:"
+		dumpinput "$1" "$2"
+	fi
+}
+
+test_pass()
+{
+	$prog <(echo "$1") <(echo "$2") > $tmpfile
+	if [ $? -ne 0 ]; then
+		echo "The program did not succeed for the following input:"
+		dumpinput "$1" "$2"
+	fi
+	diff <(echo "Candidate A won $3 electoral votes") $tmpfile
+	if [ $? -ne 0 ]; then
+		echo "The program gave wrong answer to the following input:"
+		dumpinput "$1" "$2"
+	fi
+}
+
+# no "fail" cases because countElectoralVotes never signals an error
+# however there are some interesting cases to consider...
+#
+test_interesting "X:100:1" "X"      # this one SEGFAULTS! #
+test_interesting "X:100:1" "X:"
+test_interesting "X:100:1" "X:50.5"
+test_interesting "X:100:1" "X:10O"
+test_interesting "X:100:1" "X:-50"
+test_interesting "X:100:1" "X:060"
+
+test_pass "X:100:1" "X:49" "0"
+test_pass "X:100:1" "X:50" "0"
+test_pass "X:100:1" "X:51" "1"
+test_pass "X:101:1" "X:50" "0"
+test_pass "X:101:1" "X:51" "1"
+
+test_pass "X:18446744073709551615:1" "X:9223372036854775807" "0"
+test_pass "X:18446744073709551615:1" "X:9223372036854775808" "1"
+test_pass "X:36028797018963969:1" "X:18014398509481985" "1"
+
+test_pass \
+"X:1:2147483647
+Y:1:2147483647" \
+"X:1
+Y:1" \
+"4294967294"
