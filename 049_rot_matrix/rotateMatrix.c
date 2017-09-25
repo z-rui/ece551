@@ -45,7 +45,7 @@ void read_line(char line[], FILE *f)
 	}
 }
 
-void print_rotated(const char M[ROWS][COLS])
+void print_rotated(char M[ROWS][COLS])
 {
 	int i, j;
 
