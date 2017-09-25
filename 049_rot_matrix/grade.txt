@@ -1,0 +1,11 @@
+Grading at 09/25/2017:18:25:27.770913
+For commit ID d3798c498b4da54734866109ab069e05bb89bec4
+Attempting to compile rotateMatrix.c
+rotateMatrix.c: In function ‘main’:
+rotateMatrix.c:86:2: error: pointers to arrays with different qualifiers are incompatible in ISO C [-Werror=pedantic]
+  print_rotated(matrix);
+  ^
+cc1: all warnings being treated as errors
+The code did not compile!
+
+Overall Grade: F
