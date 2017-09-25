@@ -1,0 +1,11 @@
+1. no args [this is the ACTUAL trickiest one! :( ]
+2. non-exist file
+3. too many args
+4. too few lines (empty file)
+5. too few lines (one complete line)
+6. too few lines (one line missing)
+7. too many lines (one excess line)
+8. too few columns
+9. too many columns
+10. 0xff pitfall
+11. normal input
