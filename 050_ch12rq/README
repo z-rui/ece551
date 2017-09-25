@@ -1,0 +1,176 @@
+As always, read and understand Chapter 12, then answer these questions
+in "answers.txt".
+
+1. Where does malloc allocate memory?
+
+A. On the stack
+B. In the heap
+C. In the data segment
+D. In the text segment
+E. None of the above
+
+2. What does realloc do?
+
+A. Repeats a previous allocation request.
+B. Resizes a previously allocated block.
+C. Retries a previously failed allocation.
+D. Recycles a previously allocated block of memory.
+E. None of the above.
+
+3. What is the prototype for malloc?
+
+A.  int * malloc(int size);
+B.  const int * malloc(int size);
+C.  void * malloc(int size);
+D.  const void * malloc(unsigned int size);
+E.  int * malloc(unsigned int size);
+F.  const int * malloc(unsigned int size);
+G.  void * malloc(unsigned int size);
+H.  const void * malloc(unsigned int size);
+I.  int * malloc(size_t size);
+J.  const int * malloc(size_t size);
+K.  void * malloc(size_t size);
+L.  const void * malloc(size_t size);
+
+
+4. Suppose you want p to point at an array of 16 ints,
+   which should be allocated by malloc.
+   What is the *best* way to declare and initialize p?
+
+
+A. int * p = malloc(64);
+B. int * p = malloc(16 * 4);
+C. int * p = malloc(16 * sizeof(int));
+D. int * p = malloc(16 * sizeof(*p));
+
+5. Suppose you have 
+
+struct _xyz_t {
+  int x;
+  int y;
+  int * z;
+};
+
+and that ints take 4 bytes and pointers take 8 bytes.
+
+You have
+
+  struct _xyz_t * x1;
+  struct _xyz_t * x2;
+  //x1 is initialized in here somewhere
+  //..
+  x2 = x1;
+
+
+When you execute the line x2 = x1; how many
+bytes are copied?
+
+A. 4
+B. 8
+C. 12
+D. 16
+E. 20
+F. 24
+G. 28
+
+
+6. What does free(NULL) do?
+
+A. Crashes the program
+B. Frees all memory that was allocated with malloc
+C. Frees the most recently allocated block of memory
+D. Frees all unreachable blocks of memory.
+E. Nothing
+
+7. Suppose you have the following code:
+
+  int * p = malloc(sizeof(int));
+  int * q = p;
+  free(p);
+  free(q);
+
+What problem does this code exhibit with regards
+to the use of free?
+
+A. It leaks memory.
+B. It frees a pointer not returned by malloc.
+C. It double frees a block of memory.
+D. None: it uses free correctly.
+
+8. Suppose you have the following code:
+
+int xcount=0;
+char * ptr = malloc(50 * sizeof(char));
+if(fgets(ptr, 50, stdin)!= NULL) {
+   while(*ptr != '\0') {
+      if (*ptr == 'x') {
+         xcount++;
+      }
+    ptr++;
+   }
+ }
+free(ptr);
+
+  
+What problem does this code exhibit with regards
+to the use of free?
+
+A. It leaks memory.
+B. It frees a pointer not returned by malloc.
+C. It double frees a block of memory.
+D. None: it uses free correctly.
+
+For the next three questions, suppose you have
+
+  size_t sz = X ; 
+  char * line = Y;
+  getline(&line, &sz, stdin);
+
+
+
+9. If Y is NULL, then one of the first
+   things that geline will do is
+
+A. malloc X bytes of space.
+B. malloc X * sizeof(char) bytes of space.
+C. malloc an implementation specific amount of space.
+D. use fgets to determine how many bytes of space to malloc, 
+   then malloc that much space.
+
+10. If Y is not NULL, then what will getline 
+    assume about how much space is available
+    to store characters into?
+
+A.  It will assume that there are at least as
+    many bytes as the length of the next line
+    to read from stdin.
+B.  It will assume that there are at least X
+    bytes.
+C.  It will not make any assumptions, 
+    but will instead use sizeof to determine
+    how many bytes are available.
+D.  None of the above.
+
+11. Suppose that Y is NULL and X is 0. 
+    The first line from stdin is "Hello\n"
+    After getline returns, which of the following 
+    is true?
+
+A. sz will be equal to 6 and line will point at
+   an array malloced to hold 6 chars with H e l l o \n in it.
+B. sz will be equal to 6 and line will point at
+   an array malloced to hold 6 chars with H e l l o \0 in it.
+C. sz will be equal to 7 and line will point at
+   an array malloced to hold 7 chars with H e l l o \n \0 in it.
+D. sz will be at least 6 and line will point at
+   an array malloced to hold sz chars with H e l l o \n in it.
+   The values of any other characters in the array are undefined.
+E. sz will be at least 6 and line will point at
+   an array malloced to hold 6 chars with H e l l o \0 in it.
+   The values of any other characters in the array are undefined.
+F. sz will be at least 7 and line will point at
+   an array malloced to hold 7 chars with H e l l o \n \0 in it.
+   The values of any other characters in the array are undefined.
+G. sz and line will be unchanged.
+H. None of the above.
+
