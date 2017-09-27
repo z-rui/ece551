@@ -1,0 +1,13 @@
+****************************************************
+**     REMINDER: starting now your  programs      **
+**     MUST valgrind cleanly for full credit!     **
+****************************************************
+
+Execute the code in test.c by hand.  As you execute this code,
+identify the lines on which memory leaks.  Write the line numbers
+down in a file called "leaks.txt" (one line number per line),
+then add calls to free to correct the code so it does not leak memory.
+
+The only changes you may make to this code to fix it are to add
+calls to free.  Check your work with valgrind.
+
