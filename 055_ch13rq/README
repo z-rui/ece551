@@ -1,0 +1,149 @@
+As always, read and understand Chapter 13, then answer these questions
+in "answers.txt".
+
+
+1. Writing a function is analogous to writing a:
+
+A. word
+B. sentence
+C. paragraph
+D. subsection
+E. section
+F. chapter
+G. book
+
+2. How many things can the typical human brain work 
+   with at one time?
+A. 1
+B. 3
+C. 7
+D. 11
+E. 15
+F. 19
+G. 23
+H. 50
+I. 101
+
+3. This limit on how many things the brain can work
+   on is important for designing programs because:
+
+A. Programmers love trivia
+B. It suggests the proper length of variable names.
+C. It suggests the proper size/complexity of functions.
+D. It suggests the number of files that we should divide our
+   code between.
+E. None of the above.
+
+4. Which of the following is NOT a guideline for documentation?
+
+A. Document every line.
+B. Describe each component.
+C. Do not comment the obvious
+D. Document large scale design.
+E. Explain the unexpected.
+F. More than one of these is NOT a guideline for documentation.
+G. None of the above (all are guidelines).
+
+5. If you copy something so that it is in two places in your code, then
+
+A. that is not a big deal, as long as it is in only two places (and no more).
+B. it is ok if (and only if) it is relatively simple code that is duplicated.
+C. that is always fine.
+D. you are likely to introduce bugs later when you change one but forget
+   to change the other.
+
+6. Of the following, which are advantages of "Java Style" bracing?
+
+   1. Uses more whitespace
+   2. Consistency in brace placement
+   3. Helps avoid errors when modifying code
+
+A. 1, 2, and 3
+B. 1 and 2 
+C. 1 and 3
+D. 2 and 3
+E. 1 only
+F. 2 only
+G. 3 only
+H. None of these 
+
+7. No matter what style you choose, you should always:
+
+A. Place the braces for compound initializers on their own lines.
+B. Put braces around single statement bodies of if/while/for/etc.
+C. Write a comment after every brace
+D. Write a comment before every open brace, and after ever close brace
+
+8. In pair programming, the two roles are
+
+A. Designer and implementer.
+B. Designer and tester.
+C. Implementer and tester.
+D. Driver and Navigator.
+E. Driver and Passenger.
+F. Driver and Lookout.
+G. Lookout and Navigator.
+H. Lookout and Passenger.
+
+Much of this chapter was devoted to the example program
+involving rosters and classes.  The next three questions
+all reference this example.
+
+9. In the roster example, what design/implementation strategy
+   was used?
+
+A. Bottom-up design, bottom-up implementation.
+B. Bottom-up design, top-down implementation.
+C. Top-down design, bottom-up implementation.
+D. Top-down design, top-down implementation.
+
+10. When using this implementation strategy, programmers
+    have to think carefully to test early (rather than trying
+    to write the whole program then test).  How was early
+    testing accomplished in this roster example?
+
+A. The authors wrote test stubs for the function they had
+   yet to write.
+B. The authors had sophisticated testing infrastructure
+   available from other projects.
+C. The authors stated that while testing was important,
+   they were skilled enough programmers to only test
+   at the end.
+D. The authors changed main to only read the input and
+   print it, rather than carrying out the later
+   steps in the algorithm.
+E. The authors used formal verification to prove their
+   code was correct, rather than testing.
+F. None of the above.
+
+
+11. At the end of the example, the authors have
+    written 14 functions to accomplish their task. 
+    What analysis do they give about these functions?
+
+     1. They should have written fewer to spend
+        less time writing the code.
+     2. Each function is small enough to be 
+        easily understandable.
+     3. This is a great example of abstraction
+        in action.
+     4. The code is much harder to modify than
+        if fewer functions were used.
+
+A. 1, 2, 3, and 4
+B. 1, 2, and 3.
+C. 1, 2, and 4.
+D. 1, 3, and 4.
+E. 2, 3, and 4.
+F. 1 and 2.
+G. 1 and 3.
+H. 1 and 4.
+I. 2 and 3.
+J. 2 and 4.
+K. 3 and 4.
+L. 1 only
+M. 2 only
+N. 3 only
+O. 4 only
+P. None of the above.
+
