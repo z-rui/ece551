@@ -63,17 +63,17 @@ void printBoard(board_t * b) {
     printf("%2d: ", y %100);
     for (int x = 0; x < b->width; x++) {
       if (b->board[y][x] == KNOWN_MINE) {
-	printf("*");
-	found++;
+        printf("*");
+        found++;
       }
       else if (b->board[y][x] < 0) {
-	printf("?");
+        printf("?");
       }
       else if (b->board[y][x] == 0) {
-	printf(" ");
+        printf(" ");
       }
       else {
-	printf("%d", b->board[y][x]);
+        printf("%d", b->board[y][x]);
       }
     }
     printf("\n");
@@ -140,7 +140,7 @@ int readInt(char ** linep, size_t * lineszp) {
   }
   if (*endptr != '\n') {
     fprintf( stderr, 
-	     "Input was not entirely a number (junk at end)\n");
+        "Input was not entirely a number (junk at end)\n");
     printf ("Please try again\n");
     return readInt (linep, lineszp);
   }
@@ -158,19 +158,19 @@ void doReveal(board_t * b, int x, int y, int revealMines){
       int nx = x + dx;
       int ny = y + dy;
       if (nx >= 0 && nx < b->width &&
-	  ny >= 0 && ny < b->height) {
-	if (revealMines) {
-	  assert(b->board[ny][nx] != UNKNOWN);
-	  if (b->board[ny][nx] == HAS_MINE){
-	    b->board[ny][nx] = KNOWN_MINE; 
-	  }
-	}
-	else  {
-	  assert(b->board[ny][nx] != HAS_MINE);
-	  if (b->board[ny][nx] == UNKNOWN) {
-	    b->board[ny][nx] = countMines(b,nx,ny);
-	  }
-	}
+          ny >= 0 && ny < b->height) {
+        if (revealMines) {
+          assert(b->board[ny][nx] != UNKNOWN);
+          if (b->board[ny][nx] == HAS_MINE){
+            b->board[ny][nx] = KNOWN_MINE; 
+          }
+        }
+        else  {
+          assert(b->board[ny][nx] != HAS_MINE);
+          if (b->board[ny][nx] == UNKNOWN) {
+            b->board[ny][nx] = countMines(b,nx,ny);
+          }
+        }
       }
     }
   }
@@ -184,14 +184,14 @@ int maybeReveal(board_t * b, int x, int y) {
       int nx = x + dx;
       int ny = y + dy;
       if (nx >= 0 && nx < b->width &&
-	  ny >= 0 && ny < b->height) {
-	if (b->board[ny][nx] == UNKNOWN || 
-	    b->board[ny][nx] == HAS_MINE) {
-	  unknownSquares++;
-	}
-	else if(b->board[ny][nx] == KNOWN_MINE) {
-	  knownMines++;
-	}
+          ny >= 0 && ny < b->height) {
+        if (b->board[ny][nx] == UNKNOWN || 
+            b->board[ny][nx] == HAS_MINE) {
+          unknownSquares++;
+        }
+        else if(b->board[ny][nx] == KNOWN_MINE) {
+          knownMines++;
+        }
       }
     }
   }
@@ -199,7 +199,7 @@ int maybeReveal(board_t * b, int x, int y) {
   assert(knownMines <= b->board[y][x]);
   if (unknownSquares > 0) {
     int revealMines = (knownMines + unknownSquares == 
-		       b->board[y][x]);
+        b->board[y][x]);
     int allKnown = knownMines == b->board[y][x];
     if(revealMines || allKnown) {
       assert(!revealMines || !allKnown);
@@ -214,7 +214,7 @@ void determineKnownMines(board_t * b) {
   for (int y = 0; y < b->height; y++) {
     for (int x = 0; x < b->width; x++) {
       if (b->board[y][x] >= 0) {
-	foundMore = maybeReveal(b,x,y) || foundMore;
+        foundMore = maybeReveal(b,x,y) || foundMore;
       }
     }
   }
@@ -227,7 +227,7 @@ void revealMines(board_t * b) {
   for (int y = 0; y < b->height; y++) {
     for (int x = 0; x < b->width; x++) {
       if (b->board[y][x] == HAS_MINE) {
-	b->board[y][x] = KNOWN_MINE;
+        b->board[y][x] = KNOWN_MINE;
       }
     }
   }
@@ -272,7 +272,7 @@ int main(int argc, char ** argv) {
   int numMines = atoi(argv[3]);
   if (width <= 0 || height <= 0 || numMines <= 0) {
     fprintf(stderr,
-	    "Width, height, and numMines must all be positive ints\n");
+        "Width, height, and numMines must all be positive ints\n");
     return EXIT_FAILURE;
   }
   char * line = NULL;
@@ -292,3 +292,5 @@ int main(int argc, char ** argv) {
   free(line);
   return EXIT_SUCCESS;
 }
+
+// vim: sw=2:ts=2:et
