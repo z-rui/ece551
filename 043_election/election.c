@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
-#include <float.h>
+#include <assert.h>
 //include any other headers you need here...
 
 state_t parseLine(const char * line)
@@ -11,18 +11,20 @@ state_t parseLine(const char * line)
 	const char *save, *p;
 	size_t namelen;
 
+	assert(line);
 	save = p = line;
 
 	/* name = [^:]+ */
 	/* I don't see an accurate spec,
-	 * but I would argue that this field
-	 * should be non-empty */
+	 * but I would argue that state names
+	 * should be non-empty.
+	 * PS: it is unofficially said
+	 * that this field can be empty. */
 	while (*p != ':') {
 		if (*p == '\0') goto error;
 		p++;
 	}
 	namelen = (size_t) (p - save);
-	if (namelen == 0) goto error;
 	if (namelen > MAX_STATE_NAME_LENGTH - 1) {
 		fprintf(stderr, "name too long: %zu > %zu\n",
 			namelen, (size_t) (MAX_STATE_NAME_LENGTH-1));
@@ -68,6 +70,8 @@ unsigned int countElectoralVotes(state_t * stateData, uint64_t * voteCounts, siz
 	unsigned count = 0;
 	size_t i;
 
+	assert(stateData);
+	assert(voteCounts);
 	for (i = 0; i < nStates; i++) {
 		/* no 2*x > y (potential overflow),
 		 * no x > 0.5*y (insufficient accuracy) */
@@ -83,6 +87,8 @@ void printRecounts(state_t * stateData, uint64_t * voteCounts, size_t nStates)
 {
 	size_t i;
 
+	assert(stateData);
+	assert(voteCounts);
 	for (i = 0; i < nStates; i++) {
 		uint64_t pop, vote;
 		uint64_t halfpop, pop_by_200;
@@ -120,7 +126,8 @@ void printLargestWin(state_t * stateData, uint64_t * voteCounts, size_t nStates)
 	long double this_percentage, largest_percentage = 0.0L;
 
 	/* Doing this while avoiding floating point is too hard.  :( */
-
+	assert(stateData);
+	assert(voteCounts);
 	for (i = 0; i < nStates; i++) {
 		this_percentage = (long double) voteCounts[i] / stateData[i].population;
 		if (this_percentage > largest_percentage) {
