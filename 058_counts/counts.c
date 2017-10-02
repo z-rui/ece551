@@ -68,7 +68,15 @@ void printCounts(counts_t * c, FILE * outFile) {
 }
 
 void freeCounts(counts_t * c) {
-  //WRITE ME
+  size_t i;
+  one_count_t *p;
+
+  for (i = 0; i < c->len; i++) {
+    p = &c->base[i];
+    free(p->key);
+  }
+  free(c->base);
+  free(c);
 }
 
 // vim: ts=2:sw=2:et
