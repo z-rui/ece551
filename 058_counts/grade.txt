@@ -1,0 +1,95 @@
+Grading at 10/02/2017:18:27:08.314860
+For commit ID 7ad957965169f196e19819937b9ebab26924c4fc
+Attempting to compile:
+#################################################
+testcase1:
+Your output is correct
+  - Valgrind reported errors
+valgrind was not clean
+==85539== Memcheck, a memory error detector
+==85539== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==85539== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==85539== 
+==85539== Parent PID: 85538
+==85539== 
+==85539== 
+==85539== HEAP SUMMARY:
+==85539==     in use at exit: 178 bytes in 9 blocks
+==85539==   total heap usage: 16 allocs, 7 frees, 4,610 bytes allocated
+==85539== 
+==85539== 178 (24 direct, 154 indirect) bytes in 1 blocks are definitely lost in loss record 3 of 3
+==85539==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==85539==    by 0x40084F: createCounts (in counts_test)
+==85539==    by 0x400B67: main (in counts_test)
+==85539== 
+==85539== LEAK SUMMARY:
+==85539==    definitely lost: 24 bytes in 1 blocks
+==85539==    indirectly lost: 154 bytes in 8 blocks
+==85539==      possibly lost: 0 bytes in 0 blocks
+==85539==    still reachable: 0 bytes in 0 blocks
+==85539==         suppressed: 0 bytes in 0 blocks
+==85539== 
+==85539== For counts of detected and suppressed errors, rerun with: -v
+==85539== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+#################################################
+testcase2:
+Your output is correct
+  - Valgrind reported errors
+valgrind was not clean
+==85556== Memcheck, a memory error detector
+==85556== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==85556== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==85556== 
+==85556== Parent PID: 85555
+==85556== 
+==85556== 
+==85556== HEAP SUMMARY:
+==85556==     in use at exit: 45 bytes in 3 blocks
+==85556==   total heap usage: 4 allocs, 1 frees, 4,141 bytes allocated
+==85556== 
+==85556== 45 (24 direct, 21 indirect) bytes in 1 blocks are definitely lost in loss record 3 of 3
+==85556==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==85556==    by 0x40084F: createCounts (in counts_test)
+==85556==    by 0x400B67: main (in counts_test)
+==85556== 
+==85556== LEAK SUMMARY:
+==85556==    definitely lost: 24 bytes in 1 blocks
+==85556==    indirectly lost: 21 bytes in 2 blocks
+==85556==      possibly lost: 0 bytes in 0 blocks
+==85556==    still reachable: 0 bytes in 0 blocks
+==85556==         suppressed: 0 bytes in 0 blocks
+==85556== 
+==85556== For counts of detected and suppressed errors, rerun with: -v
+==85556== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+#################################################
+testcase3:
+Your output is correct
+  - Valgrind reported errors
+valgrind was not clean
+==85576== Memcheck, a memory error detector
+==85576== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==85576== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==85576== 
+==85576== Parent PID: 85575
+==85576== 
+==85576== 
+==85576== HEAP SUMMARY:
+==85576==     in use at exit: 199 bytes in 10 blocks
+==85576==   total heap usage: 18 allocs, 8 frees, 4,743 bytes allocated
+==85576== 
+==85576== 199 (24 direct, 175 indirect) bytes in 1 blocks are definitely lost in loss record 3 of 3
+==85576==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==85576==    by 0x40084F: createCounts (in counts_test)
+==85576==    by 0x400B67: main (in counts_test)
+==85576== 
+==85576== LEAK SUMMARY:
+==85576==    definitely lost: 24 bytes in 1 blocks
+==85576==    indirectly lost: 175 bytes in 9 blocks
+==85576==      possibly lost: 0 bytes in 0 blocks
+==85576==    still reachable: 0 bytes in 0 blocks
+==85576==         suppressed: 0 bytes in 0 blocks
+==85576== 
+==85576== For counts of detected and suppressed errors, rerun with: -v
+==85576== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+Overall Grade: B
