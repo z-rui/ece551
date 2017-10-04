@@ -26,6 +26,7 @@ counts_t * countFile(const char * filename, kvarray_t * kvPairs) {
   }
   if (!feof(f)) {
     fprintf(stderr, "invalid input format");
+    exit(EXIT_FAILURE);
   }
   free(line);
   fclose(f);
