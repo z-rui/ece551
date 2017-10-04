@@ -25,7 +25,7 @@ counts_t * countFile(const char * filename, kvarray_t * kvPairs) {
     addCount(c, lookupValue(kvPairs, line));
   }
   if (!feof(f)) {
-    fprintf(stderr, "invalid input format");
+    fprintf(stderr, "invalid input format\n");
     exit(EXIT_FAILURE);
   }
   free(line);
@@ -37,7 +37,7 @@ int main(int argc, char ** argv) {
   kvarray_t *kv;
   int i;
   //WRITE ME (plus add appropriate error checking!)
-  if (argc < 1) {
+  if (argc <= 1) {
     fprintf(stderr, "need at least one argument\n");
     exit(EXIT_FAILURE);
   }
