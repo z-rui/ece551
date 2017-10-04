@@ -60,10 +60,10 @@ void printCounts(counts_t * c, FILE * outFile) {
 
   for (i = 0; i < c->len; i++) {
     p = &c->base[i];
-    printf("%s: %d\n", p->key, p->count);
+    fprintf(outFile, "%s: %d\n", p->key, p->count);
   }
   if (c->unknowns > 0) {
-    printf("<unknown> : %d\n", c->unknowns);
+    fprintf(outFile, "<unknown> : %d\n", c->unknowns);
   }
 }
 
