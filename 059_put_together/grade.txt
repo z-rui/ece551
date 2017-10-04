@@ -1,0 +1,44 @@
+Grading at 10/04/2017:17:57:54.778162
+For commit ID 0ed4894eebc8fb9601e2ab95e08a0a27444832d4
+Attempting to compile:
+rm -f  outname.o  counts.o  main.o  kv.o count_values *~
+gcc -c -Wall -Werror -std=gnu99 -pedantic -ggdb3 outname.c
+gcc -c -Wall -Werror -std=gnu99 -pedantic -ggdb3 counts.c
+gcc -c -Wall -Werror -std=gnu99 -pedantic -ggdb3 main.c
+gcc -c -Wall -Werror -std=gnu99 -pedantic -ggdb3 kv.c
+gcc -Wall -Werror -std=gnu99 -pedantic -ggdb3 -o count_values  outname.o  counts.o  main.o  kv.o
+#################################################
+testcase1:
+valgrind reported memory errors
+#################################################
+testcase2:
+Your file matched the expected output
+Comparing file list1a.txt.counts with answer
+Your output is correct
+Comparing file list1b.txt.counts with answer
+Your file matched the expected output
+Your output is correct
+  - Valgrind was clean (no errors, no memory leaks)
+valgrind was clean
+#################################################
+testcase3:
+Your file matched the expected output
+Comparing file list2a.txt.counts with answer
+Your output is correct
+Comparing file list2b.txt.counts with answer
+Your file matched the expected output
+Your output is correct
+Comparing file list2c.txt.counts with answer
+Your file matched the expected output
+Your output is correct
+  - Valgrind was clean (no errors, no memory leaks)
+valgrind was clean
+#################################################
+testcase4:
+Your file matched the expected output
+Comparing file list3a.txt.counts with answer
+Your output is correct
+  - Valgrind was clean (no errors, no memory leaks)
+valgrind was clean
+
+Overall Grade: B
