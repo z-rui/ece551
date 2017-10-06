@@ -1,0 +1,333 @@
+In this assignment, you will be producing your own, simplified version
+of the UNIX utility "stat", which provides information about a file.
+
+Before you get started, try out "stat" on some files.  For example,
+you might do "stat README" and get something like (but not exactly) this:
+
+  File: ‘README’
+  Size: 196		Blocks: 8          IO Block: 4096   regular file
+Device: fc00h/64512d	Inode: 801835      Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1001/    drew)   Gid: ( 1001/    drew)
+Access: 2016-05-30 12:12:12.020211296 -0400
+Modify: 2016-05-30 12:12:12.020211296 -0400
+Change: 2016-05-30 12:12:12.024211870 -0400
+ Birth: -
+
+You can see how big the file is, that it is a regular file, the permissions,
+who owns it, and when it was accessed (among other things).
+
+If you were to do stat on a directory (e.g., "stat ."), you would
+get information about the directory:
+
+  File: ‘.’
+  Size: 4096		Blocks: 8          IO Block: 4096   directory
+Device: fc00h/64512d	Inode: 801832      Links: 2
+Access: (0775/drwxrwxr-x)  Uid: ( 1001/    drew)   Gid: ( 1001/    drew)
+Access: 2016-05-30 12:12:14.044278298 -0400
+Modify: 2016-05-30 12:13:51.183029783 -0400
+Change: 2016-05-30 12:13:51.183029783 -0400
+ Birth: -
+
+Notice that now the type is "directory".  
+There are other types of files, which you could see if you were to do, e.g.,
+"stat /dev/null"
+
+  File: ‘/dev/null’
+  Size: 0		Blocks: 0          IO Block: 4096   character special file
+Device: 5h/5d		Inode: 6872        Links: 1     Device type: 1,3
+Access: (0666/crw-rw-rw-)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2016-05-27 06:55:17.993993052 -0400
+Modify: 2016-05-27 06:55:17.993993052 -0400
+Change: 2016-05-27 06:55:17.993993052 -0400
+ Birth: -
+
+You can learn more about "stat" by reading "man stat".  However, note that
+the real stat utility has many features that you will NOT be implementing.
+
+The other thing you will want to know a bit about before starting
+is how the stat utility gets this information about a file.  It uses
+(and you will use) the system call "lstat" which asks the operating
+system to give the program metadata about a requested file.
+
+As we proceed, you will want to make frequent reference to 
+
+  man lstat
+
+It may seem overwhelmingly long at first, but you will work through this
+in small steps.  Also note that this man page has an example of how to use
+the "stat" system call at the end (and "lstat" is used in exactly the same
+way).
+
+One thing to be mindful of when reading this manpage is that it
+appears to have many unfamiliar types (dev_t, ino_t, mode_t, nlink_t, etc),
+but they are generally just typedefs for an appropriately sized "int" (most are
+"long unsigned int").
+
+Now you are ready to start writing your program.  Your ultimate
+goal is to write a program called "mystat" which replicates the 
+functionality of the "stat" command without any options (that is, 
+you aren't going to do -t, -c, etc).  If you run "stat something"
+and "mystat something" they should produce exactly the same output.
+
+We have provided mystat.c, which has some #includes in it,
+as well as one function for Step 4.
+
+**Step 1 [20 points]
+  Your first goal is to make your mystat program accept exactly ONE
+  filename as a command line argument, and print out the first
+  THREE lines of the output that "stat" would print for that file.
+
+For example, "mystat README" might produce output like this:
+
+  File: ‘README’
+  Size: 2825		Blocks: 8          IO Block: 4096   regular file
+Device: fc00h/64512d	Inode: 801829      Links: 1
+
+To avoid issues figuring out exactly how the whitespace is formatted, here are the correct
+format strings for printf for these three lines:
+
+  "  File: ‘%s’\n"       
+  "  Size: %-10lu\tBlocks: %-10lu IO Block: %-6lu %s\n"
+  "Device: %lxh/%lud\tInode: %-10lu  Links: %lu\n"
+
+Note that stat uses ‘’ around the filename in the first line, not '', and you should too.
+In the second line:
+  - The first % conversion is the total size, in bytes
+   (look at man lstat to figure out what to pass as the converted argument).  
+  - The second % conversion is the number of 512B blocks allocated to the file (again, see man lstat)
+  - The third % conversion is the blocksize for filesystem I/O
+  - The fourth % conversion is a description of the file type.
+   The file type is some of the bits in the st_mode field ( AND it with S_IFMT).
+   You can compare that result to several defined constants to figure out what
+   to print:
+
+    S_IFBLK  -> "block special file"
+    S_IFCHR  -> "character special file"
+    S_IFDIR  -> "directory"
+    S_IFIFO  -> "fifo"
+    S_IFLNK  -> "symbolic link"
+    S_IFREG  -> "regular file"
+    S_IFSOCK -> "socket"
+
+In the third line:
+  - The first and second % conversions are the ID of the device containing the file
+  - The third % conversion is the inode number
+  - The fourth % conversion is the number of hard links.
+
+
+Implement and test that before proceeding (hint: abstract things out
+into functions!).
+    - Do NOT "grade" yet.  You only get to grade once for this assignment.
+    - DO git commit often as you make progress.
+       - If you run low on time with a broken mess, you can go back to
+         to an old commit which has working code.
+
+**Step 2 [20 points]
+  Your next goal is to add part of the the FOURTH line of output from stat.  This line
+might look like:
+
+Access: (0664/-rw-rw-r--)  Uid: ( 1001/    drew)   Gid: ( 1001/    drew)
+
+However, you are only going to do the "Access" part in this step, 
+so use this format string for now:
+
+ "Access: (%04o/%s)\n"
+
+
+The two percent conversions in this steps are:
+  (1) The permissions in octal.  These come from st_mode & ~S_IFMT.
+      (That is, all the bits of st_mode except the ones for the file
+       type).
+  (2) The human readable description of the permissions (plus
+      one character for file type).  This string always has 10 characters:
+
+        - The first is either 'b','c', 'd', 'p', 'l', '-', or 's' depending 
+          on the file type (corresponding to S_IFBLK, S_IFCHR, S_IFDIR, S_IFIFO, 
+          S_IFLNK, S_IFREG, S_IFSOCK in that order)
+        - The second is either 'r' or '-' depending on if the file
+          is readable by the owner.   To figure this out, 
+          look at st_mode & S_IRUSR.  If that value is non-zero,
+          the owner has read permission, and you should put 'r' here.
+          Otherwise, the owner cannot read it, and you should put '-' here.
+        - The third is either 'w' or '-' depending on if the file
+          is writeable able by the owner.  This is similar to the
+          previous, but the bit to check is S_IWUSR.
+        - The fourth is either 'x' or '-' depending on if the
+          file is executable by the owner (S_IXUSR)
+        - The next three (5,6,7) are similar to the previous
+          three, but for the group rather than the owner.
+          They will be r/-, w/-, and x/- based on 
+          S_IRGRP, S_IWGRP, and S_IXGRP respectively.
+        - The next three (8,9,10) follow the same pattern,
+          but with S_IROTH, S_IWOTH, and S_IXOTH  (for "other"
+          instead of user/group).
+
+Test and commit before proceeding!
+
+**Step 3 [20 points]
+Now you will finish this fourth line.  The format string for
+the full line is:
+
+ "Access: (%04o/%s)  Uid: (%5d/%8s)   Gid: (%5d/%8s)\n"
+
+You have already done the first two conversion (from Step 2).
+The remaining ones to implement are:
+  (3) The user ID of the owner, as a number.
+  (4) This string is the name of the owner.  You will need to use
+
+          struct passwd *getpwuid(uid_t uid);
+ 
+      to look up the user's name from their uid.  See "man getpwuid"
+      for information about "struct passwd", so you can find out
+      how to get the user name out of it.
+  (5) The group ID of the owning group, as a number.
+  (6) This string is the group name of the owning group.  You will need to
+      use
+
+          struct group *getgrgid(gid_t gid); 
+
+      to look up the group's name from their gid.  See "man getgrgid".
+
+As always, test and commit before proceeding!
+
+***Step 4 [10 points]
+Now you are going to add the last four lines of output:
+
+
+Access: 2016-05-30 12:21:34.372150942 -0400
+Modify: 2016-05-30 12:58:49.647474442 -0400
+Change: 2016-05-30 12:58:49.647474442 -0400
+ Birth: -
+
+which use the following format strings:
+  "Access: %s\n";
+  "Modify: %s\n";
+  "Change: %s\n";
+  " Birth: -\n";
+
+
+For the first three of these, we have provided the time2str
+function, which formats the time for you.  If "sbuf" is your
+struct stat, you can call this function like this:
+
+
+  char *timestr =   time2str(timestr, 
+                             &sbuf.st_atime, 
+                             sbuf.st_atim.tv_nsec);
+
+This call will fill in timestr with the formatted time for the 
+access time.  You can then print timestr out.  Note that
+time2str mallocs its answer, so you need to free it.
+
+Note that for each of the files (st_atime, st_mtime, st_ctime),
+there is also an st_atim.tv_nsec, st_mtim.tv_nsec, and st_ctim.tv_nsec
+[where these do not have an 'e' on the end of 'time'].  These
+are described in the notes at the bottom of the man pages.
+
+Note that for "Birth" you will always just produce "-",
+as "stat" does too.
+
+Test and commit before proceeding!
+
+
+**Step 5 [10 points]
+
+ Up to this point, your program has taken ONE command line argument,
+ however, the real stat program takes an arbitrary number of arguments,
+ and stats each one.  For example, you can run "stat README . /dev/null"
+ and it will print the information for all three files one after
+ the other. 
+
+ For this step, change your program so that it accept any number
+ of arguments on the command line, and print information for each of them.
+
+Test and commit before proceeding!
+
+**Step 6 [10 points]
+
+  If you run "mystat /dev/null" and "stat /dev/null" you will notice
+  a difference in the third line of output:
+
+stat:   Device: 5h/5d  Inode: 6872        Links: 1     Device type: 1,3
+mystat: Device: 5h/5d  Inode: 6872        Links: 1
+
+Your goal in this step is to fix this discrepancy, by checking
+if the file you stated is a device (either the S_ISCHR or the S_ISBLK macro
+returns true), and if so, using the following format for the third line:
+
+   "Device: %lxh/%lud\tInode: %-10lu  Links: %-5lu Device type: %d,%d\n"
+
+These two new % conversions are for the "major" and "minor" numbers of the
+file's device ID. As "man lstat" explains, the "major" and "minor" functions
+are useful for splitting a device number into these two components.
+
+**Step 7 [10 points]
+
+  The final discrepancy between "mystat" and "stat" is in the first  
+  line of output if the file is a symbolic link.  In particular,
+  stat prints and -> and the target of the link, whereas mystat
+  does not (yet).
+
+stat:   File: ‘/dev/fd’ -> ‘/proc/self/fd’
+mystat: File: ‘/dev/fd’
+
+  In this final step, you will make mystat check if the
+  file is a symbolic link (use the S_ISLNK macro), and if so,
+  use the following format: 
+
+   "  File: ‘%s’ -> ‘%s’\n"
+
+  To get the target of the link (that is, what the symbolic link
+  is a link to), use 
+
+       ssize_t readlink(const char *path, char *buf, size_t bufsiz);
+
+  which you can read about in "man -S2 readlink".
+
+  Note that readlink does *NOT* null terminate the buffer that it fills
+  in, so you will need to do that.  You can figure out where to put
+  the null terminator character ('\0') based on the size returned 
+  from readlink (it will tell you how many character it put in.
+
+  You should make the output string have space for
+  256 characters, and can call readlink like this:
+
+   char linktarget[256];
+   ssize_t len = readlink(fname, linktarget, 256);
+   //you should then write some code here to add a null terminator!
+
+   //after you do that, linktarget is the string you can print
+
+Once you finish all of these steps, and have tested your code
+(and it valgrinds cleanly), commit it, push it, and grade it.
+
+NOTE: we have provided a script called "test.sh" which takes one command
+line arugment, and runs your stat, runs the real stat, and diffs the output.
+You should use this to make sure that your output matches the real stat
+for a variety of test cases before you submit!
+
+======Reminders about the rules============
+
+ - Your work must be your own!
+ - You may NOT consult with other students about
+    o high level approaches
+    o how to implement your algorithm in code
+    o how to debug your code
+  (Basically, you may not discuss anything 
+   particular to this assignment).
+ - You may NOT look at another student's code,
+   nor show your code to anyone else.
+ - You are responsible for keeping your code
+   private.
+ - You may not look for solutions to this
+   or similar problems online.
+ - You may not use code from any other source.
+
+ + You MAY consult All of Programming 
+ + You MAY consult notes you wrote in your notebook.
+ + You MAY consult the man pages.
+ + You MAY ask the professor or TAs for clarification 
+   on the assignment.
+ + You MAY consult online resources about Unix
+   filesystems, permissions, etc, as long as you
+   do not make use of code from these resources.
