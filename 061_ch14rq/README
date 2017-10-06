@@ -1,0 +1,114 @@
+As always, read and understand Chapter 14, then answer these questions
+in "answers.txt".
+
+1. In the coming chapters, you are going to learn...
+
+A. ...all the complex details of C++.
+B. ...everything you need to be an expert C++11 programmer.
+C. ...where the C++ language standard defines each term you learn.
+D. ...important programming and OO concepts in C++.
+
+2. What does 
+    extern "C" {
+      //declarations
+    }
+    mean?
+
+A. The names declared in "declarations" should not be mangled.
+B. The given declarations are from langauges external to C.
+C. The Makefile commands in "declarations" should be used to build
+   some external C programs.
+D. None of the above.
+
+
+For questions 3 and 4, consider the following code fragment:
+
+class Xyz {
+  //other things ommitted..
+  void someMethod(int x) {
+    //method body ommitted.
+  }
+};
+
+3. How many parameters does the "someMethod" method in class Xyz shown
+   above take?
+
+A. 0
+B. 1
+C. 2
+D. 3
+
+4. Inside the body of someMethod, what is the type of "this"?
+
+A. Xyz *
+B. const Xyz *
+C. Xyz * const
+D. const Xyz * const 
+E. None of the above
+
+5. Which of the following types is illegal?
+
+A. int &
+B. int & *
+C. int * &
+D. const int &
+
+
+
+6. Which "part of speech" do classes correspond to?
+
+A. Nouns
+B. Verbs
+C. Adjectives
+D. Adverbs
+
+7. Which "part of speech" do methods correspond to?
+
+A. Nouns
+B. Verbs
+C. Adjectives
+D. Adverbs
+
+8. Which of the following terms describes a type which can
+   be directly turned into a C struct (i.e., is just a sequence
+   of fields in memory):
+
+A.  Virtual
+B.  Raw
+C.  C-ty
+D.  POD
+E.  const
+
+
+9. "Under the hood" a reference is..
+
+A. A pointer
+B. A struct
+C. A union
+D. A float (in C++03 or earlier, but a double in C++11 or later)
+
+10. In C++, the :: operator is called the
+
+A. indirect reference operator
+B. namespace decharacterization operator
+C. bitwise cast operator
+D. scope resolution operator
+
+
+11. What characteristic must a reference have in order for it to
+    be legal to initialize it from something that is not an lvalue?
+
+A. It must reference a POD type
+B. It must reference a const type
+C. It must reference a struct or class type
+D. It must reference an int type
+
+
+12. What does it mean to add "const" between the ) and { of a method declaration
+    that is, int foo(void) const  {...}?
+
+A. The method should be consantly called.
+B. The object pointed to by "this" is const.
+C. The return type is const.
+D. The method may not modify any global state.
+
