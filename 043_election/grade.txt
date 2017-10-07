@@ -1,4 +1,4 @@
-Grading at 10/07/2017:14:20:13.552609
+Grading at 10/07/2017:16:05:57.556838
 For commit ID b7a51a20ce2e0519510f7cfa0a9be6d25aa83651
 election.c exists (good)
 Attempting to compile election.c
