@@ -1,0 +1,8 @@
+Grading at 10/11/2017:18:23:01.425059
+For commit ID de4b42bb061c83dd8bd7c890cd95f20638f23314
+Attempting to compile:
+g++ -Wall -Wextra -Werror -o code code.cpp
+Your file matched the expected output
+Your output matched what we expected
+
+Overall Grade: PASSED
