@@ -1,0 +1,57 @@
+This problem can be used as great practice in 
+thinking about how to test a program.  (We will also
+note that this is a great example of why programmers
+should understand probability).
+
+First: ponder what you would do to check the correctness
+of your program if I had not given you sample inputs
+or outputs (or put a different way: how would I have
+checked the correctness of *my* program that generated them)?
+
+As usual, you can work instances of the problem yourself,
+by hand---but the crux of the "area of the intersection of
+two circles" is a bunch of math that you were probably not
+familiar with before this problem.  If you misunderstood
+the math, you would come up with the same wrong answer
+by hand as in your implementation!
+
+It would be great if we could find another way to come
+up with (or closely approxmiate) the answer.  If we can do so
+in an automated way, we can automate random testing, and
+become much more confident in the correctness of our program.
+
+Here, another way we could come up with a good approximation
+of the answer is to use a Monte Carlo method.  Monte Carlo
+methods are the general set of algorithms which involve
+using many random samples to approximate an answer.
+
+For this particular problem, we could approximate the
+area of the intersection of the two circles by 
+
+ (1) Computing a shape of known area (e.g., a rectangle or cicle)
+     which we are certain fully encloses the area of interest.
+ (2) Picking a large number (e.g., 300 Million) of points within
+     this shape, and testing if they fall in the area of interest.
+     Note that checking if a given point is within a circle is
+     quite simple given that we already wrote a function to compute
+     the distance between two points.   Once we can test if a 
+     point is within one circle, testing if it is in the intersection
+     is just a matter of &&ing together the test for each circle.
+     We count the number of points which are in the area of interest.
+ (3) We then take the ratio of
+         (points inside the area) / (total points tested)
+     and multiply it by the area of the known shape.  The restulting answer
+     approximates the area of the intersection.  The accuracy of this
+     approximation increases as we increase the total number of points
+     used.
+
+If you want to (it is NOT part of your homework grade), you can
+try writing a Monte Carlo approximation of the area and comparing its
+answers to your exact solutions.  For 300 Million samples, my
+Monte Carlo approximation has an error less than 0.001 for all of
+the test cases in input1.txt.   Your exact accuracy will vary based
+on what you do, but should be quite small.
+
+ 
+
+

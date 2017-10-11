@@ -1,0 +1,46 @@
+For this problem, you will make a "Circle" class which makes use of your "Point"
+class from 067_point.  Start by symlinking point.h and point.cpp from 067_point into the
+current directory:
+
+ ln -s ../067_point/point.h 
+ ln -s ../067_point/point.cpp
+
+Now write a circle.h file, which declares the class Circle. 
+Your circle class should have two private fields:
+
+ - A Point for the center   (remember: Point is a type, so we can have a field whose  
+                                       type is "Point")
+ - A const double for the radius
+
+Your circle should then have three pieces of public functionality:
+
+ (1) A constructor which takes a Point and a dobule, and initializes the 
+     center and radius from them.  Note that you should use an initializer list
+     for both fields, and will *have to* use for the const radius field.
+ (2) The method:
+        void move (double dx, double dy)
+     which moves the circle's center by <dx,dy> (hint: Point already has a move method)
+
+ (3) The method 
+
+       double intersectionArea(const Circle & otherCircle)
+
+     which computs the area of the intersection of this circle and otherCircle.
+     Note that if you lack the domain knowledge for this problem, you can
+     (and should) find it on the Internet before you begin the problem!
+
+Declare these methods and constructor in your Circle class (in circle.h), 
+and implement them in circle.cpp.
+
+Create a "Makefile" which will compile your code into a program called "circles."
+Use the provided main.cpp which has a main function that reads input from stdin.
+The input it reads starts with a line containing the number of circles to have.
+The next (ncircles) lines describe a circle with three doubles: x y radius.
+After that, there are 0 or more commands, "i c1 c2" or "m cnum dx dy".  The
+first prints the area of intersection of circles c1 and c2 (where these are numbers
+which specify which circle).  The second moves circle cnum by <dx,dy>.
+
+We have provided a sample input (input1.txt) and output (output1.txt).
+
+
+If you want to do some ungraded extra practice, see the EXTRA-PRACTICE-README.
