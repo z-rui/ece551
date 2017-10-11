@@ -1,0 +1,35 @@
+For this problem, you will write a "Point" class in point.h and point.cpp.
+The Point class will represent a 2-D point (i.e., it has an x and a y).
+The class should have fields for the x and y, which should be private doubles.
+
+The Point class must have the following public functionality:
+
+ - A default constructor, which initializes the point's x and y to 0.
+ - The method
+     void move(double dx, double dy);
+   which increases the point's x by dx, an its y by dy.
+ - The method
+     double distanceFrom(const Point & p);
+   which takes a constant reference to another point, and computes the distance
+   between the two points.  If you do not remember the formula for the distance
+   between two points, you should be able to find this domain knowledge easily
+   on the Internet.
+
+
+We have provided a main function (in main.cpp) which makes use of your Point class.
+Specifically, it reads input from stdin, where the first line tells it how many
+Points to create.  It then reads one command per line until end of input, where
+a command is either 
+
+m pnum dx dy
+
+or
+
+d p1 p2
+
+The first moves the point specified by pnum (which is an int) by <dx,dy> (which
+are floats).   The second prints the distance between the points specified by p1
+and p2 (which are ints).
+
+We have already provided a sample input (input1.txt) and sample output (output1.txt)
+ 
