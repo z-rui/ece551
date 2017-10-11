@@ -1,0 +1,145 @@
+As always, read and understand Chapter 15, then answer these questions
+in "answers.txt".
+
+1. What does "this" point at during a constructor's execution?
+
+A. Nothing (it is NULL).
+B. The object being created.
+C. The object being destroyed.
+D. A temporary object which goes out of scope at the end of the constructor.
+
+
+2. Which of the following is the correct return type to use when declaring a 
+   constructor?
+
+A. void
+B. int
+C. The class it resides in
+D. None of the above
+
+3. What is the proper way to name a destructor?
+
+A. Dtor
+B. dtor
+C. The name of the class it resides in
+D. A tilde followed by the name of the class it resides in.
+
+4. Instead of using free, in C++ you should use:
+
+A. std::free
+B. std::cppfree
+C. delete
+D. delete_object
+
+5. What is the difference between
+
+    new ClassName;
+and
+    new ClassName(); 
+
+A. Without parenthesis, you use value initialization; with parenthesis, you
+   use default initialization.
+B. Without parenthesis, you do not call the constructor for ClassName,
+   but with them you call the constructor.
+C. They behave exactly the same in all circumstances.
+D. If ClassName has a default constructor, they will both behave the same.
+   Otherwise, it is complicated.
+
+6. What is the difference between using an initializer list and 
+   assigning to fields in a constructor?
+
+A. An initializer list is the only way to initialize a const field.
+B. An initializer list is the only way to initialize a reference field.
+C. Only the initializer list performs initialization.  Anything
+   which you assign to in the constructor is assignment.  Assignment
+   and initialization are quite different in C++.
+D. All of the above.
+
+7. Consider the following 
+
+ 1. Make your classes default constructible. 
+ 2. Initialize the fields of your class with assignment statements in the constructor's
+    body.
+ 3. Only initialize the fields you need to: do not waste time initializing the others.
+ 4. Initialize the fields in the order they are declared. 
+
+Which of the above statements describe the best practices that you should follow
+for writing a constructor?
+
+A. 1, 2, 3, and 4.
+B. 1, 2, and 3.
+C. 1, 2, and 4.
+D. 1, 3, and 4.
+E. 2, 3, and 4.
+F. 1 and 2.
+G. 1 and 3.
+H. 1 and 4.
+I. 2 and 3.
+J. 2 and 4.
+K. 3 and 4.
+L. 1 only.
+M. 2 only.
+N. 3 only.
+O. 4 only.
+P. None of these.
+
+8. If a class has a destructor, when is that class's destructor invokved?
+
+A. Only when you use the delete (or delete[]) operator on an object of that class.
+B. Whenever a box for an object of that type is about to be destroyed.
+C. At the completion of the class's copy constructor.
+D. When the "this" pointer goes out of scope.
+
+9. Suppose that class Abc has a copy constructor, a copying assignment
+   operator, and a default constructor.  Assume that 
+   abc1 has type Abc, and has been declared and intiailized previously.
+   Consider the following line of code:
+
+    Abc abc2 = abc1;
+
+   which of the members of Abc described above will be invoked
+   for this line of code?
+
+A.  The copy constructor.
+B.  The copying assignment operator.
+C.  The default constructor.
+D.  The default constructor, THEN the copying assignment operator.
+
+10.  Which of the following is the correct way to declare the copy
+     constructor for class Abc?
+
+A.  Abc(Abc rhs)
+B.  Abc(const Abc & rhs)
+C.  Abc(const Abc * rhs)
+D.  None of the above
+
+11. Suppose you are writing a copying assignment operator, whose
+    argument is a const reference called rhs.  Which of the following 
+    is important to test before making any modifications to the object?
+
+A. *this != *rhs
+B. *this !=  rhs
+C. *this != &rhs
+D.  this != *rhs
+E.  this !=  rhs
+F.  this != &rhs
+G. &this != *rhs
+H. &this !=  rhs
+I. &this != &rhs
+
+12.  When should you use the keyword "explicit"?
+
+A. For any constructor you write, except the default constructor
+B. For any constructor you write which takes one argument
+C. For any constructor you write, except the copy constructor
+D. For any constructor you write that takes one argument, except the copy constructor.
+
+13. What is the rule of three?
+
+A. You should use at least three test cases on each class.
+B. You should use at least three test caess on each method.
+C. You should always write a default constructor, copy constructor, and conversion 
+   constructor in every class.
+D. If you write any of a copy constructor, copying assignment operator, 
+   or destructor, you should write all three of them.
+
