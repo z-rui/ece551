@@ -1,0 +1,11 @@
+Consider the code in the enclosed file, "code.cpp".
+Suppose, you were to know that when this code is run,
+the three variables of type MyClass in main's frame
+(a,b,and c) were to have the following addresses:
+
+a : 0x4050
+b : 0x4080
+c : 0x40B0
+
+What would the output of the code be?
+Put the output in a file called "answer.txt"
