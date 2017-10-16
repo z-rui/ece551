@@ -277,7 +277,7 @@ the previous one.
   struct group *gr;
 
   gr = getgrgid(st.st_gid);
-  printf("   Gid: (%5d/%8s)", st.st_uid, gr->gr_name);
+  printf("   Gid: (%5d/%8s)", st.st_gid, gr->gr_name);
 }
 
 
