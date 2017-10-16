@@ -36,6 +36,7 @@ I may want to include more when needed.
 
 @ And a |time2str| function is provided, too.
 
+@s tm int
 @<definitions@>=
 //This function is for Step 4
 char * time2str(const time_t * when, long ns) {
@@ -105,6 +106,7 @@ The README said I should use the fancy quotes ({\tt `'}).
 However, this specification is later changed (see Piazza @@366),
 and I should use ordinary quotes ({\tt \char13\char13}) instead.
 
+@s stat int
 @<definitions@>+=
 int printstat(const char *filename)
 {
@@ -263,6 +265,7 @@ Be careful about the leading spaces in the output.
 They are here to separate the current field from
 the previous one.
 
+@s passwd int
 @<print the fields in the fourth ...@>+=
 {
   struct passwd *pw;
@@ -272,6 +275,8 @@ the previous one.
 }
 
 @ Then ``Gid''.  This time use |getgrgid|.
+
+@s group int
 @<print the fields in the fourth ...@>+=
 {
   struct group *gr;
@@ -295,7 +300,8 @@ into a separate function |print_timeinfo|.
   print_timeinfo("Change", &st.st_ctim);
   printf(" Birth: -\n"); /* ``Birth'' line is always this */
 
-@ @<declarations@>+=
+@ @s timespec int
+@<declarations@>+=
 void print_timeinfo(const char *what, const struct timespec *when);
 
 @ |print_timeinfo| uses the provided |time2str| function

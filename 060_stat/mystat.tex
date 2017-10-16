@@ -1,0 +1,467 @@
+\input cwebmac
+
+
+% Sometimes I just cite the text in README.
+% I make it narrower so it is more obvious.
+\def\cite{\par\smallskip \leftskip=.5in \rightskip=.5in}
+
+
+\N{1}{1}Introduction.
+This is the source for assignment 060.
+Here's some instructions from README:
+
+{\cite
+In this assignment, you will be producing your own, simplified version
+of the UNIX utility \.{stat}, which provides information about a file.
+\dots
+Your ultimate
+goal is to write a program called \.{mystat} which replicates the
+functionality of the \.{stat} command without any options (that is,
+you aren't going to do \.{-t}, \.{-c}, etc).  If you run \.{stat something}
+and \.{mystat something} they should produce exactly the same output.
+
+}
+
+\fi
+
+\M{2}Below are some header files already included in \.{mystat.c}.
+I may want to include more when needed.
+
+\Y\B\4\X2:headers\X${}\E{}$\6
+\8\#\&{include} \.{<sys/types.h>}\6
+\8\#\&{include} \.{<sys/stat.h>}\6
+\8\#\&{include} \.{<time.h>}\6
+\8\#\&{include} \.{<stdio.h>}\6
+\8\#\&{include} \.{<stdlib.h>}\6
+\8\#\&{include} \.{<ctype.h>}\6
+\8\#\&{include} \.{<pwd.h>}\6
+\8\#\&{include} \.{<grp.h>}\6
+\8\#\&{include} \.{<unistd.h>}\par
+\A6.
+\U4.\fi
+
+\M{3}And a \PB{\\{time2str}} function is provided, too.
+
+\Y\B\4\X3:definitions\X${}\E{}$\SHC{This function is for Step 4 }\6
+\&{char} ${}{*}{}$\\{time2str}(\&{const} \&{time\_t} ${}{*}\\{when},\39{}$%
+\&{long} \\{ns})\1\1\2\2\6
+${}\{{}$\1\6
+\&{char} ${}{*}\\{ans}\K\\{malloc}(\T{128}*{}$\&{sizeof} ${}({*}\\{ans}));{}$\6
+\&{char} \\{temp1}[\T{64}];\6
+\&{char} \\{temp2}[\T{32}];\6
+\&{const} \&{struct} \&{tm} ${}{*}\|t\K\\{localtime}(\\{when});{}$\7
+${}\\{strftime}(\\{temp1},\39\T{512},\39\.{"\%Y-\%m-\%d\ \%H:\%M:\%S"},\39%
+\|t);{}$\6
+${}\\{strftime}(\\{temp2},\39\T{32},\39\.{"\%z"},\39\|t);{}$\6
+${}\\{snprintf}(\\{ans},\39\T{128},\39\.{"\%s.\%09ld\ \%s"},\39\\{temp1},\39%
+\\{ns},\39\\{temp2});{}$\6
+\&{return} \\{ans};\6
+\4${}\}{}$\2\par
+\As7, 15, 18\ETs25.
+\U4.\fi
+
+\M{4}The whole program will look like this:
+
+\Y\B\X2:headers\X\6
+\X14:declarations\X\6
+\X3:definitions\X\6
+\X5\*:main program\X\par
+\fi
+
+\N{1}{5\*}Step 1.  As in README:
+
+{\cite
+Your first goal is to make your mystat program accept exactly ONE
+filename as a command line argument, and print out the first
+THREE lines of the output that \.{stat} would print for that file.
+
+}
+
+In Step~1, I wrote a main function that only needs to process \PB{\\{argv}[%
+\T{1}]}.
+
+In Step~5, README says
+{\cite
+Up to this point, your program has taken ONE command line argument,
+however, the real stat program takes an arbitrary number of arguments,
+and stats each one.  For example, you can run \.{stat README . /dev/null}
+and it will print the information for all three files one after
+the other.
+
+}
+
+So finally the \PB{\\{main}} function here is able to handle multiple
+arguments.
+
+\Y\B\4\X5\*:main program\X${}\E{}$\6
+\&{int} \\{main}(\&{int} \\{argc}${},\39{}$\&{char} ${}{*}{*}\\{argv}){}$\1\1\2%
+\2\6
+${}\{{}$\1\6
+\&{int} \|i;\6
+\&{int} \\{rc}${}\K\.{EXIT\_SUCCESS};{}$\7
+\&{if} ${}(\\{argc}<\T{2}){}$\5
+${}\{{}$\C{ \.{stat} is run without arguments }\1\6
+${}\\{fprintf}(\\{stderr},\3{-1}\39\.{"stat:\ missing\ opera}\)\.{nd\\n"}\3{-1}%
+\.{"Try\ 'stat\ --help'\ f}\)\.{or\ more\ information.}\)\.{\\n"});{}$\6
+\&{return} \.{EXIT\_FAILURE};\6
+\4${}\}{}$\2\6
+\&{for} ${}(\|i\K\T{1};{}$ ${}\|i<\\{argc};{}$ ${}\|i\PP){}$\5
+${}\{{}$\1\6
+\&{if} ${}(\\{printstat}(\\{argv}[\|i])\I\T{0}){}$\5
+${}\{{}$\1\6
+${}\\{rc}\K\.{EXIT\_FAILURE}{}$;\C{ \.{stat} returns failure if any argument
+caused an error }\6
+\4${}\}{}$\2\6
+\4${}\}{}$\2\6
+\&{return} \\{rc};\6
+\4${}\}{}$\2\par
+\U4.\fi
+
+\M{6}Before proceeding, I think there are some headers very useful.
+
+\Y\B\4\X2:headers\X${}\mathrel+\E{}$\6
+\8\#\&{include} \.{<assert.h>}\C{ \PB{\\{assert}} }\6
+\8\#\&{include} \.{<string.h>}\C{ \PB{\\{strcpy}}, \PB{\\{strerror}}, etc. }\6
+\8\#\&{include} \.{<errno.h>}\C{ \PB{\\{errno}} }\par
+\fi
+
+\M{7}\PB{\\{printstat}} is the \.{stat} program for a single file.
+For example, passing \PB{\.{"README"}} to it might produce output like this:
+{\smallskip\tt\settabs 4\columns
+\+File: `README'\cr
+\+Size: 2825&           Blocks: 8&      IO Block: 4096& regular file\cr
+\+Device: fc00h/64512d& Inode: 801829&  Links: 1\cr
+\smallskip}
+
+\noindent{\bf Note}\quad
+The README said I should use the fancy quotes ({\tt `'}).
+However, this specification is later changed (see Piazza @366),
+and I should use ordinary quotes ({\tt \char13\char13}) instead.
+
+\Y\B\4\X3:definitions\X${}\mathrel+\E{}$\6
+\&{int} \\{printstat}(\&{const} \&{char} ${}{*}\\{filename}){}$\1\1\2\2\6
+${}\{{}$\1\6
+\&{struct} \&{stat} \\{st};\7
+\X8:read stats into \PB{\\{st}}\X\6
+\X9\*:print formatted stats\X\6
+\&{return} \T{0};\C{ no error happened }\6
+\4${}\}{}$\2\par
+\fi
+
+\M{8}I can make use of the \PB{\\{lstat}} system call to read the stats
+into a \PB{\&{struct} \&{stat}}.
+
+Before printing anything, I need to check if the call succeeded.
+(Things like nonexistent file or permission denied might happen.)
+
+\Y\B\4\X8:read stats into \PB{\\{st}}\X${}\E{}$\6
+\&{if} ${}(\\{lstat}(\\{filename},\39{\AND}\\{st})\I\T{0}){}$\5
+${}\{{}$\C{ \PB{\\{lstat}} returns non-zero on error }\1\6
+${}\\{fprintf}(\\{stderr},\39\.{"stat:\ cannot\ stat\ '}\)\.{\%s':\ \%s\\n"},%
+\39\\{filename},\39\\{strerror}(\\{errno}));{}$\6
+\&{return} \\{errno};\C{ don't call \PB{\\{exit}}; real \.{stat} program
+proceeds        and deals with other files }\6
+\4${}\}{}$\2\par
+\U7.\fi
+
+\M{9\*}On the first line I only need to print the filename.
+
+But (in step 7) when the file is a symbolic link,
+I should also output what it links to.
+\Y\B\4\X9\*:print formatted stats\X${}\E{}$\6
+\&{if} ${}(\.{S\_ISLNK}(\\{st}.\\{st\_mode})){}$\5
+${}\{{}$\C{ file is a symbolic link }\1\6
+\&{char} \\{buf}[\T{256}];\6
+\&{ssize\_t} \\{len};\7
+${}\\{len}\K\\{readlink}(\\{filename},\39\\{buf},\39\T{256});{}$\6
+${}\\{assert}(\\{len}\G\T{0}){}$;\C{ negative length does not make sense }\6
+\&{if} ${}(\\{len}>\T{255}){}$\5
+${}\{{}$\1\6
+${}\\{buf}[\T{255}]\K\.{'\\0'};{}$\6
+\4${}\}{}$\2\6
+\&{else}\5
+${}\{{}$\1\6
+${}\\{buf}[\\{len}]\K\.{'\\0'};{}$\6
+\4${}\}{}$\2\6
+${}\\{printf}(\.{"\ \ File:\ '\%s'\ ->\ '\%s}\)\.{'\\n"},\39\\{filename},\39%
+\\{buf});{}$\6
+\4${}\}{}$\2\6
+\&{else}\5
+${}\{{}$\1\6
+${}\\{printf}(\.{"\ \ File:\ '\%s'\\n"},\39\\{filename});{}$\6
+\4${}\}{}$\2\par
+\As10, 11\*, 12\ETs23.
+\U7.\fi
+
+\M{10}On the second line I need to print `Size', `Blocks', and `IO Block'.
+
+\Y\B\4\X9\*:print formatted stats\X${}\mathrel+\E{}$\6
+${}\{{}$\1\6
+\&{const} \&{char} ${}{*}\\{filetype}\K\NULL;{}$\7
+\&{switch} ${}(\\{st}.\\{st\_mode}\AND\.{S\_IFMT}){}$\5
+${}\{{}$\1\6
+\4\&{case} \.{S\_IFBLK}:\5
+${}\\{filetype}\K\.{"block\ special\ file"}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFCHR}:\5
+${}\\{filetype}\K\.{"character\ special\ f}\)\.{ile"}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFDIR}:\5
+${}\\{filetype}\K\.{"directory"}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFIFO}:\5
+${}\\{filetype}\K\.{"fifo"}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFLNK}:\5
+${}\\{filetype}\K\.{"symbolic\ link"}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFREG}:\5
+${}\\{filetype}\K\.{"regular\ file"}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFSOCK}:\5
+${}\\{filetype}\K\.{"socket"}{}$;\5
+\&{break};\6
+\4${}\}{}$\2\6
+${}\\{assert}(\\{filetype}\I\NULL){}$;\C{ none of the possibilities described
+in README! I'm confused\dots }\6
+${}\\{printf}(\.{"\ \ Size:\ \%-10lu\\tBlo}\)\.{cks:\ \%-10lu\ IO\ Block}\)\.{:%
+\ \%-6lu\ \%s\\n"},\3{-1}\39\\{st}.\\{st\_size},\39\\{st}.\\{st\_blocks},\39%
+\\{st}.\\{st\_blksize},\39\\{filetype});{}$\6
+\4${}\}{}$\2\par
+\fi
+
+\M{11\*}On the third line, I need to print `Device', `Inode', and `Links'.
+
+Additionally (in step 6), another field called ``Device type''
+will be appended to the third line if the file happens to be
+a device.
+
+\Y\B\4\X9\*:print formatted stats\X${}\mathrel+\E{}$\6
+$\\{printf}(\.{"Device:\ \%lxh/\%lud\\t}\)\.{Inode:\ \%-10lu"},\39\\{st}.\\{st%
+\_dev},\39\\{st}.\\{st\_dev},\39\\{st}.\\{st\_ino});{}$\6
+\&{if} ${}(\.{S\_ISCHR}(\\{st}.\\{st\_mode})\V\.{S\_ISBLK}(\\{st}.\\{st%
+\_mode})){}$\5
+${}\{{}$\C{ file is a device }\1\6
+${}\\{printf}(\.{"\ \ Links:\ \%-5lu\ Devi}\)\.{ce\ type:\ \%d,\%d\\n"},\3{-1}%
+\39\\{st}.\\{st\_nlink},\39\\{major}(\\{st}.\\{st\_rdev}),\39\\{minor}(\\{st}.%
+\\{st\_rdev}));{}$\6
+\4${}\}{}$\2\6
+\&{else}\5
+${}\{{}$\1\6
+${}\\{printf}(\.{"\ \ Links:\ \%lu\\n"},\39\\{st}.\\{st\_nlink});{}$\6
+\4${}\}{}$\2\par
+\fi
+
+\N{1}{12}Step 2.  Now I need to deal with the fourth line
+in the formatted output.
+To leave room for future extension,
+I will not hard-code what to print here.
+
+\Y\B\4\X9\*:print formatted stats\X${}\mathrel+\E{}$\6
+\X13:print the fields in the fourth formatted line\X\6
+\\{printf}(\.{"\\n"});\C{ terminate the fourth line }\par
+\fi
+
+\M{13}At this point, only the first field (``Access'') needs to be output
+on the fourth line.
+It consists of two parts.  The first is an octal code of the permissions.
+I need to mask \PB{\\{st\_mode}} with \PB{$\CM\.{S\_IFMT}$} to get that code.
+The second part is a human-readable description
+(I will call it ``mode string'' in later descriptions),
+which can be generated by \PB{\\{get\_modestr}}.
+
+\Y\B\4\D$\.{MODESTR\_LEN}$ \5
+\T{10}\C{ length of the mode string, not including \PB{\.{'\\0'}} }\par
+\Y\B\4\X13:print the fields in the fourth formatted line\X${}\E{}$\6
+${}\{{}$\1\6
+\&{char} ${}\\{modestr}[\.{MODESTR\_LEN}+\T{1}]{}$;\C{ ${}+1$ for \PB{\.{'%
+\\0'}} }\7
+${}\\{printf}(\.{"Access:\ (\%04o/\%s)"},\39\\{st}.\\{st\_mode}\AND\CM\.{S%
+\_IFMT},\39\\{get\_modestr}(\\{modestr},\39\\{st}.\\{st\_mode}));{}$\6
+\4${}\}{}$\2\par
+\As21\ET22.
+\U12.\fi
+
+\M{14}\PB{\\{get\_modestr}} generates the mode string.
+
+\Y\B\4\X14:declarations\X${}\E{}$\6
+\&{char} ${}{*}{}$\\{get\_modestr}(\&{char} ${}{*}\\{buf},\39{}$\&{int} %
+\\{mode});\par
+\As17\ET24.
+\U4.\fi
+
+\M{15}\B\X3:definitions\X${}\mathrel+\E{}$\6
+\&{char} ${}{*}{}$\\{get\_modestr}(\&{char} ${}{*}\\{buf},\39{}$\&{int} %
+\\{mode})\1\1\2\2\6
+${}\{{}$\1\6
+\X16:write file type into \PB{\\{buf}[\T{0}]}\X\6
+\X19:write permissions into \PB{\\{buf}[\T{1}]}\dots\PB{$\\{buf}[\.{MODESTR%
+\_LEN}-\T{1}]$}\X\6
+${}\\{buf}[\.{MODESTR\_LEN}]\K\.{'\\0'}{}$;\C{ terminate the string }\6
+\&{return} \\{buf};\6
+\4${}\}{}$\2\par
+\fi
+
+\M{16}The first character in the mode string
+will need a big switch
+similar to the one in Step 1.
+But some characters are different, so I cannot reuse the code.
+
+\Y\B\4\X16:write file type into \PB{\\{buf}[\T{0}]}\X${}\E{}$\6
+${}\{{}$\1\6
+\&{char} \|c${}\K\T{0};{}$\7
+\&{switch} ${}(\\{mode}\AND\.{S\_IFMT}){}$\5
+${}\{{}$\1\6
+\4\&{case} \.{S\_IFBLK}:\5
+${}\|c\K\.{'b'}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFCHR}:\5
+${}\|c\K\.{'c'}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFDIR}:\5
+${}\|c\K\.{'d'}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFIFO}:\5
+${}\|c\K\.{'p'}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFLNK}:\5
+${}\|c\K\.{'l'}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFREG}:\5
+${}\|c\K\.{'-'}{}$;\5
+\&{break};\6
+\4\&{case} \.{S\_IFSOCK}:\5
+${}\|c\K\.{'s'}{}$;\5
+\&{break};\6
+\4${}\}{}$\2\6
+${}\\{assert}(\|c\I\T{0}){}$;\C{ Again, I'm confused when run out of
+possibilities. }\6
+${}\\{buf}[\T{0}]\K\|c{}$;\C{ write it into \PB{\\{buf}[\T{0}]} }\6
+\4${}\}{}$\2\par
+\U15.\fi
+
+\M{17}\PB{\\{get\_permissions}} unifies the formatting
+of user, group and other permissions.
+
+\Y\B\4\X14:declarations\X${}\mathrel+\E{}$\6
+\&{void} \\{get\_permissions}(\&{char} ${}{*}\\{buf},\39{}$\&{int} \\{mode}${},%
+\39{}$\&{int} \\{rmask}${},\39{}$\&{int} \\{wmask}${},\39{}$\&{int} \\{xmask});%
+\par
+\fi
+
+\M{18}\B\X3:definitions\X${}\mathrel+\E{}$\6
+\&{void} \\{get\_permissions}(\&{char} ${}{*}\\{buf},\39{}$\&{int} \\{mode}${},%
+\39{}$\&{int} \\{rmask}${},\39{}$\&{int} \\{wmask}${},\39{}$\&{int} \\{xmask})%
+\1\1\2\2\6
+${}\{{}$\1\6
+${}\\{buf}[\T{0}]\K(\\{mode}\AND\\{rmask})\?\.{'r'}:\.{'-'};{}$\6
+${}\\{buf}[\T{1}]\K(\\{mode}\AND\\{wmask})\?\.{'w'}:\.{'-'};{}$\6
+${}\\{buf}[\T{2}]\K(\\{mode}\AND\\{xmask})\?\.{'x'}:\.{'-'};{}$\6
+\4${}\}{}$\2\par
+\fi
+
+\M{19}Now I can call \PB{\\{get\_permissions}} to fill in the corresponding
+fields
+in the mode string.
+
+\Y\B\4\X19:write permissions into \PB{\\{buf}[\T{1}]}\dots\PB{$\\{buf}[%
+\.{MODESTR\_LEN}-\T{1}]$}\X${}\E{}$\6
+$\\{get\_permissions}(\\{buf}+\T{1},\39\\{mode},\39\.{S\_IRUSR},\39\.{S%
+\_IWUSR},\39\.{S\_IXUSR});{}$\6
+${}\\{get\_permissions}(\\{buf}+\T{4},\39\\{mode},\39\.{S\_IRGRP},\39\.{S%
+\_IWGRP},\39\.{S\_IXGRP});{}$\6
+${}\\{get\_permissions}(\\{buf}+\T{7},\39\\{mode},\39\.{S\_IROTH},\39\.{S%
+\_IWOTH},\39\.{S\_IXOTH}){}$;\par
+\U15.\fi
+
+\N{1}{20}Step 3.  Now deal with the other fields in the fourth line.
+They are ``Uid'' and ``Gid''.
+
+\fi
+
+\M{21}First deal with ``Uid''.
+I can use the \PB{\\{getpwuid}} library function
+to look up the user's name from it's user~ID.
+
+Be careful about the leading spaces in the output.
+They are here to separate the current field from
+the previous one.
+
+\Y\B\4\X13:print the fields in the fourth formatted line\X${}\mathrel+\E{}$\6
+${}\{{}$\1\6
+\&{struct} \&{passwd} ${}{*}\\{pw};{}$\7
+${}\\{pw}\K\\{getpwuid}(\\{st}.\\{st\_uid});{}$\6
+${}\\{printf}(\.{"\ \ Uid:\ (\%5d/\%8s)"},\39\\{st}.\\{st\_uid},\39\\{pw}\MG%
+\\{pw\_name});{}$\6
+\4${}\}{}$\2\par
+\fi
+
+\M{22}Then ``Gid''.  This time use \PB{\\{getgrgid}}.
+
+\Y\B\4\X13:print the fields in the fourth formatted line\X${}\mathrel+\E{}$\6
+${}\{{}$\1\6
+\&{struct} \&{group} ${}{*}\\{gr};{}$\7
+${}\\{gr}\K\\{getgrgid}(\\{st}.\\{st\_gid});{}$\6
+${}\\{printf}(\.{"\ \ \ Gid:\ (\%5d/\%8s)"},\39\\{st}.\\{st\_gid},\39\\{gr}\MG%
+\\{gr\_name});{}$\6
+\4${}\}{}$\2\par
+\fi
+
+\N{1}{23}Step 4.
+In this step I will add four more lines to the output.
+They are the last ones, and are related to time information.
+
+Again, these lines have some similarities,
+so I will put the actual printing code
+into a separate function \PB{\\{print\_timeinfo}}.
+
+\Y\B\4\X9\*:print formatted stats\X${}\mathrel+\E{}$\6
+$\\{print\_timeinfo}(\.{"Access"},\39{\AND}\\{st}.\\{st\_atim});{}$\6
+${}\\{print\_timeinfo}(\.{"Modify"},\39{\AND}\\{st}.\\{st\_mtim});{}$\6
+${}\\{print\_timeinfo}(\.{"Change"},\39{\AND}\\{st}.\\{st\_ctim});{}$\6
+\\{printf}(\.{"\ Birth:\ -\\n"});\C{ ``Birth'' line is always this }\par
+\fi
+
+\M{24}\B\X14:declarations\X${}\mathrel+\E{}$\6
+\&{void} \\{print\_timeinfo}(\&{const} \&{char} ${}{*}\\{what},\39{}$\&{const} %
+\&{struct} \&{timespec} ${}{*}\\{when}){}$;\par
+\fi
+
+\M{25}\PB{\\{print\_timeinfo}} uses the provided \PB{\\{time2str}} function
+to format the time value into a string.
+\Y\B\4\X3:definitions\X${}\mathrel+\E{}$\6
+\&{void} \\{print\_timeinfo}(\&{const} \&{char} ${}{*}\\{what},\39{}$\&{const} %
+\&{struct} \&{timespec} ${}{*}\\{when}){}$\1\1\2\2\6
+${}\{{}$\1\6
+\&{char} ${}{*}\\{timestr};{}$\7
+${}\\{timestr}\K\\{time2str}({\AND}\\{when}\MG\\{tv\_sec},\39\\{when}\MG\\{tv%
+\_nsec});{}$\6
+${}\\{printf}(\.{"\%s:\ \%s\\n"},\39\\{what},\39\\{timestr});{}$\6
+\\{free}(\\{timestr});\6
+\4${}\}{}$\2\par
+\fi
+
+\N{1}{26}Step 5, 6, 7.
+These steps require modifications to previous steps.
+
+The modifications are already in place.
+So no code will be shown here.
+
+An asterisk next to a section number indicates modification.
+
+
+\fi
+
+\N{1}{27\*}Index.  Here is the index of all C identifiers, in alphabetical
+order.
+The listed numbers are section numbers.
+The underlined ones are where the corresponding identifiers are defined.
+
+
+% vim: ts=2:sw=2:et:si
+\fi
+
+\ch 5\*, 9\*, 11\*, 27\*.
+\inx
+\fin
+\con

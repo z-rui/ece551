@@ -1,6 +1,6 @@
 #define MODESTR_LEN 10
 /*4:*/
-#line 54 "./mystat.w"
+#line 55 "./mystat.w"
 
 /*2:*/
 #line 26 "./mystat.w"
@@ -16,33 +16,33 @@
 #include <unistd.h> 
 
 /*:2*//*6:*/
-#line 90 "./mystat.w"
+#line 91 "./mystat.w"
 
 #include <assert.h>  
 #include <string.h>  
 #include <errno.h>   
 
 /*:6*/
-#line 55 "./mystat.w"
+#line 56 "./mystat.w"
 
 /*14:*/
-#line 199 "./mystat.w"
+#line 201 "./mystat.w"
 
 char*get_modestr(char*buf,int mode);
 /*:14*//*17:*/
-#line 235 "./mystat.w"
+#line 237 "./mystat.w"
 
 void get_permissions(char*buf,int mode,int rmask,int wmask,int xmask);
 /*:17*//*24:*/
-#line 298 "./mystat.w"
+#line 304 "./mystat.w"
 
 void print_timeinfo(const char*what,const struct timespec*when);
 
 /*:24*/
-#line 56 "./mystat.w"
+#line 57 "./mystat.w"
 
 /*3:*/
-#line 39 "./mystat.w"
+#line 40 "./mystat.w"
 
 
 char*time2str(const time_t*when,long ns){
@@ -57,14 +57,14 @@ return ans;
 }
 
 /*:3*//*7:*/
-#line 108 "./mystat.w"
+#line 110 "./mystat.w"
 
 int printstat(const char*filename)
 {
 struct stat st;
 
 /*8:*/
-#line 124 "./mystat.w"
+#line 126 "./mystat.w"
 
 if(lstat(filename,&st)!=0){
 
@@ -77,7 +77,7 @@ return errno;
 
 #line 50 "./mystat.ch"
 /*:8*/
-#line 113 "./mystat.w"
+#line 115 "./mystat.w"
 
 /*9:*/
 #line 56 "./mystat.ch"
@@ -97,10 +97,10 @@ printf("  File: '%s' -> '%s'\n",filename,buf);
 }else{
 printf("  File: '%s'\n",filename);
 }
-#line 138 "./mystat.w"
+#line 140 "./mystat.w"
 
 /*:9*//*10:*/
-#line 141 "./mystat.w"
+#line 143 "./mystat.w"
 
 {
 const char*filetype= NULL;
@@ -135,13 +135,13 @@ st.st_nlink,major(st.st_rdev),minor(st.st_rdev));
 }else{
 printf("  Links: %lu\n",st.st_nlink);
 }
-#line 168 "./mystat.w"
+#line 170 "./mystat.w"
 
 /*:11*//*12:*/
-#line 174 "./mystat.w"
+#line 176 "./mystat.w"
 
 /*13:*/
-#line 188 "./mystat.w"
+#line 190 "./mystat.w"
 
 {
 char modestr[MODESTR_LEN+1];
@@ -151,7 +151,7 @@ get_modestr(modestr,st.st_mode));
 }
 
 /*:13*//*21:*/
-#line 266 "./mystat.w"
+#line 269 "./mystat.w"
 
 {
 struct passwd*pw;
@@ -161,7 +161,7 @@ printf("  Uid: (%5d/%8s)",st.st_uid,pw->pw_name);
 }
 
 /*:21*//*22:*/
-#line 275 "./mystat.w"
+#line 280 "./mystat.w"
 
 {
 struct group*gr;
@@ -172,12 +172,12 @@ printf("   Gid: (%5d/%8s)",st.st_gid,gr->gr_name);
 
 
 /*:22*/
-#line 175 "./mystat.w"
+#line 177 "./mystat.w"
 
 printf("\n");
 
 /*:12*//*23:*/
-#line 292 "./mystat.w"
+#line 297 "./mystat.w"
 
 print_timeinfo("Access",&st.st_atim);
 print_timeinfo("Modify",&st.st_mtim);
@@ -185,18 +185,18 @@ print_timeinfo("Change",&st.st_ctim);
 printf(" Birth: -\n");
 
 /*:23*/
-#line 114 "./mystat.w"
+#line 116 "./mystat.w"
 
 return 0;
 }
 
 /*:7*//*15:*/
-#line 201 "./mystat.w"
+#line 203 "./mystat.w"
 
 char*get_modestr(char*buf,int mode)
 {
 /*16:*/
-#line 216 "./mystat.w"
+#line 218 "./mystat.w"
 
 {
 char c= 0;
@@ -214,10 +214,10 @@ buf[0]= c;
 }
 
 /*:16*/
-#line 204 "./mystat.w"
+#line 206 "./mystat.w"
 
 /*19:*/
-#line 249 "./mystat.w"
+#line 251 "./mystat.w"
 
 get_permissions(buf+1,mode,S_IRUSR,S_IWUSR,S_IXUSR);
 get_permissions(buf+4,mode,S_IRGRP,S_IWGRP,S_IXGRP);
@@ -225,14 +225,14 @@ get_permissions(buf+7,mode,S_IROTH,S_IWOTH,S_IXOTH);
 
 
 /*:19*/
-#line 205 "./mystat.w"
+#line 207 "./mystat.w"
 
 buf[MODESTR_LEN]= '\0';
 return buf;
 }
 
 /*:15*//*18:*/
-#line 237 "./mystat.w"
+#line 239 "./mystat.w"
 
 void get_permissions(char*buf,int mode,int rmask,int wmask,int xmask)
 {
@@ -242,7 +242,7 @@ buf[2]= (mode&xmask)?'x':'-';
 }
 
 /*:18*//*25:*/
-#line 303 "./mystat.w"
+#line 309 "./mystat.w"
 
 void print_timeinfo(const char*what,const struct timespec*when)
 {
@@ -255,17 +255,17 @@ free(timestr);
 
 
 /*:25*/
-#line 57 "./mystat.w"
+#line 58 "./mystat.w"
 
 /*5:*/
-#line 71 "./mystat.w"
+#line 72 "./mystat.w"
 
 #line 23 "./mystat.ch"
 int main(int argc,char**argv)
 {
 int i;
 int rc= EXIT_SUCCESS;
-#line 74 "./mystat.w"
+#line 75 "./mystat.w"
 if(argc<2){
 
 fprintf(stderr,
@@ -282,11 +282,11 @@ rc= EXIT_FAILURE;
 }
 }
 return rc;
-#line 86 "./mystat.w"
+#line 87 "./mystat.w"
 }
 
 /*:5*/
-#line 58 "./mystat.w"
+#line 59 "./mystat.w"
 
 
 /*:4*/

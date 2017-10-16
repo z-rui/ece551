@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -g
 
-all: prog doc
+all: prog # doc is not made by default
 
 prog: mystat
 
@@ -14,10 +14,13 @@ mystat.c: mystat.w mystat.ch
 mystat.ch: mystat.w mystat-step*.ch
 	ctie -c $@ mystat.w mystat-step*.ch
 
-doc: mystat.dvi
+doc: mystat.pdf
 
 %.dvi: %.tex
 	tex $<
+
+%.pdf: %.tex
+	pdftex $<
 
 mystat.tex: mystat.w mystat.ch
 	cweave $< mystat.ch
