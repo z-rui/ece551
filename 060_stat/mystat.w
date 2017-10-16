@@ -281,6 +281,36 @@ the previous one.
 }
 
 
+@* Step 4.
+In this step I will add four more lines to the output.
+They are the last ones, and are related to time information.
+
+Again, these lines have some similarities,
+so I will put the actual printing code
+into a separate function |print_timeinfo|.
+
+@<print formatted stats@>+=
+  print_timeinfo("Access", &st.st_atim);
+  print_timeinfo("Modify", &st.st_mtim);
+  print_timeinfo("Change", &st.st_ctim);
+  printf(" Birth: -\n"); /* ``Birth'' line is always this */
+
+@ @<declarations@>+=
+void print_timeinfo(const char *what, const struct timespec *when);
+
+@ |print_timeinfo| uses the provided |time2str| function
+to format the time value into a string.
+@<definitions@>+=
+void print_timeinfo(const char *what, const struct timespec *when)
+{
+  char *timestr;
+  
+  timestr = time2str(&when->tv_sec, when->tv_nsec);
+  printf("%s: %s\n", what, timestr);
+  free(timestr);
+}
+
+
 @* Index.
 
 

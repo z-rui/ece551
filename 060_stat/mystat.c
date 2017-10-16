@@ -33,7 +33,12 @@ char*get_modestr(char*buf,int mode);
 #line 235 "./mystat.w"
 
 void get_permissions(char*buf,int mode,int rmask,int wmask,int xmask);
-/*:17*/
+/*:17*//*24:*/
+#line 298 "./mystat.w"
+
+void print_timeinfo(const char*what,const struct timespec*when);
+
+/*:24*/
 #line 56 "./mystat.w"
 
 /*3:*/
@@ -147,7 +152,15 @@ printf("   Gid: (%5d/%8s)",st.st_gid,gr->gr_name);
 
 printf("\n");
 
-/*:12*/
+/*:12*//*23:*/
+#line 292 "./mystat.w"
+
+print_timeinfo("Access",&st.st_atim);
+print_timeinfo("Modify",&st.st_mtim);
+print_timeinfo("Change",&st.st_ctim);
+printf(" Birth: -\n");
+
+/*:23*/
 #line 114 "./mystat.w"
 
 return 0;
@@ -204,7 +217,19 @@ buf[1]= (mode&wmask)?'w':'-';
 buf[2]= (mode&xmask)?'x':'-';
 }
 
-/*:18*/
+/*:18*//*25:*/
+#line 303 "./mystat.w"
+
+void print_timeinfo(const char*what,const struct timespec*when)
+{
+char*timestr;
+
+timestr= time2str(&when->tv_sec,when->tv_nsec);
+printf("%s: %s\n",what,timestr);
+free(timestr);
+}
+
+/*:25*/
 #line 57 "./mystat.w"
 
 /*5:*/
