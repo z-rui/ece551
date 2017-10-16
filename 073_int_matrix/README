@@ -1,0 +1,65 @@
+For this problem, you will be writing an IntMatrix, making use of your IntArray from 
+the previous problem.
+
+First, you should make a symbolic link to your IntArray code in this directory:
+
+  ln -s ../072_int_array/IntArray.cpp ./
+  ln -s ../072_int_array/IntArray.h ./
+
+This makes IntArray.cpp in the current directory another name for IntArray.cpp in
+../072_int_array/ (and the same for IntArray.h).   These are basically pointers
+(on the filesystem, rather than in memory) to the other files!
+This means that you can access the file (cat IntArray.cpp and you will
+see the stuff you wrote in the last problem), but (unlike if you had copied the
+files), any changes you make will be reflected through either
+name---if you fix a bug, it will be fixed in both.
+
+I have provided IntMatrix.h, as well as a skeleton of IntMatrix.cpp
+(with empty functions).
+
+You will write the following members of IntMatrix:
+
+  IntMatrix();
+    A default constructor: it should initialize the matrix to have 0
+    rows and 0 columns.
+
+  IntMatrix(int r, int c);
+   A constructor that takes the number of rows and columns.  It should
+   initialize the matrix to have the specified number of rows and
+   columns.
+
+  IntMatrix(const IntMatrix & rhs);
+   A copy constructor which makes a deep copy.
+  ~IntMatrix();
+   A destructor which frees any memory the Matrix has allocated.
+  IntMatrix & operator=(const IntMatrix & rhs);
+   An assignment operator which makes a deep copy
+  int getRows() const;
+   Returns the number of rows
+  int getColumns() const;
+   Returns the number of columns
+  IntArray & operator[](int index);
+  const IntArray & operator[](int index) const;
+   Uses assert() to check that index is valid, then returns
+   a reference to the requested row.
+  bool operator==(const IntMatrix & rhs) const;
+   Compares two matricies for equality.  The matricies are equal
+   if they have the same number of rows, the same number of columns,
+   and each element is the same as the corresponding element in the
+   other matrix.
+  IntMatrix operator+(const IntMatrix & rhs) const;
+   assert()s that this and rhs have the same dimensions.
+   Returns matrix (also the same dimensions as this and rhs)
+   whose elements are the sum of the corresponding elements of
+   this matrix and rhs (does matrix addition).
+
+Additionally, you will write an overloading of the << operator for
+std::ostream & and const IntMatrix &
+
+  std::ostream & operator<<(std::ostream & s, const IntMatrix & rhs) {
+  This should print (to s) a "[ ", followed by each row of the matrix
+  (using IntArray's << operator).  These rows should be separated by
+  ",\n".  After the last row, you should print " ]" and return s.
+
+Compile, test, and valgrind your code.  We have provided the output of
+the test program which the Makefile builds.
