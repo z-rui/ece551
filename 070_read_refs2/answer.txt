@@ -1,0 +1,6 @@
+Making AClass(3,4)
+Making AClass(6,16)
+Making AClass(13,4)
+Destroying AClass(13,4)
+Destroying AClass(6,10)
+Destroying AClass(10,9)
