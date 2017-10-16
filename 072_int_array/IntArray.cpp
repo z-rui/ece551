@@ -6,13 +6,14 @@
 IntArray::IntArray() : data(NULL), numElements(0) {
 
 }
-IntArray::IntArray(int n) : data(new int[n]), numElements(n) {
+IntArray::IntArray(int n) : data(new int[n]()), numElements(n) {
 
 }
 
 IntArray::IntArray(const IntArray & rhs)  {
 	numElements = rhs.numElements;
 	data = new int[numElements]();
+	std::copy(rhs.data, rhs.data + numElements, data);
 }
 IntArray::~IntArray() {
 	delete[] data;
