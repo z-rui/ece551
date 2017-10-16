@@ -251,6 +251,36 @@ in the mode string.
   get_permissions(buf+4, mode, S_IRGRP, S_IWGRP, S_IXGRP);
   get_permissions(buf+7, mode, S_IROTH, S_IWOTH, S_IXOTH);
 
+
+@* Step 3.  Now deal with the other fields in the fourth line.
+They are ``Uid'' and ``Gid''.
+
+@ First deal with ``Uid''.
+I can use the |getpwuid| library function
+to look up the user's name from it's user~ID.
+
+Be careful about the leading spaces in the output.
+They are here to separate the current field from
+the previous one.
+
+@<print the fields in the fourth ...@>+=
+{
+  struct passwd *pw;
+
+  pw = getpwuid(st.st_uid);
+  printf("  Uid: (%5d/%8s)", st.st_uid, pw->pw_name);
+}
+
+@ Then ``Gid''.  This time use |getgrgid|.
+@<print the fields in the fourth ...@>+=
+{
+  struct group *gr;
+
+  gr = getgrgid(st.st_gid);
+  printf("   Gid: (%5d/%8s)", st.st_uid, gr->gr_name);
+}
+
+
 @* Index.
 
 

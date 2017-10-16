@@ -121,7 +121,28 @@ printf("Access: (%04o/%s)",st.st_mode&~S_IFMT,
 get_modestr(modestr,st.st_mode));
 }
 
-/*:13*/
+/*:13*//*21:*/
+#line 266 "./mystat.w"
+
+{
+struct passwd*pw;
+
+pw= getpwuid(st.st_uid);
+printf("  Uid: (%5d/%8s)",st.st_uid,pw->pw_name);
+}
+
+/*:21*//*22:*/
+#line 275 "./mystat.w"
+
+{
+struct group*gr;
+
+gr= getgrgid(st.st_gid);
+printf("   Gid: (%5d/%8s)",st.st_uid,gr->gr_name);
+}
+
+
+/*:22*/
 #line 175 "./mystat.w"
 
 printf("\n");
@@ -164,6 +185,7 @@ buf[0]= c;
 get_permissions(buf+1,mode,S_IRUSR,S_IWUSR,S_IXUSR);
 get_permissions(buf+4,mode,S_IRGRP,S_IWGRP,S_IXGRP);
 get_permissions(buf+7,mode,S_IROTH,S_IWOTH,S_IXOTH);
+
 
 /*:19*/
 #line 205 "./mystat.w"
