@@ -1,0 +1,18 @@
+For this problem, you will be revisit the IntMatrix class you did in a previous 
+assignment, but will make a templated matrix.  You have been provided with Matrix.h,
+test.cpp, and a Makefile. As you are writing templated classes and functions, you should 
+write them in Matrix.h.
+
+ - You should write a templated class Matrix, which works like your IntMatrix, except for
+   any type T, not just ints.  You should use vector<T> for each "row" (instead of IntArray).
+
+ - Your new Matrix class should provide similar methods, constructors, operators, and destructor
+   to your IntMatrix class, though you may need to change some types.
+
+ - You should be able to compile and run with the provided test.cpp file without modifying it.
+
+This problem is primarily an excercise in working with templates, not designing new/complex
+algorithms.  You may find it easy to start with your IntMatrix code and make the 
+required changes (which should be minimal).
+
+As always, compile, test, debug, and valgrind your program.
