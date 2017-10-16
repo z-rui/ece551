@@ -1,0 +1,15 @@
+Earlier in the semester, you wrote a C program to read strings from input file(s),
+sort them, and print them out.
+
+In this problem, you will repeat that task (your program should behave exactly the same way),
+however you will do it in C++, using the proper C++ tools. You should call your file sortLines.cpp.
+
+ - You should use C++'s streams to read the input (opening std::ifstreams to read files, 
+   or using std::cin to read from standard input).
+ - You should use std::vector to hold the strings that you read in.
+ - You should use std::sort to sort the vector
+    [see http://www.cplusplus.com/reference/algorithm/sort/ for reference ]
+ - You should then print the strings using std::cout.
+ - You should NOT use FILE, malloc, realloc, qsort, or printf.
+
+
