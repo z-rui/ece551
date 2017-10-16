@@ -86,9 +86,15 @@ IntMatrix IntMatrix::operator+(const IntMatrix & rhs) const {
 }
 
 std::ostream & operator<<(std::ostream & s, const IntMatrix & rhs) {
+	bool first = true;
 	s << "[ ";
 	for (int i = 0; i < rhs.getRows(); i++) {
-		s << rhs[i] << ",\n";
+		if (first) {
+			first = false;
+		} else {
+			s << ",\n";
+		}
+		s << rhs[i];
 	}
 	s << " ]";
 	return s;
