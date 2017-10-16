@@ -1,0 +1,119 @@
+As always, read and understand Chapter 17, then answer these questions
+in "answers.txt".
+
+1. Templates are an example of 
+ 
+A. Static Variables
+B. POD types
+C. Parametric Polymorphism
+D. An exception to The Rule of Three
+
+2. The compiler may infer template parameters during instantiation
+
+A. for templated classes and templated functions
+B. for templated classes only
+C. for templated functions only
+D. never
+
+
+3. What is the difference betweeen
+
+   template<typename T> 
+and
+   template<class T>
+
+A. The former allows any type to be passed as the parameter, the later only classes.
+B. The former allows any type to be passed as the parameter, the later, only classes
+   or structs.
+C. The former allows any type to be passed as the parameter, the later only non-POD 
+   types.
+D. None of the above.
+
+4. In a templated class, what is the scope of the template parameters?
+
+A. The field declarations.
+B. Anywhere the visibility specifier is private
+C. The entire class
+D. Until the end of the file in which it is declared.
+
+5. Suppose you have 
+
+template<typename T> class X {
+   T v1;
+   T::t v2;
+   Y<T> v3;
+   Y<T>::z v4;
+};
+
+This attempt to declare templated class X is incorrect as it is missing
+"typename" before the type names which are dependent names.  Which variables'
+declarations require "typename"?
+
+
+A. Only v1
+B. Only v2
+C. Only v3
+D. v1 and v2
+E. v1 and v3
+F. v1 and v4
+G. v2 and v3
+H. v2 and v4
+I. v3 and v4
+J. v1, v2, and v3
+K. v1, v2, and v4
+L. v2, v3, and v4
+M. All four variables (v1, v2, v3, and v4)
+
+
+6. When is the body of a templated function or class type checked?
+
+A. When the compiler encounters the declaration of the template.
+B. When the compiler has type checked all other code in the compilation unit.
+C. When the template is specialized for the first time.
+D. When a new template specialization is created.
+
+7. The fact that std::vector<T> can overload operator== and operator<,
+   even though not all possible "T"s themselves have == and/or < defined
+   on them is a great example of which template rule in action?
+
+A. Dependent type names require the "typename" keyword.
+B. Templates are typechecked when they are specialized.
+C. Template declarations must be visible at the point of specialization.
+D. Multiple close brackets must be separated by whitespace.
+
+8. Iterators are a great examples of
+
+A. The Rule of Three
+B. Dependent Name Resolution
+C. Implicit Conversions
+D. Abstraction
+
+9. When a programmer says "arbitrary" (as in "insert into
+   a data structure at an arbitrary position"), what does she mean?
+
+A. It does not matter
+B. Random
+C. Any one that you might choose
+D. Irrational
+
+10. What is the difference in the * operator between an iterator and
+   a const_iterator?
+
+A. In an iterator, the * operator returns a pointer to the element, while the 
+   const_iterator returns elements by value.
+B. In an iterator, the * operator returns a reference, while the
+   const_iterator returns a const reference.
+C. In the iterator, the * operator returns a reference to the element,
+   while the const_iteartor returns elements by value.
+D. None of the above.
+
+11. How do you know if some operation invalidates a particular iterator on 
+    some data structure?
+
+A. Operations which delete from a datastructure invalidate all of its iterators
+   (and only deletion operations invalidate iterators).
+B. Any operatios which modify the contents of a data structure invalidate
+   all of its iterators.
+C. When an operation modifies a data structure, any iterator which references
+   the affected position(s) is invalidated.
+D. None of the above
