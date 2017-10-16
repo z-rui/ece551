@@ -30,10 +30,8 @@ int main(int argc, char **argv)
   if (argc < 2) {
     doSort(std::cin);
   } else {
-    std::ifstream ifs;
-
     for (int i = 1; i < argc; i++) {
-      ifs.open(argv[i]);
+      std::ifstream ifs(argv[i]);
       if (!ifs) {
         std::cerr << "failed to open " << argv[i] << std::endl;
         exit(EXIT_FAILURE);
