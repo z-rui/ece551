@@ -229,14 +229,19 @@ printf("%s: %s\n",what,timestr);
 free(timestr);
 }
 
+
 /*:25*/
 #line 57 "./mystat.w"
 
 /*5:*/
 #line 71 "./mystat.w"
 
+#line 29 "./mystat-step5.ch"
 int main(int argc,char**argv)
 {
+int i;
+int rc= EXIT_SUCCESS;
+#line 74 "./mystat.w"
 if(argc<2){
 
 fprintf(stderr,
@@ -245,14 +250,20 @@ fprintf(stderr,
 return EXIT_FAILURE;
 }
 
-if(printstat(argv[1])!=0){
-return EXIT_FAILURE;
+#line 41 "./mystat-step5.ch"
+for(i= 1;i<argc;i++){
+if(printstat(argv[i])!=0){
+rc= EXIT_FAILURE;
+
 }
-return EXIT_SUCCESS;
+}
+return rc;
+#line 86 "./mystat.w"
 }
 
 /*:5*/
 #line 58 "./mystat.w"
 
 
+#line 4 "./mystat-step5.ch"
 /*:4*/
