@@ -12,7 +12,7 @@ IntArray::IntArray(int n) : data(new int[n]), numElements(n) {
 
 IntArray::IntArray(const IntArray & rhs)  {
 	numElements = rhs.numElements;
-	data = new int[numElements];
+	data = new int[numElements]();
 }
 IntArray::~IntArray() {
 	delete[] data;
