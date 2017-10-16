@@ -1,10 +1,4 @@
 @x
-@* Step 1.  As in README:
-@y
-@* Step 1 \char38\ 5.  As in README:
-@z
-
-@x
 At this point, I only need to process |argv[1]| in the |main| function.
 @y
 In Step~1, I wrote a main function that only needs to process |argv[1]|.

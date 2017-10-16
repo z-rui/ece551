@@ -75,13 +75,29 @@ return errno;
 
 }
 
+#line 50 "./mystat.ch"
 /*:8*/
 #line 113 "./mystat.w"
 
 /*9:*/
-#line 136 "./mystat.w"
+#line 56 "./mystat.ch"
 
+if(S_ISLNK(st.st_mode)){
+char buf[256];
+ssize_t len;
+
+len= readlink(filename,buf,256);
+assert(len>=0);
+if(len> 255){
+buf[255]= '\0';
+}else{
+buf[len]= '\0';
+}
+printf("  File: '%s' -> '%s'\n",filename,buf);
+}else{
 printf("  File: '%s'\n",filename);
+}
+#line 138 "./mystat.w"
 
 /*:9*//*10:*/
 #line 141 "./mystat.w"
@@ -106,12 +122,20 @@ printf("  Size: %-10lu\tBlocks: %-10lu IO Block: %-6lu %s\n",
 st.st_size,st.st_blocks,st.st_blksize,filetype);
 }
 
+#line 82 "./mystat.ch"
 /*:10*//*11:*/
-#line 164 "./mystat.w"
+#line 88 "./mystat.ch"
 
-printf("Device: %lxh/%lud\tInode: %-10lu  Links: %lu\n",
-st.st_dev,st.st_dev,st.st_ino,st.st_nlink);
+printf("Device: %lxh/%lud\tInode: %-10lu",
+st.st_dev,st.st_dev,st.st_ino);
+if(S_ISCHR(st.st_mode)||S_ISBLK(st.st_mode)){
 
+printf("  Links: %-5lu Device type: %d,%d\n",
+st.st_nlink,major(st.st_rdev),minor(st.st_rdev));
+}else{
+printf("  Links: %lu\n",st.st_nlink);
+}
+#line 168 "./mystat.w"
 
 /*:11*//*12:*/
 #line 174 "./mystat.w"
@@ -236,7 +260,7 @@ free(timestr);
 /*5:*/
 #line 71 "./mystat.w"
 
-#line 29 "./mystat-step5.ch"
+#line 23 "./mystat.ch"
 int main(int argc,char**argv)
 {
 int i;
@@ -250,7 +274,7 @@ fprintf(stderr,
 return EXIT_FAILURE;
 }
 
-#line 41 "./mystat-step5.ch"
+#line 35 "./mystat.ch"
 for(i= 1;i<argc;i++){
 if(printstat(argv[i])!=0){
 rc= EXIT_FAILURE;
@@ -265,5 +289,4 @@ return rc;
 #line 58 "./mystat.w"
 
 
-#line 4 "./mystat-step5.ch"
 /*:4*/

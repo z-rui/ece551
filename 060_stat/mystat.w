@@ -229,7 +229,7 @@ But some characters are different, so I cannot reuse the code.
   buf[0] = c; /* write it into |buf[0]| */
 }
 
-@ |get_permission| unifies the formatting
+@ |get_permissions| unifies the formatting
 of user, group and other permissions.
 
 @<declarations@>+=
@@ -311,8 +311,18 @@ void print_timeinfo(const char *what, const struct timespec *when)
 }
 
 
-@* Index.
+@* Step 5, 6, 7.
+These steps require modifications to previous steps.
+
+The modifications are already in place.
+So no code will be shown here.
+
+An asterisk next to a section number indicates modification.
+
+
+@* Index.  Here is the index of all C identifiers, in alphabetical order.
+The listed numbers are section numbers.
+The underlined ones are where the corresponding identifiers are defined.
 
 
 % vim: ts=2:sw=2:et:si
-

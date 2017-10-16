@@ -8,16 +8,19 @@ prog: mystat
 mystat: mystat.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-mystat.c: mystat.w *.ch
-	ctangle $< *.ch
+mystat.c: mystat.w mystat.ch
+	ctangle $< mystat.ch
+
+mystat.ch: mystat.w mystat-step*.ch
+	ctie -c $@ mystat.w mystat-step*.ch
 
 doc: mystat.dvi
 
 %.dvi: %.tex
 	tex $<
 
-%.tex: %.w *.ch
-	cweave $< *.ch
+mystat.tex: mystat.w mystat.ch
+	cweave $< mystat.ch
 
 clean:
 	rm -f *.idx *.log *.scn *.toc
