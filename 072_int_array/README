@@ -1,9 +1,9 @@
 For this problem, you will be writing an IntArray class.  This class will hold
-an array of ints, as well as the nubmer of elements in the array.  It will
+an array of ints, as well as the number of elements in the array.  It will
 provide the following functionality:
 
  - A default constructor  
-     o Initalizes the size to 0, and the array to NULL
+     o Initializes the size to 0, and the array to NULL
  - A constructor which takes an int
      o Initializes the size to the int passed in, and the array to hold that many ints
  - A copy constructor
@@ -22,7 +22,7 @@ provide the following functionality:
        they are invoked on is "const", then the second will be used, returning
        a "const" reference, preventing modification of the object.
  - A size function
-     o Returns the size of the arrray
+     o Returns the size of the array
  - An == operator
      o Checks two arrays to see if the have the same contents:
         + Same number of elements
