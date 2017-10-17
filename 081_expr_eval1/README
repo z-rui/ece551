@@ -1,0 +1,133 @@
+In this program,  you will be practicing using inheritance,
+virtual methods, and method overriding to complete a 
+simple "calculator" program, which accepts input in "prefix notation".
+That is, rather than entering "4 + 3" you would enter "(+ 4 3)"
+
+We are going to split this problem into 3 parts.
+
+This part: Expressions are limited to numbers and pluses.  
+           We don't actually evaluate the expressions, just print them back out
+Next part: We add *, -, and /, but still don't evaluate
+Last part: We add expression evaluation.
+
+
+I have written code for you (in expr.cpp) which reads the
+input, parses it, and makes "Expression" objects appropriately.
+You should not need to modify this code at all (Note: there are three
+different versions of it for the three problems.).
+
+
+Instead, what you will write for this is the implementation of the "Expression"
+class and its sub-classes which will represent the math expression that gets
+read in, as well as provide a way to print it "normally" (in infix notation: 4+5)
+and evaluate it to an integer.
+
+
+Your code must have the following classes, with the following functionality
+(that is, the parsing code relies on these classes existing, with these names,
+the various Expression types being subtype compatible with Expression, and
+the classes having the methods and constructors noted below):
+
+*** This part ****
+ - class Expression
+    std::string toString() const = 0;  //abstract method
+   
+ - class NumExpression, which must be a subclass of Expression
+    A constructor: NumExpression(long) 
+    std::string toString() const //actually implement it
+
+ - class PlusExpression, which must be a subclass of Expression
+    A constructor: PlusExpression(Expression * lhs, Expression * rhs)
+    std::string toString() const //actually implement it
+
+*** Next part ****
+ - class MinusExpression, which must be a subclass of Expression
+    A constructor: MinusExpression(Expression * lhs, Expression
+ * rhs)
+    std::string toString() const //actually implement it
+
+ - class TimesExpression, which must be a subclass of Expression
+    A constructor: TimesExpression(Expression * lhs, Expression * rhs)
+    std::string toString() const //actually implement it
+
+ - class DivExpression, which must be a subclass of Expression
+    A constructor: DivExpression(Expression * lhs, Expression * rhs)
+    std::string toString() const //actually implement it
+
+*** Last part ****
+
+Add to Expression    
+   long evaluate() const = 0; //abstract method
+ 
+and implement it in the subclasses of Expression.
+
+
+You may wish to add other classes or methods as you wish.
+The various expression types must be a subclass of Expression, but do not
+have to extend it directly: if you see similarity between some of these
+classes that you wish to pull out into another class "in between" Expression
+and those classes, you are welcome (and encouraged) to.  
+
+You will want to implement a lot of this functionality by overriding methods
+and relying on dynamic dispatch.
+
+A few concrete details:
+
+ 1. Expression representation:  An expression (+ E1 E2) will result in
+    a new PlusExpression with E1 as its lhs (first argument to the constructor),
+    and E2 as its rhs (second argument to the constructor).  This is similar
+    for MinusExpression, TimesExpression, and DivExpression.
+
+    A number (like 9 or -27) will resultin a new NumExpression being created,
+    with the numeric value of that number passed as the argument to the constructor.
+
+ 2. The parser etc will never make a copy or assign objects by value.  You do not
+    need to worry about operator= or the copy constructor.  Each expression
+    object will be created with "new", and will be referenced by at most
+    one other Expression object (as either the lhs or rhs of a +,-,*, or /).
+
+ 3. When an expression is destructed, it is responsible for destructing any
+    "sub expressions" (its lhs or rhs) if it has them (Plus, Minus, Times, 
+    and Div Expressions).
+
+ 4. The toString function should return a string representation of the
+    Expression in infix notation (that is, if the input is "(+ 4 5)" it should
+    return "(4 + 5)".  Note that for Plus, Minus, Times, and Div, it is difficult
+    to figure out where () are truly needed, you should put them around the output
+    always.  So "(+ (+ 4 5) 7)" will result in "((4 + 5) + 7)"
+
+ 5. You will declare your classes in expr.h.  You can just implement the
+    methods inside the class, or you can implement them in expr.cpp if you wish.
+
+ 6. I have provided you with a sample_input.txt, and sample_output.txt
+    which show sample inputs and the output you should produce respectively.
+    I have also included invalid_inputs.txt and invalid_output.txt which show
+    some invalid inputs (which the parser handles) and the resulting output.
+    Note that parser handles the error cases here, but you should make sure
+    that you do not leak memory on the invalid_inputs.txt when the 
+    parser cleans up.
+
+HINTS
+=====
+These are a few things that I did in my implementation of this, which you
+may find useful to at least think about, if not do.  You are free to do or not
+do these as you see fit.  You might talk them over with your partner.
+
+  - My Expression class is abstract, and all of the functions in it are abstract
+
+  - I have one more abstract class that I put in my inheritance hierarchy.
+    This class has some fields which would otherwise appear in each of its subclasses. 
+    This class adds one more abstract method which I make use of in toString.
+    With this approach, I implement toString once in this class, and do not
+    need to override it in any of its subclasses.
+
+  - A PlusExpression would evaluate itself by evaluating its lefthand side,
+    evaluating its right hand side, and then adding the two results together
+    to get its answer.
+
+  - Think about how your objects will get destructed. Note that 
+    the static type of pretty much everything in the parsing/printing code
+    is Expression * 
+
+  - stringstream is very nice for implementing toString 
+
