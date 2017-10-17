@@ -1,0 +1,64 @@
+Grading at 10/17/2017:00:38:01.127577
+For commit ID 3220cfb8487d980c1622e353f5c8c991cf173510
+-----------------------------------------------
+testcase 1 : Testing with Matrix<int>
+...compiling...
+test.cpp: In function ‘int main()’:
+test.cpp:73:60: error: passing ‘const MatrixTy {aka const Matrix<int>}’ as ‘this’ argument discards qualifiers [-fpermissive]
+       std::cout << "m[" << i  << "][" << j << "] = " << m[i][j] << "\n";
+                                                            ^
+In file included from test.cpp:1:0:
+Matrix.h:41:17: note:   in call to ‘std::vector<T>& Matrix<T>::operator[](int) [with T = int]’
+ std::vector<T>& Matrix<T>::operator [](int index) {
+                 ^
+The code did not compile.  This test failed.
+-----------------------------------------------
+testcase 2 : Testing with Matrix<std::string>
+...compiling...
+test.cpp: In function ‘int main()’:
+test.cpp:73:60: error: passing ‘const MatrixTy {aka const Matrix<std::__cxx11::basic_string<char> >}’ as ‘this’ argument discards qualifiers [-fpermissive]
+       std::cout << "m[" << i  << "][" << j << "] = " << m[i][j] << "\n";
+                                                            ^
+In file included from test.cpp:1:0:
+Matrix.h:41:17: note:   in call to ‘std::vector<T>& Matrix<T>::operator[](int) [with T = std::__cxx11::basic_string<char>]’
+ std::vector<T>& Matrix<T>::operator [](int index) {
+                 ^
+The code did not compile.  This test failed.
+-----------------------------------------------
+testcase 3 : Testing with Matrix<(a custom class we wrote)>
+...compiling...
+test.cpp: In function ‘int main()’:
+test.cpp:73:60: error: passing ‘const MatrixTy {aka const Matrix<Tester>}’ as ‘this’ argument discards qualifiers [-fpermissive]
+       std::cout << "m[" << i  << "][" << j << "] = " << m[i][j] << "\n";
+                                                            ^
+In file included from test.cpp:1:0:
+Matrix.h:41:17: note:   in call to ‘std::vector<T>& Matrix<T>::operator[](int) [with T = Tester]’
+ std::vector<T>& Matrix<T>::operator [](int index) {
+                 ^
+The code did not compile.  This test failed.
+--------------------------------------------
+Preparing to test assert fails...
+Compiling assertion failure tester...
+Compiled.
+-----------------------------------------------
+testcase 4 :  operator[]: row number too high
+  - Valgrind was clean (no errors, no memory leaks)
+Your file matched the expected output
+Testcase passed
+-----------------------------------------------
+testcase 5 :  operator[]: row number too low
+  - Valgrind was clean (no errors, no memory leaks)
+Your file matched the expected output
+Testcase passed
+-----------------------------------------------
+testcase 6 :  operator+: different number of rows
+  - Valgrind was clean (no errors, no memory leaks)
+Your file matched the expected output
+Testcase passed
+-----------------------------------------------
+testcase 7 :  operator+: different number of columns
+  - Valgrind was clean (no errors, no memory leaks)
+Your file matched the expected output
+Testcase passed
+
+Overall Grade: F
