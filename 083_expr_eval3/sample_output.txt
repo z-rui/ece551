@@ -1,0 +1,12 @@
+Read expression: 9
+Parsed expression to: 9
+Evaluated expression to: 9
+Read expression: (+ 1 1)
+Parsed expression to: (1 + 1)
+Evaluated expression to: 2
+Read expression: (* 2 (+ 1 3))
+Parsed expression to: (2 * (1 + 3))
+Evaluated expression to: 8
+Read expression: ( / ( + ( * ( - 4    5  )  (* (+ 1 2) 42 )  ) (* -77 -11)) (  -  3  2 )) 
+Parsed expression to: ((((4 - 5) * ((1 + 2) * 42)) + (-77 * -11)) / (3 - 2))
+Evaluated expression to: 721

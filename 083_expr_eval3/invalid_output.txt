@@ -1,0 +1,25 @@
+Read expression: (+ 9 invalid input)
+Expected a number, but found invalid input)
+
+Could not parse expression, please try again.
+Read expression: an invalid line
+Expected a number, but found an invalid line
+
+Could not parse expression, please try again.
+Read expression: (+ invalid 9)
+Expected a number, but found invalid 9)
+
+Could not parse expression, please try again.
+Read expression: 
+End of line found mid expression!
+Could not parse expression, please try again.
+Read expression: ( / ( + ( * ( - 4    5  )  (* (+ 1 2) 42 )  ) (* -77 -11)) (  -  3  2 )
+Expected ) but found 
+Could not parse expression, please try again.
+Read expression: ( / ( + ( * ( - 4    5  )  (* (+ 1 2) 42 )  ) (* -77 -11) (  -  3  2 ))
+Expected ) but found (  -  3  2 ))
+
+Could not parse expression, please try again.
+Read expression: ( / ( + ( * ( - 4    5  )  (x (+ 1 2) 42 )  ) (* -77 -11)) (  -  3  2 ))
+Invalid op: x
+Could not parse expression, please try again.

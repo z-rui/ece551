@@ -1,0 +1,8 @@
+For the problem, you need to declare this abstract
+method in Expression:
+
+ long evaluate() const = 0;
+
+
+and implement it in each concrete subclass
+of Expression.
