@@ -23,6 +23,7 @@ public:
 	int getColumns() const {return nCols;}
 
 	std::vector<T>& operator [](int index);
+	const std::vector<T>& operator [](int index) const;
 	bool operator ==(const Matrix<T>& m);
 	Matrix<T> operator +(const Matrix<T>& m);
 	//Matrix& operator =(const Matrix<T>& m);
@@ -39,6 +40,12 @@ Matrix<T>::Matrix(int r, int c) : nRows(r), nCols(c), rows(r) {
 
 template <typename T>
 std::vector<T>& Matrix<T>::operator [](int index) {
+	assert(0 <= index && (size_t) index < rows.size());
+	return rows[index];
+}
+
+template <typename T>
+const std::vector<T>& Matrix<T>::operator [](int index) const {
 	assert(0 <= index && (size_t) index < rows.size());
 	return rows[index];
 }
