@@ -1,0 +1,22 @@
+Fluffy purrs.
+Leon purrs.
+Leon roars.
+Aslan purrs.
+Aslan roars.
+Fluffy purrs.
+Leon roars.
+Aslan roars.
+Don't forget your destructors!
+~Lion(Aslan)
+Aslan roars.
+~Cat(Aslan)
+Aslan purrs.
+~Animal(Aslan)
+~Lion(Leon)
+Leon roars.
+~Cat(Leon)
+Leon purrs.
+~Animal(Leon)
+~Cat(Fluffy)
+Fluffy purrs.
+~Animal(Fluffy)
