@@ -1,0 +1,133 @@
+As always, read and understand Chapter 19, then answer these questions
+in "answers.txt".
+
+1. What is the WORST possible way to deal with an error?
+
+A. Print an error message.
+B. Retry the operation.
+C. Crash the program.
+D. Fail silently.
+
+2. Which of the following best describes RAII?
+
+A. All resources are stored in a std::vector so they
+   can be iterated over and released later.
+B. Proper use of try-catch to provide at least a strong
+   exception guarantee in all cases.
+C. All resources are allocated after any code which
+   does not provide a no-throw guarantee.
+D. When a resource is allocated, it is held in a local
+   variable whose destructor will release that resource.
+
+
+3. What does perror(s) do?
+
+A. Prints s to stderr.
+B. Prints s, along with a string describing the current value of errno,
+   to stderr.
+C. Prints "error" followed by s to stderr.
+D. Prints a log of every error that has occured in the program
+   since s was modified.
+
+4. What is a "strong" exception guarantee?
+
+A. The method will never throw an exception.
+B. If an exception is thrown, no side effects have occured.
+C. If an exception is thrown, the object remains in a valid state
+   and no memory is leaked.
+D. If an exception is thrown, no memory is leaked.
+
+5. You should catch exceptions by
+
+A. Value
+B. Reference
+C. A pointer to the exception
+D. None of the above
+
+6. What kinds of exceptions are ok to throw from a destructor?
+
+A. No exception type is ever permissible
+B. Only std::bad_alloc
+C. Only std::invalid_argument
+D. Only std::destructor_failure
+E. std::bad_alloc or std::invalid_argument
+F. std::bad_alloc or std::destructor_failure
+G. std::invalid_argument or std::destructor_failure
+H. Any of std::bad_alloc, std::invalid_argument,
+   or std::destructor_failure.
+
+
+7. Suppose the you have a function f, which calls another function g:
+
+  int f(int x) {
+    //some code
+    int y = g(x+2);
+    //some more code
+ }
+
+ Inside of g, an exception is thrown, and propogates to the call site
+ shown above.  f has no try-catch blocks.  What best describes the
+ actions that occur next?
+
+A. The return value of g is treated as 0, assigned to y,
+   and execution resumes in f after the assignment statement.
+B. errno is set to indicate the exception type, 
+   f returns -1, and execution resumes from f's call site.
+C. f's frame is destroyed, invoking destructors for any
+   objects in it, then the exception propogates to f's call
+   site, where exception handling continues.
+D. None of the above.
+
+
+
+8. Suppose that in the above f were declared 
+     int f (int x) throw (std::invalid_argument)
+   but the exception that g threw was std::bad_alloc.  Now what happens?
+
+A. unexpected() is called, which (by default) calls terminate(),
+   as f's exception specification does not permits 
+   std::bad_exception (if it did, it would throw that).
+B. terminate() is called, which (by default) abort()s the program.
+C. Any memory held by f is released, the exception is
+   ignored, and execution continue at f's call site.
+D. The original exception is handled first.  Then a  
+   std::bad_exception is handled from the same point.
+E. A std::bad_exception is handled from f's call site.  
+   Then the original exception is handled from the same place.
+
+
+9. What happens if an exception propogates out of a constructor
+   during object creation?
+
+A. unexpected() is called, which (by default) throws std::bad_exception
+   if the constructors's exception specification permits, and otherwise
+   calls terminate().
+B. terminate() is called, which (by default) abort()s the program.
+C. The object's memory is released, the constructors's exception is
+   ignored, and the object creation evaluates to NULL.
+D. None of the above.
+
+
+10. What happens if an exception propogates out of the destructor
+    for an object which is being destroyed as part of handling another exception?
+
+A. unexpected() is called, which (by default) throws std::bad_exception
+   if the destructor's exception specification permits, and otherwise
+   calls terminate().
+B. terminate() is called, which (by default) abort()s the program.
+C. The object's memory is released, the destructor's exception is
+   ignored, and propogation of the original exception continues.
+D. The original exception is handled first.  Then the 
+   destructor's exception is handled.
+E. The destructor's exception is handled first.  Then the original
+   exception is handled.
+
+11. Which of the following is the appropriate way to throw
+    an exception of type xyz?
+
+A. throw xyz(args);
+B. throw new xyz(args);
+C. xyz temp(args);
+   throw &temp;   
+D. None of the above.
+
