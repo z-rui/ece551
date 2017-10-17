@@ -47,7 +47,7 @@ J. 3 and 4
 A. No destructors would happen, since Cat is POD.
 B. No destructors would happen, since Cat is not-POD.
 C. Cat's destructor (only).
-D. Animals's destructor (only)
+D. Animal's destructor (only)
 E. Cat's destructor, then Animal's destructor.
 F. Animal's destructor, then Cat's destructor.
 G. None of the above
@@ -103,7 +103,7 @@ B. When it declares that it inherits from its parent class
    arguments right after the parent class name there.
 C. You write the parent class name, with the parameters in parenthesis
    in the first position of the initializer list.
-D. You call super() and pass paremetsr to it as the first line of hte constructor.
+D. You call super() and pass parameters to it as the first line of the constructor.
 
 10. Abstract classes cannot be instantiated, however, they are quite useful.
     Which other language features make them so useful?
