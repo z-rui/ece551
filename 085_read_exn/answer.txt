@@ -1,0 +1,18 @@
+Something(1)
+Something(7)
+Something(3)
+~Something(3)
+Something(42)
+~Something(42)
+Something(99)
+~Something(99)
+Something(99)
+~Something(99)
+Something(99)
+~Something(99)
+Something(99)
+~Something(99)
+~Something(7)
+A domain error (Division by zero) occured!
+At the end of main 
+~Something(1)
