@@ -1,0 +1,125 @@
+As always, read and understand Chapter 21, then answer these questions
+in "answers.txt".
+
+
+1. Which of the following is not a common type of linked list?
+
+A. singly linked
+B. double linked
+C. circular 
+D. measurable
+E. None of the above (all are common types of linked lists)
+
+2. What can you add to your linked list class to make the
+   "add to back" operation more efficient?
+
+A. previous pointers 
+B. skip pointers 
+C. a tail pointer
+D. a backup list pointer
+E. None of the above
+
+3. AoP describes a common novice problem in writing
+   linked list destructors.  What type of memory allocation
+   error is this problem?
+
+A. Double free/delete
+B. Freeing/deleting a pointer not returned by malloc/new
+C. Use of memory after it has been freed/deleted
+D. Memory Leak
+E. None of the above
+
+4. AoP describes three ways to insert in sorted order, 
+   and to remove a particular node.  One of these is to find a pointer 
+   to the node before you want  to remove.  Why is this approach not so
+   good?
+
+A. It runs in O(N^2) time, while the others run in O(N) time.
+B. It makes special cases where the other algorithms do not.
+C. It exhibits worse cache behavior relative to the other algorithms.
+D. You should always use recursion if you can.
+E. None of the above
+
+5. If you use a recursive solutions to insert in sorted order or
+   remove a particular node, what do you need to do with the return value
+   of the recursive call in the helper function?
+
+A. Ignore it
+B. Set it equal to NULL
+C. free/delete it
+D. Set the current node's next pointer to it
+E. None of the above
+
+6. AoP shows how to use what feature of C++ to avoid code
+   duplication between remove and removeAllOccurences?
+
+A. templates
+B. subtype polymorphism
+C. exceptions
+D. iostreams
+E. references
+F. None of the above
+
+7. With respect to linked lists, iterators provide a nice combination
+   of which two desireable features?
+
+A. Easy debugging and short functions/methods
+B. Documentation and code re-use
+C. Testing and readability
+D. Abstraction and performance
+E. None of the above
+
+8. C++'s std::list is what kind of list?
+
+A. singly linked
+B. doubly linked
+C. circular 
+D. measurable
+E. None of the above 
+
+
+9. What method in std::list would you use to get
+   an iterator which refers to the start of the list?
+
+A. .begin()
+B. .start_iterator()
+C. .iterator()
+D. .start()
+E. None of the above
+
+10. What method in std::list would you use to add 
+    an element to the end of the list?
+
+A. .add_back()
+B. .add()
+C. .push_back()
+D. .pop_back()
+E. .end()
+F. None of the above
+
+11.  Suppose you have an iterator (it) which
+     refers to an element in a std::list (lst).
+     You want to remove the element that it 
+     refers to from lst.  What would you write?
+
+A. it.remove();
+B. delete it;
+C. lst.delete(it);
+D. lst.erase(it);
+E. None of the above
+
+12. After doing correct action for question 11, which
+    iterators are invalidated?
+
+A. All iterators on all std::lists
+B. All iterators on all std::lists which are instantiated
+   on the same type for the template parameter.
+C. All iterators on the specific std::list from
+   which the element was removed.
+D. All iterators which reference the removed element,
+   or the element immediately before or after it.
+E. All iterators which reference the removed element.
+F. Only the particular iterator which was used to
+   remove the element (it)
+G. No iterators are invalidated
+H. None of the above
