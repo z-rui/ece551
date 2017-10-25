@@ -1,0 +1,60 @@
+For this problem, you will be making a templated
+linked list class.   This list will be *doubly* linked (most
+of the ones in lecture are singly linked). 
+
+
+In ll.h, create a LinkedList class templated over what type of data it holds.
+Your LinkedList should contain the following:
+
+ - A private inner class Node for its nodes, which should have
+   data,next, and previous.  You may wish to write some constructors too.
+ - Two private Node *s: one for the head of the list and one for the tail of the list.
+ - A "void addFront(const T &item)" method which adds the item to the front
+ - A "void addBack(const T &item)" method which adds the item to the back
+ - A "bool remove(const T &item)" method which removes the specified item from the
+   list (assume that == is overloaded on Ts, and use it to tell if you have
+   the item you want). This should return true if an item was actually removed
+   and false if no such item existed.  You should only remove the first
+   (starting from the head) if there are multiple items that match.
+ - A "T& operator[](int index)" which gives a reference to the data
+   in the "index" element (starting from 0).  You should make an exception
+   class (which extends std::exception) and throw an instance of it
+   when the requested item does not exist.
+   You should write a "const" and a "non-const" version of this.
+ - A "int find(const T &item) const" which returns the index of the item in the list
+   or -1 if no such item exists
+ - A default constructor which makes the head and tail both NULL.
+ - A copy constructor and operator= which make deep copies of the list
+ - A destructor for the list
+ - A getSize() function which returns the number of items in the list.
+   You can either implement this by having getSize() count the items in the list,
+   or by adding another field to the class which tracks the size.
+Hints:
+------
+  - Write a "destroy" function which you can use in both the destructor
+    and the operator=
+  - Your copy constructor can intialize the object to a sane state, then
+    use the operator= you wrote (or will write) to do most of the work
+  - Draw pictures
+  - Draw pictures 
+  - No seriously, draw a picture.
+  - You may find it useful to write a method which checks the invariants
+    of your data structure, and (while you are debugging) call this method 
+    after you finish each modification to it.  You might use assert() in
+    this for ease of debugging.
+
+
+=================
+Testing your list
+=================
+
+I have provided you with a "count.cpp" file which uses the LinkedList that you
+wrote in a variety of ways.  This program takes two command line arguments (both
+of which name files), reads in those files---splitting them into "words" (note
+that it does a very simple job of this), counts how many occurences of each word
+there are in the first file, removes all the words that appear in the second file,
+sort the remaining list, and prints the results.
+
+You should make some test cases and try out the behavior of your linked list
+before you submit for grading.
+
