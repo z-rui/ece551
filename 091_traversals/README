@@ -1,0 +1,27 @@
+For this problem, you will be taking a sequence of numbers, adding them
+to a BST (by hand), and then performing each of the standard
+three traversals (pre-order, in-order, and post-order) to print out the
+tree's contents.  For this problem, there are three trees. You will
+write the answer for each tree into a separate file (answer1.txt, answer2.txt,
+and answer3.txt).  In each file, you will write the results of each traversal
+on the appropriate line (one traversal per line), with the items separated by spaces.
+For the third tree, you will also delete a few items before you perform your traversals.
+For deletions of nodes with two children, select the left-most right child (right
+once, then all the way left) as the replacement.
+
+For example, if we added 2, 1, and 3 to the tree, your answer file would look like:
+
+Preorder: 2 1 3
+Inorder: 1 2 3
+Postorder: 1 3 2
+
+
+
+==========================
+
+Tree 1:  7 2 5 6 1 9 3
+
+Tree 2:  33 44 12 55 99 16 77 0 -1 100
+
+Tree 3:  2 4 1 7 3 9 -1 88 17 -23 16 44 77
+         Then delete 2, 16, -1.
