@@ -1,0 +1,78 @@
+For this assignment, you are going to write a file de-duplication
+program. A de-duplication program searches through a set of
+directories and removes files that are exactly identical to other
+files. However, to reduce the risk of catastrophe as you test this
+program, you are not actually going to remove the files, but instead,
+print a shell script, which would remove the files if you ran it.
+
+*DO NOT ACTUALLY REMOVE THE DUPLICATED FILES*
+
+Your program has the following requirements:
+
+ - It must take as command line arguments 1 or more directory names,
+   find all regular files (recursively) contained within those
+   directories, and find duplicates to remove.
+
+ - As your program's output is a shell script, it should first print
+   #!/bin/bash
+
+ - Whenever your program finds a duplicated file, it must print lines
+   of a shell script to standard output. First, it must print a
+   comment indicating what file it is removing and what file it is a
+   duplicate of, then it should print an "rm" command, which would
+   remove the file. The program should print this output using the
+   full pathnames of the files. For example:
+   
+   #Removing /home/ece551/test/file1 (duplicate of
+   /home/ece551/test/dir1/file2).
+   
+   rm /home/ece551/test/file1
+
+   Your script should have exactly the same format.
+
+ - Of the identical files, you may remove any of the copies, as long
+   as you leave one of them.
+
+ - Your program must work correctly in the presence of multiple copies
+   of the same file (so if file1, file2, file3, and file4 are the
+   same, your program must delete three of them and leave one;
+   however, it is considered correct regardless of which one you
+   leave).
+
+ - Your program should ignore symlinks, as they do not actually
+   represent another copy of the data.
+
+ - Your program may NOT perform an N^2 comparison of all of the files
+   (checking every file's contents against every other file's
+   contents). Instead, you must use a hashtable, in which you hash the
+   contents of the files, and only compare files that have the same
+   hash. You can expect that we may test on a large number of
+   large-ish files and will require your program to complete in a
+   reasonable time. 
+
+ - You may assume that the contents of the directories/files will not
+   change while your program runs (unless you change them).
+
+ - Provide a Makefile that compiles your code into a program called
+   dedup 
+
+At this point, you have had enough experience working on moderately
+sized programming problems that we are not going to hold your hand and
+walk you through how to break this down into reasonably sized pieces
+and incrementally test. Instead, we are simply going to expect that
+you use what you have learned in this class to write the program
+yourself.
+
+This program may require library functions and system calls that you
+are likely unfamiliar with. We expect that you have the skills to find
+them and read their documentation by this point. 
+
+Ultimately, you should provide a Makefile that compiles your program
+for us into a binary called dedup. As always, your program should
+valgrind cleanly and be resilient to error conditions.
+
+You may find the files in /var/dedup useful to test on.
+
+You may use --std=gnu++11 so that you can use the built in hash
+functions. You should not use any other feature of C++ 11 unless you
+have read Appendix D and understand them completely.
