@@ -1,0 +1,9 @@
+For this problem, you will implement a Map with a Binary Search Tree.
+You should write a templated BstMap class in a file called bstmap.h.
+Your BstMap should implement the ADT found in map.h, and must use
+a BST.  Note that your lookup function should throw a std::invalid_argument
+exception if the key is not found.  If you add a key which already exists,
+you should replace its value.
+
+You should test this code yourself in a separate file.
+
