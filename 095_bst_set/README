@@ -1,0 +1,8 @@
+For this problem, you will implement a Set with a Binary Search Tree.
+You should write a templated BstSet class in a file called bstset.h.
+Your BstSet should implement the ADT found in set.h, and must use
+a BST.  If you are clever, you can make use of the code that you wrote in
+the previous problem to do most of the work for this problem....
+
+You should test this code yourself in a separate file.
+
