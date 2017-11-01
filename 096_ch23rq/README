@@ -1,0 +1,110 @@
+As always, read and understand Chapter 23, then answer these questions
+in "answers.txt".
+
+1. If a hash table with N elements  is well designed and implemented (i.e., 
+   has a good hash function, is appropriately sized, etc), then you
+   would expect accesses to it to have what runtime?
+
+A. O(1)
+B. O(lg(N))
+C. O(N)
+D. O(N^2)
+E. O(2^N)
+F. O(N!)
+G. None of the above
+
+For the next two questions, consider the following line of
+code which has had a typename replaced by TYPE, and a binary
+operator replaced by OP:
+     TYPE bucket =   hash(key) OP num_buckets;
+
+2. What operator should OP be so taht this line of code
+   determines the bucket which the key goes into?
+A. +
+B. -
+C. *
+D. /
+E. %
+F. &
+G. |
+H. ^
+I. <
+J. None of the above
+
+3. What is the most correct type for TYPE?
+   [Hint: think about what you will use the variable 'bucket' for]
+
+A. char * 
+B. const char * 
+C. int
+D. char
+E. unsigned char.
+F. size_t
+G. ssize_t
+H. void *
+I. None of the above
+
+4. What is "rehashing"?
+
+A. When you find that a bucket is already occupied, so you
+   compute a variant of the hash function to find a new bucket.
+B. When the load factor exceeds a threshold, so you increase
+   the number of buckets and reinsert all elements.
+C. When you determine that your hash function is poor for your
+   dataset, so you alter your hash function while the program is runnign.
+D. When you compute hash(hash(key)) instead of hash(key).
+E. None of the above
+
+5. If you write a program which works with passwords, how should you store them?
+
+A. Store the passwords directly.
+B. Hash the passwords.
+C. Add pepper to the passwords, then store them.
+D. Salt the passwords, then hash them. Store the salt and the hash.
+E. Salt and pepper the passwords, then hash. Store the salt and hash, but not the pepper.
+F. Smothered, covered, cappped.
+G. One provelone without.
+H. None of the above.
+
+6. How good or bad is this hash function for strings?
+
+unsigned hash(const std::string & str) {
+  unsigned ans = 0;
+  for ( std::string::const iterator it=str.begin();
+        it!=str.end(); 
+        ++it) {
+    ans += * it;
+  }
+  return ans ;
+}
+
+A. It is not a valid hash function.
+B. It is valid, but not a good choice.
+C. It is valid, and is decent, but not great.
+D. It is a good hash function.
+E. It is a cryptographically secure hash function.
+
+7. What is external chaining?
+
+A. A collision resolution scheme in which a fixed ammount is added
+   to the bucket number until an empty bucket is found.
+B. A collision resolution scheme in which an increasing ammount is added
+   to the bucket number until an empty bucket is found.
+C. A collision resolution scheme in which linked lists are used
+   to hold all colliding elements in a bucket.
+D. A colliding resolution scheme in which the element being
+   collided with is removed.
+E. None of the above.
+
+8. What is linear probing?
+
+A. A collision resolution scheme in which a fixed ammount is added
+   to the bucket number until an empty bucket is found.
+B. A collision resolution scheme in which an increasing ammount is added
+   to the bucket number until an empty bucket is found.
+C. A collision resolution scheme in which linked lists are used
+   to hold all colliding elements in a bucket.
+D. A colliding resolution scheme in which the element being
+   collided with is removed.
+E. None of the above.
+
