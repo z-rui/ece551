@@ -19,9 +19,10 @@
 #include <sys/stat.h>  
 
 /*:20*//*31:*/
-#line 360 "./dedup.w"
+#line 365 "./dedup.w"
 
 #include <fstream> 
+#include <cstring> 
 
 /*:31*/
 #line 73 "./dedup.w"
@@ -225,7 +226,7 @@ static bool equal(std::istream&,std::istream&);
 #line 339 "./dedup.w"
 
 struct Slot{
-std::string path;
+char*path;
 size_t hash;
 };
 Slot*hvec;
@@ -243,34 +244,32 @@ FileSet()
 ,hsiz(HASH_INISIZ)
 ,hcnt(0)
 {}
-~FileSet(){delete[]hvec;}
+~FileSet(){
+for(size_t i= 0;i<hsiz;i++){
+delete[]hvec[i].path;
+}
+delete[]hvec;
+}
 
 /*:30*//*32:*/
-#line 369 "./dedup.w"
+#line 374 "./dedup.w"
 
-const std::string&add(const std::string&path)
+const char*findDuplicate(const char*path)
 {
 Slot*p,*pos,*end;
-std::ifstream f(path.c_str());
+std::ifstream f(path);
 size_t h= hash(f);
 p= pos= &hvec[h%hsiz];
 end= &hvec[hsiz];
-while(!p->path.empty()){
+while(p->path!=NULL){
 /*33:*/
-#line 388 "./dedup.w"
+#line 393 "./dedup.w"
 
 if(p->hash==h){
-/*34:*/
-#line 402 "./dedup.w"
-
-if(p->path==path){
-return path;
+if(std::strcmp(p->path,path)==0){
+return NULL;
 }
-
-/*:34*/
-#line 390 "./dedup.w"
-
-std::ifstream fs(p->path.c_str());
+std::ifstream fs(p->path);
 f.clear();
 f.seekg(0);
 if(equal(fs,f)){
@@ -279,33 +278,35 @@ return p->path;
 }
 
 /*:33*/
-#line 378 "./dedup.w"
+#line 383 "./dedup.w"
 
 p++;
 if(p==end){
 p= hvec;
 }
 }
-/*35:*/
-#line 407 "./dedup.w"
+/*34:*/
+#line 406 "./dedup.w"
 
-p->path= path;
+size_t len= std::strlen(path);
+p->path= new char[len+1];
+std::memcpy(p->path,path,len+1);
 p->hash= h;
 hcnt++;
 if(hcnt> hsiz/2){
-/*36:*/
-#line 421 "./dedup.w"
+/*35:*/
+#line 422 "./dedup.w"
 
 Slot*nvec= new Slot[hsiz*2]();
 size_t nsiz= hsiz*2;
 for(size_t i= 0;i<hsiz;i++){
 Slot*p= &hvec[i];
-if(p->path.empty()){
+if(p->path==NULL){
 continue;
 }
 Slot*q= &nvec[p->hash%nsiz];
 Slot*end= &nvec[nsiz];
-while(!q->path.empty()){
+while(q->path!=NULL){
 q++;
 if(q==end){
 q= nvec;
@@ -317,15 +318,15 @@ delete[]hvec;
 hvec= nvec;
 hsiz= nsiz;
 
-/*:36*/
-#line 412 "./dedup.w"
+/*:35*/
+#line 413 "./dedup.w"
 
 }
 
-/*:35*/
-#line 384 "./dedup.w"
+/*:34*/
+#line 389 "./dedup.w"
 
-return path;
+return NULL;
 }
 
 /*:32*/
@@ -333,8 +334,8 @@ return path;
 
 };
 
-/*:25*//*38:*/
-#line 450 "./dedup.w"
+/*:25*//*37:*/
+#line 451 "./dedup.w"
 
 class Dedup:FileTreeWalker{
 protected:
@@ -344,11 +345,11 @@ public:
 void run(const char*path){walk(path);}
 };
 
-/*:38*/
+/*:37*/
 #line 74 "./dedup.w"
 
-/*40:*/
-#line 473 "./dedup.w"
+/*39:*/
+#line 472 "./dedup.w"
 
 int main(int argc,char*argv[])
 {
@@ -364,7 +365,7 @@ dd.run(argv[i]);
 return 0;
 }
 
-/*:40*/
+/*:39*/
 #line 75 "./dedup.w"
 
 
@@ -393,20 +394,18 @@ return false;
 return f1.eof()&&f2.eof();
 }
 
-/*:28*//*39:*/
-#line 459 "./dedup.w"
+/*:28*//*38:*/
+#line 460 "./dedup.w"
 
 int Dedup::work(const std::string&path)
 {
-const std::string&stored_path= fset.add(path);
-if(&stored_path!=&path){
-
-
+const char*dup= fset.findDuplicate(path.c_str());
+if(dup!=NULL){
 std::cout<<"#Removing "<<path
-<<" (duplicate of "<<stored_path
+<<" (duplicate of "<<dup
 <<").\n\nrm "<<path<<"\n\n";
 }
 return 0;
 }
 
-/*:39*/
+/*:38*/

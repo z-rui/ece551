@@ -338,7 +338,7 @@ Each slot contains the file path and the hash value of the file content.
 
 @<private fields in |FileSet|@>=
 struct Slot {
-	std::string path;
+	char *path;
 	size_t hash;
 };
 Slot *hvec; /* array of slots */
@@ -355,26 +355,31 @@ because I do not know in advance how many files I will be processing.
 		, hsiz(HASH_INISIZ)
 		, hcnt(0)
 	{}
-	~FileSet() { delete[] hvec; }
+	~FileSet() {
+		for (size_t i = 0; i < hsiz; i++) {
+			delete[] hvec[i].path;
+		}
+		delete[] hvec;
+	}
 
 @ @<headers@>+=
 #include <fstream>
+#include <cstring>
 
-@ In fact, |FileSet| has only one operation, |add|.
-It tries to add a file to the set, but also has an interesting
-property:  if the file is not a duplicate, |path| will be returned;
-otherwise it returns the stored path of an existing file, of which
-the to-be-added file is a duplicate.
+@ In fact, |FileSet| has only one operation, |findDuplicate|.
+It tries to find a file that has been seen and is the duplicate
+of the new file.  If found, return the path of the duplicate;
+otherwise, return NULL.
 
 @<public fields in |FileSet|@>=
-const std::string& add(const std::string& path)
+const char *findDuplicate(const char *path)
 {
 	Slot *p, *pos, *end;
-	std::ifstream f(path.c_str());
+	std::ifstream f(path);
 	size_t h = hash(f);
 	p = pos = &hvec[h % hsiz];
 	end = &hvec[hsiz];
-	while (!p->path.empty()) {
+	while (p->path != NULL) {
 		@<if found a duplicate, return the stored path@>@;
 		p++; /* linear probing */
 		if (p == end) {
@@ -382,13 +387,15 @@ const std::string& add(const std::string& path)
 		}
 	}
 	@<add |path| to hash table@>@;
-	return path;
+	return NULL;
 }
 
 @ @<if found a duplicate...@>=
 if (p->hash == h) { /* very likely two files are identical */
-	@<|return path| if the two files have the same path@>@;
-	std::ifstream fs(p->path.c_str());
+	if (std::strcmp(p->path, path) == 0) {
+		return NULL; /* same file does not count as duplicate */
+	}
+	std::ifstream fs(p->path);
 	f.clear();
 	f.seekg(0);
 	if (equal(fs, f)) { /* yes, they are indeed identical */
@@ -396,16 +403,10 @@ if (p->hash == h) { /* very likely two files are identical */
 	}
 }
 
-@ I don't know why I would see the same path twice.
-Maybe the user gave some arguments that are not disjoint?
-
-@<|return path| if...@>=
-if (p->path == path) {
-	return path;
-}
-
 @ @<add |path|...@>=
-p->path = path;
+size_t len = std::strlen(path);
+p->path = new char[len+1];
+std::memcpy(p->path, path, len+1);
 p->hash = h;
 hcnt++;
 if (hcnt > hsiz / 2) {
@@ -423,12 +424,12 @@ Slot *nvec = new Slot[hsiz * 2]();
 size_t nsiz = hsiz * 2;
 for (size_t i = 0; i < hsiz; i++) {
 	Slot *p = &hvec[i];
-	if (p->path.empty()) {
+	if (p->path == NULL) {
 		continue;
 	}
 	Slot *q = &nvec[p->hash % nsiz];
 	Slot *end = &nvec[nsiz];
-	while (!q->path.empty()) {
+	while (q->path != NULL) {
 		q++;
 		if (q == end) {
 			q = nvec;
@@ -459,12 +460,10 @@ public:@/
 @ @c
 int Dedup::work(const std::string &path)
 {
-	const std::string &stored_path = fset.add(path);
-	if (&stored_path != &path) {
-		/* comparing addresses is OK,
-		   due to the implementation of |FileSet::add| */
+	const char *dup = fset.findDuplicate(path.c_str());
+	if (dup != NULL) {
 		std::cout << "#Removing " << path
-			<< " (duplicate of " << stored_path
+			<< " (duplicate of " << dup
 			<< ").\n\nrm " << path << "\n\n";
 	}
 	return 0;
