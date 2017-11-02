@@ -1,0 +1,83 @@
+As always, read and understand Chapter 24, then answer these questions
+in "answers.txt".
+
+For questions 1-4, consider the max heap created by adding
+the following items (in this order) to an empty heap:
+
+9, 3, 15, 99, 1, 7, 12, 6
+
+1.  When you inserted 6, it had to be swapped with:
+
+A. 1
+B. 7
+C. 1 then 3
+D. 3
+E. 15 then 7
+F. 7 then 15
+G. 9
+H. No swaps were involved.
+I. None of the above
+
+2. In array form, the final heap is:
+
+A. 3  6  15 99 1  7  12 9
+B. 3  9  7  1  6  12 15 99
+C. 99 12 9  7  1  15 6  3
+D. 99 15 12 6  1  7  9  3
+E. 1  3  6  7  9  12 15 99
+F. 1  7  6  99 12 15 3  9
+G. None of the above
+
+3. If you were to remove the maximum element, what
+   element would temporarily become the root, and need
+   to be bubbled down?
+
+A. 1
+B. 3 
+C. 6
+D. 7
+E. 9
+F. 12
+G. 15
+
+4. If you were to add a new element to the original tree 
+   (without having done the removal in question 3),
+   under what condition would it need exactly two swaps
+   as it bubbles up?
+
+A. It is between 7 and 12
+B. It is between 6 and 99
+C. It is between 3 and 15
+D. It is between 15 and 99
+E. It is greater than 99
+F. It is less than 3
+G. None of the above.
+
+5. What property does Huffman coding exploit to compress data?
+
+A. Spatial Locality
+B. Different Frequencies of Symbols
+C. Abstraction
+D. Gaussian Distribution of Hash Results
+E. None of the above
+
+6. Huffman compression finds an optimal encoding where...
+
+A. each symbol is encoded in 6 or 7 bits.
+B. you are guaranteed to compress the data by at least 10%.
+C. no symbol's encoding is a prefix of another's.
+D. each symbol's encoding includes an error correction bit.
+E. None of the above.
+
+7. The Huffman compression algorithm uses what two data structures?
+
+A. A linked list and a heap.
+B. A linked list and a binary search tree.
+C. A hash table and a priority queue.
+D. A hash table and a binary search tree.
+E. A stack and a priority queue.
+F. A priority queue and a binary tree.
+G. A binary tree and a binary search tree.
+H. None of the above.
+
+
