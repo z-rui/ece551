@@ -421,8 +421,11 @@ are stored.
 @<rehash@>=
 Slot *nvec = new Slot[hsiz * 2]();
 size_t nsiz = hsiz * 2;
-for (size_t i = 0; i < hcnt; i++) {
+for (size_t i = 0; i < hsiz; i++) {
 	Slot *p = &hvec[i];
+	if (p->path.empty()) {
+		continue;
+	}
 	Slot *q = &nvec[p->hash % nsiz];
 	Slot *end = &nvec[nsiz];
 	while (!q->path.empty()) {

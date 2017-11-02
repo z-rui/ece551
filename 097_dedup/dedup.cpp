@@ -298,8 +298,11 @@ if(hcnt> hsiz/2){
 
 Slot*nvec= new Slot[hsiz*2]();
 size_t nsiz= hsiz*2;
-for(size_t i= 0;i<hcnt;i++){
+for(size_t i= 0;i<hsiz;i++){
 Slot*p= &hvec[i];
+if(p->path.empty()){
+continue;
+}
 Slot*q= &nvec[p->hash%nsiz];
 Slot*end= &nvec[nsiz];
 while(!q->path.empty()){
@@ -331,7 +334,7 @@ return path;
 };
 
 /*:25*//*38:*/
-#line 447 "./dedup.w"
+#line 450 "./dedup.w"
 
 class Dedup:FileTreeWalker{
 protected:
@@ -345,7 +348,7 @@ void run(const char*path){walk(path);}
 #line 74 "./dedup.w"
 
 /*40:*/
-#line 470 "./dedup.w"
+#line 473 "./dedup.w"
 
 int main(int argc,char*argv[])
 {
@@ -391,7 +394,7 @@ return f1.eof()&&f2.eof();
 }
 
 /*:28*//*39:*/
-#line 456 "./dedup.w"
+#line 459 "./dedup.w"
 
 int Dedup::work(const std::string&path)
 {

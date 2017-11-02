@@ -9,6 +9,10 @@ dedup: dedup.o
 dedup.cpp: dedup.w
 	ctangle $< - $@
 
+debug: dedup.w dedup-debug.ch
+	ctangle dedup dedup-debug.ch debug.cpp
+	$(CXX) $(CXXFLAGS) -o $@ debug.cpp
+
 doc: dedup.pdf
 
 dedup.pdf: dedup.tex
