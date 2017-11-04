@@ -1,0 +1,70 @@
+Now, you have two last pieces to make the whole thing work, both
+of which are in compress.cpp.
+
+First, look for the writeCompressedOutput function:
+void writeCompressedOutput(const char* inFile,
+			   const char *outFile,
+			   const std::map<char,BitString> &theMap );
+
+
+
+In this function, I already created a BitFileWriter (bfw) for the
+output file for you.  The BitFileWriter class abstracts away the
+complexities of writing date to a file at granularities smaller than
+an individual byte (which is what the C library lets you write at a
+time).
+
+I also call the writeHeader function, which I have written for you.
+This function writes out a table for the decompressor to understand
+how the symbols in the file are encoded.  You do not need to know the
+details of this table to do what you need, but if you remove the call
+to writeHeader, your program will not work.
+
+After this, find a //WRITE YOUR CODE HERE !  marker.
+This is where you need to read the input file (do  not
+store the entire contents in memory, since it might be Huge),
+and encode each character with the BitString you have previously computed
+and stored in theMap. 
+ A few notes on this:
+   - You should check if theMap contains the character you have read
+     before you try to do anything with it, but if theMap does not contain it,
+     then it indicates an error in your previous code: you should have computed
+     a mapping for it earlier.
+  - The BitFileWriter class (of which bfw is an instance) has a 
+    .writeBitString(bitString) method that will take a BitString and write
+    it to the output file.  You should make use of this method.
+ - Do not forget to write the encoding of "character 256" which we use
+   to represent the end of the file (we must represent it explicitly,
+   since we might not have an integer number of bytes of output, and otherwise
+   we cannot distinguish whether the remaining bits of the byte are input
+   or junk).
+
+ - When you are finished reading the input, you should close your input file.
+
+ - Note that you do not need to close the output file, the destructor for 
+   BitFileWriter takes care of closing the file.
+
+
+After that, you will need to write the main function, which puts the whole thing
+together.  You already have the files for the other problems symlinked into this directory.
+Note that the previou problem's main does 90% of what you need.
+
+Compiling, testing, and debugging:
+ - If you try to use [] on theMap, you WILL get errors, since theMap is const,
+   and [] may modify the it.  Use .find
+
+ - You should be able to take *any* file, compress it, decompress the resulting
+   output, and get *exactly* the original input file back. We have provided
+   a binary for the working decompressor.
+ 
+ - If you compress /usr/share/dict/words on the 551 machine, the resulting file should
+have an md5 hash of 
+   d1a8b3f3adae08dba875175ccd774be7
+ You can compute the md5 has of a file with the "md5sum" command:
+   ./compress /usr/share/dict/words words.compressed
+   md5sum words.compressed
+
+ - I have provided you with a Makefile that builds the compressor.
+
+ - As always, you should valgrind cleanly.
+
