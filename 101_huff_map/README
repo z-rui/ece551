@@ -1,0 +1,49 @@
+Huffman Compression: Building an encoding map
+=============================================
+   After the tree is built (which you did in the last probem), 
+you need to use it to create a mapping which encodes characters 
+with the appropriate bit strings. We have provided a  BitString 
+class  (see bitstring.h) which lets you accumulate strings of bits 
+easily.
+
+Look in node.cpp and you will find one empty function:
+
+void Node::buildMap(BitString b, std::map<unsigned,BitString> & theMap);
+
+Note that this function is a member function of the Node class.  
+ 
+
+ This function builds up a map which maps from each character that appears
+ in the tree to the BitString representing the path to get to that character
+ (0 = left, 1 = right).  
+
+ You should implement this function using recursion, and the following information:
+
+ 
+ - if this node contains a symbol (sym != NO_SYM), the node is a "leaf"
+   (you might assert that left and right are both NULL to help you detect any bugs
+    in your code to build the tree).    When this happens, you should update
+   theMap, so that it maps sym to the BitString representing the path to get to this Node
+   (which you is passed down as an argument).
+
+ - if this node does not contain a symbol (sym == NO_SYM), then it is
+   an "internal" node.  In this case, both left and right should be
+   non-NULL.  You should not make any mapping updates, but instead
+   should recurse to both the left and the right. When you recurse
+   left, you should update the BitString you pass in to reflect the
+   fact you went left (add a 0 to it with the .plusZero() method).
+   When you recurse right, you should update the BitString you pass in
+   to reflect the fact you went right (add a 1 to it with the
+   .plusOne() method).
+   NOTE: plusZero and plusOne do NOT modify the object they are called on!
+    Instead they return a new object with the 0/1 added.
+
+   Also note that you should just keep passing the same map reference down through all
+   calls, since you want everything to update the same Map.
+
+
+We have provided a Makefile and a testMap.cpp file to help you test your code
+for this problem. The included file words.map has the mapping for /usr/share/dict/words
+on the ece551 machine.
+
+
