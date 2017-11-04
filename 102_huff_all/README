@@ -10,7 +10,7 @@ void writeCompressedOutput(const char* inFile,
 
 In this function, I already created a BitFileWriter (bfw) for the
 output file for you.  The BitFileWriter class abstracts away the
-complexities of writing date to a file at granularities smaller than
+complexities of writing data to a file at granularities smaller than
 an individual byte (which is what the C library lets you write at a
 time).
 
@@ -47,7 +47,7 @@ and stored in theMap.
 
 After that, you will need to write the main function, which puts the whole thing
 together.  You already have the files for the other problems symlinked into this directory.
-Note that the previou problem's main does 90% of what you need.
+Note that the previous problem's main does 90% of what you need.
 
 Compiling, testing, and debugging:
  - If you try to use [] on theMap, you WILL get errors, since theMap is const,
