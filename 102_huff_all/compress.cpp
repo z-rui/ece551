@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include "readFreq.h"
 #include "node.h"
-
+#include <fstream>
 
 
 void writeHeader(BitFileWriter * bfw, const std::map<unsigned,BitString> &theMap) {
@@ -25,18 +25,29 @@ void writeHeader(BitFileWriter * bfw, const std::map<unsigned,BitString> &theMap
 }
 
 void writeCompressedOutput(const char* inFile,
-			   const char *outFile,
-			   const std::map<unsigned,BitString> &theMap ){
+                           const char *outFile,
+                           const std::map<unsigned,BitString> &theMap ){
   BitFileWriter bfw(outFile);
   writeHeader(&bfw,theMap);
 
   //WRITE YOUR CODE HERE!
   //open the input file for reading
+  std::ifstream f(inFile);
+  typename std::map<unsigned, BitString>::const_iterator it;
+  char ch;
 
   //You need to read the input file, lookup the characters in the map,
   //and write the proper bit string with the BitFileWriter
+  while (f.get(ch)) {
+    it = theMap.find((unsigned char) ch);
+    assert(it != theMap.end());
+    bfw.writeBitString(it->second);
+  }
 
   //dont forget to lookup 256 for the EOF marker, and write it out.
+  it = theMap.find(256);
+  assert(it != theMap.end());
+  bfw.writeBitString(it->second);
 
   //BitFileWriter will close the output file in its destructor
   //but you probably need to close your input file.
@@ -51,7 +62,17 @@ int main(int argc, char ** argv) {
   //Implement main
   //hint 1: most of the work is already done. 
   //hint 2: you can look at the main from the previous tester for 90% of this
-
+  const char *inFile = argv[1], *outFile = argv[2];
+  uint64_t *counts = readFrequencies(inFile);
+  Node *tree = buildTree(counts);
+  delete[] counts;
+  BitString bs; // ouch..
+  std::map<unsigned, BitString> theMap;
+  tree->buildMap(bs, theMap);
+  delete tree;
+  writeCompressedOutput(inFile, outFile, theMap);
 
   return EXIT_SUCCESS;
 }
+
+// vim: ts=2:sw=2:et
