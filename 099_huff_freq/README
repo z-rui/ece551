@@ -1,0 +1,29 @@
+Huffman Compression: Counting Frequencies
+=========================================
+For this problem, and the next few problems, you will be
+writing a Huffman compressor.  We have broken this
+down into smaller pieces to help guide you through
+the problem.
+
+ First, write the readFrequencies function:
+
+uint64_t * readFrequencies(const char * fname) {
+  //WRITE ME
+}
+
+This function takes the name of a file (fname), opens the file, and builds
+an array of the frequency of each character.  Note that uint64_t is just
+a 64 bit unsigned int (in case you have a very large count for any character).
+
+ - You should return an array that has 257 entries (one for each possible character,
+   plus an end-of-file indicator).
+ - The array you return should have a count of how many times that character 
+   appears in the input.  
+ - You should use the index 256 of the array to count the end of file marker,
+   which should be treated as appearing EXACTLY ONCE.
+
+Don't forget to close your file when you are done with it.
+
+The provided Makefile and testFreq.cpp will create a testFreq program which lets
+you test this code before proceeding.  The included file words.freq contains
+the frequency counts for /usr/share/dict/words on the ece551 machine.
