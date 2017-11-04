@@ -1,0 +1,79 @@
+  For this problem, you will be building the tree which is used
+to encode the data.  Open the buildTree.cpp file.
+
+This file has one empty function:
+  
+  Node *  buildTree(uint64_t * counts);
+
+which you should write.
+
+You will want to make use of the type priority_queue_t, which is typedefed in node.h as
+
+typedef std::priority_queue<Node *,std::vector<Node*>,NodePtrCompare> priority_queue_t;
+
+
+This type is a PriorityQueue of Node*s. The Node class represents the Nodes 
+in the Binary Tree (not Binary Search Tree) which is used to make the encodings.
+The declaration looks a bit complex, but it is just a templated type in the C++ library.
+It looks overly complex because we have to give it a non-standard comparison, since it holds
+pointers, and we dont want them priortized by comparing the address they point to
+(the NodePtrCompare class is already written in node.h).
+
+You need to do a couple things.
+  - Make a priority queue.
+  - For each character that appears in the input (its frequency is not 0---you have
+    the frequencies passed in as an argument), you need to construct a new Node
+    and add it to the priority queue. 
+    Note that if you are on the ith charachter, you can do 
+     pq.push(new Node(i,freqs[i]));
+ - Next, you need to build the tree from the Nodes by removing the top two nodes,
+    building a new Node out of them, and putting the new Node into the Priority Queue.
+    Methods you may find useful:
+       pq.size() //tells you how many items are in the PQ
+       pq.top()   //returns the top item on the PQ (without removing it)
+       pq.pop()   //removes the top item of the queue
+       pq.push(x)   //puts x into the queue
+    You should also look at the constructors for Node (in node.h).
+Note that the priority queue class will take care of the ordering of the data, and that while
+the names push+pop are typically what we have used for a Stack, C++ decided to used them
+for queues too to be consistent.
+
+ - Once the priority queue has only one element, that element should be the entire tree.
+ - You should return the root Node of the resulting encoding tree.
+
+Note that we have provided a Makefile and a testTree.cpp file for you to test with.
+The resulting program takes one argument (a file to read), and prints out the resulting
+tree with
+ - <sym:    freq>  for tree nodes that have a symbol
+ - (left right)    for tree nodes that do not have a symbol. 
+
+For example, if you gave the program a file with the contents
+eeeeeeeeeeeabaaeeeeeebeeeeeeeeceeeeeeeeeeeabacabaddeeee
+
+the test program should print:
+
+((<'a':      7>((<'c':      2>(<  a:      1><EOF:      1>))
+                (<'d':      2><'b':      4>)))
+ <'e':     40>)
+
+which is the textual representation of the following tree:
+
+                               O
+                              / \
+                             /   e:40
+                            O
+                          /  \
+                        a:7   O
+                             / \
+                            /   \
+                          O      O
+                        /  \    /  \
+                       c:2  O  d:2  b:4
+                           / \
+                        \n:1 EOF:1 
+
+Note that 'a' is the character 'a', while non-printable characters (such as '\n') 
+are printed as their hex numerical value (eg. <  a:      1> is for '\n', while
+<'a':     7> is for 'a').  The included words.tree contains the tree for
+/usr/share/dict/words on the ece551 machine.
+
