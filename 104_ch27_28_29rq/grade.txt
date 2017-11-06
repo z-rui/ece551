@@ -1,0 +1,6 @@
+Grading at 11/06/2017:17:50:21.528333
+For commit ID a48b7ca758fa542195c4e97c218116efcd4070c0
+Reading your quiz answers from answers.txt
+You have 4 wrong answers
+
+Overall Grade: FAILED
