@@ -1,0 +1,235 @@
+As always, read and understand Chapters 27, 28, and 29 then answer these questions
+in "answers.txt".  Unlike usual, this quiz covers three chapters.
+
+For questions 1--5, consider the following tree:
+
+                      64
+                    /    \ 
+                   32      72
+                  /  \   /   \
+                 16  50 68    90
+                /      /  \   / 
+               8      66  70 80  
+                         /  \ 
+                        69  71                
+For questions 1--3, consider this tree as an AVL tree.
+For questions 4--5, consider this tree as a Red/Black tree.
+
+
+1. If you were to add 4 to this tree, what rotation would be required?
+
+A. A single rotation at 8
+B. A single rotation at 16
+C. A single rotation at 32
+D. A single rotation at 64
+E. A double rotation at 8
+F. A double rotation at 16
+G. A double rotation at 32
+H. A dobule rotation at 64
+I. No rotation is required.
+J. Some other rotation (not listed here) is required.
+
+2.  If you were to add 67 to the original tree, what rotation would be required?
+
+A. A single rotation at 69.
+B. A single rotation at 70.
+C. A single rotation at 66.
+D. A single rotation at 72.
+E. A single rotation at 64.
+F. A double rotation at 69.
+G. A double rotation at 70.
+H. A double rotation at 66.
+I. A double rotation at 72.
+J. A double rotation at 64
+K. No rotation is required.
+L. Some other rotation (not listed here) is required.
+
+3. If you were to add 47 to the original tree, what rotation would be required?
+
+A. A single rotation at 50.
+B. A single rotation at 32.
+C. A single rotation at 64.
+D. A double rotation at 50.
+E. A double rotation at 32.
+F. A double rotation at 64.
+G. No rotation is required.
+H. Some other rotation (not listed here) is required.
+
+
+4. To red black color this tree, how many black nodes must there be on
+   all paths from the root to NULL [do not include NULL nodes in this count]:
+
+A. 1
+B. 2
+C. 3
+D. 4
+E. 5
+F. 1 or 2  [i.e., some colorings have 1, others have 2]
+G. 2 or 3
+H. 1, 2, or 3
+
+5. Which of the following nodes must be colored RED to correctly 
+   red/black color this tree?
+
+A. 16
+B. 32
+C. 50
+D. 64
+E. 66
+F. 68
+G. 72
+H. 90
+
+6. What does pid stand for?
+
+A. Performance Interrupt Descriptor
+B. Parallelism Intensity Definition
+C. Process ID
+D. Pretty Interesting Data
+
+7. Threads are like processes except that, unlike processes, threads...
+
+A. share a stack pointer
+B. do not run in parallel with each other
+C. share an address space
+D. do not share their heaps
+E. are only supported on Linux
+
+8. The third argument to pthread_create (which is of type void *(*) (void *))
+   specifies...
+
+A. the stack pointer for the new thread
+B. the heap pointer for the new thread
+C. the function to execute for the new thread
+D. None of the above
+
+9. What does pthread_join do?
+
+A. Causes two threads to execute serially
+B. Causes two threads to join togetehr to work on the same data
+C. Causes two threads to merge their heaps
+D. Causes the calling thread to wait for another thread to exit.
+
+10. Figure 28.1 stops at 16 threads, as that is what the hardware 
+    that was used supported.  Suppose this experiment were run on
+    hardware that supports more threads.  What would you expect to see
+    happen to the black (2048x2048) line?
+
+A. It would continue to linearly increase no matter how many threads are available.
+B. It would flatten off immediately after 16 threads.
+C. It would continue to increase mostly linearly to a point, then flatten off
+D. None of the above
+
+11. If you want to parallelise work that is not EP, you typically need...
+
+A. at least 64 threads
+B. synchronization
+C. a hashtable
+D. to use a functional language
+E. to use fork() instead of threads
+F. some other thing not listed here (None of the above).
+
+12. If one thread has locked a mutex, and another thread attempts to lock it,
+    what will happen on the second thread?
+
+A. segmentation fault
+B. std::mutex_locked_exception
+C. it is automatically unlocked on the other thread
+D. it will wait until the mutex is unlocked
+E. None of the above
+
+13. The performance benefits of a reader/writer lock come from the fact that it
+    allows...
+
+A. one read and one write can be done at the same time
+B. multiple reads to happen when no writes are occuring
+C. multiple writes to happen when no reads are occuring
+D. None of the above
+
+14. Which operations are used on a condition variable?
+
+A. lock/unlock
+B. acquire/release
+C. up/down
+D. wait/signal
+E. enqueue/dequeue
+F. test/set
+G. None of the above
+
+15. In order to write your own correct mutex implementat which also performs well, 
+    (as opposed to using one in a library) you need to have complete mastery of
+     which of the following concepts?
+
+A. Cache coherence
+B. Memory consistency models
+C. Atomic primitives
+D. All of the above
+
+16. The trickiest part of implementing a lock free data structure in a language
+    like C or C++ is...
+
+A. understanding atomic compare-and-swap
+B. correctly freeing memory
+C. understanding memory consistency models
+D. None of the above
+
+17. What is Cilk?
+
+A. A framework for task paralellism
+B. A framework for data parallelism
+C. A framework for pipeline parallelism
+D. A framework for lock free data structures
+E. None of the above
+
+18. Applying Amdhal’s Law to time you spend on tasks during a day, you
+    would find that optimizing time spent brushing your teeth is worthwhile...
+
+A. only if you can speed up tooth brushing by at least 2x
+B. only if you can speed up tooth brushing by at least 10x
+C. only if you can speed up tooth brushing by at least 100x
+D. never.
+
+19. What does the sub-object rule say?
+
+A. Ring-ding-ding-ding-dingeringeding! Gering-ding-ding-ding-dingeringeding!
+B. Objects must be laid out such that they contain a portion which is laid
+   out exactly like each parent class.
+C. Objects must be laid out such that fields are in one part of the object,
+   and methods are in another part of the object.
+D. Objects must be laid out such that private fields are separated from public
+   fields.
+E. None of the above.
+
+20. What is a vtable?
+
+A. An array of objects of the same type
+B. An array of pointers to parent classes
+C. An array of verification data.
+D. An array of function pointers, used for dynamic dispatch.
+E. None of the above.
+
+21. If class X inherits from two parent classes, how many vtable pointers
+    do objects of type X contain?
+
+A. 0
+B. 1
+C. 2
+D. 3
+E. 4 
+
+22. What does virtual inheritance do?
+
+A. Makes all inherited functions use dynamic dispatch.
+B. Makes all inherited functions use static dispatch.
+C. Makes the sub-object rule not apply to the child class.
+D. Makes references to the parent sub-object occur through an offest in the vtable.
+E. None of the above.
+
+23. What is a mixin?
+
+A. When you go get icecream, and they fold the toppings into it.
+B. A templated class, whose template parameter is used as the parent class.
+C. A class where the parent and child classes in an inheritance hiearchy each
+   have pointers to distinct instances of that class.
+D. A form of circular queue.
+E. None of the above
