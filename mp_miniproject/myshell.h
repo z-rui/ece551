@@ -5,6 +5,8 @@
 #include <string>
 #include <exception>
 
+#include "path.h"
+
 class MyShell {
 	class Bug : public std::exception {
 		const char *msg;
@@ -13,8 +15,10 @@ class MyShell {
 		Bug(const char *msg) : msg(msg) {}
 	};
 protected:
+	PathSearcher pathSearcher;
 	static bool runProgram(const char *, const char *const *, const char *const *, int *);
 public:
+	MyShell();
 	void runREPL();
 };
 
