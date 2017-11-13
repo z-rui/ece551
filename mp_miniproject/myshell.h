@@ -6,6 +6,7 @@
 #include <exception>
 
 #include "path.h"
+#include "parse.h"
 
 class MyShell {
 	class Bug : public std::exception {
@@ -16,6 +17,7 @@ class MyShell {
 	};
 protected:
 	PathSearcher pathSearcher;
+	Parser parser;
 	static bool runProgram(const char *progname,
 		const char *const *argv,
 		const char *const *envp,

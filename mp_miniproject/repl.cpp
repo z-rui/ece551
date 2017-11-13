@@ -50,6 +50,11 @@ void MyShell::runREPL()
 		Parser::Command::const_iterator it;
 		it = cmd.begin();
 		const char *progname = it->argv[0];
+		if (it->redir[0] != NULL || it->redir[1] != NULL ||
+				it->redir[2] != NULL) {
+			std::cout << "Redirections are not implemented yet.\n";
+			continue;
+		}
 		progname = pathSearcher.search(progname);
 		if (progname == NULL) {
 			std::cout << "Command " << it->argv[0] <<
