@@ -16,7 +16,10 @@ class MyShell {
 	};
 protected:
 	PathSearcher pathSearcher;
-	static bool runProgram(const char *, const char *const *, const char *const *, int *);
+	static bool runProgram(const char *progname,
+		const char *const *argv,
+		const char *const *envp,
+		int *status);
 public:
 	MyShell();
 	void runREPL();

@@ -44,10 +44,10 @@ static bool is_regular_file(const char *pathname)
 /* PathSearcher::search searches for progname
  * according to the rule in the spec:
  * 1. If progname contains '/', test if it's regular file;
- * 2. Otherwise, search in paths that was previously set by setPath.
+ * 2. Otherwise, search in paths that were previously set by setPath.
  *
  * In either case, if a regular file is found,
- * it return the path that can be used to open the file.
+ * it returns the path that can be used to open the file.
  * Otherwise it returns NULL.
  */
 const char *PathSearcher::search(const char *progname)
@@ -58,7 +58,7 @@ const char *PathSearcher::search(const char *progname)
 	}
 
 	// case 2. maybe add a cache later
-	typename std::vector<const char *>::const_iterator it;
+	std::vector<const char *>::const_iterator it;
 
 	for (it = pathFields.begin(); it != pathFields.end(); ++it) {
 		buf = *it; // directory
