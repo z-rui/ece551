@@ -33,22 +33,21 @@ void MyShell::runREPL()
 		if (line == "exit") {
 			break;
 		}
-		Parser::Command cmd;
-		bool ok = parser.parse(line.c_str(), cmd);
+		Parser::Pipes pipes;
+		bool ok = parser.parse(line.c_str(), pipes);
 		if (!ok) {
 			std::cout << "Syntax Error\n";
 			continue;
 		}
-		if (cmd.size() == 0) {
-			// empty command
+		if (pipes.size() == 0) { // empty
 			continue;
 		}
-		if (cmd.size() > 1) {
+		if (pipes.size() > 1) {
 			std::cout << "Pipes are not implmented yet.\n";
 			continue;
 		}
-		Parser::Command::const_iterator it;
-		it = cmd.begin();
+		Parser::Pipes::const_iterator it;
+		it = pipes.begin();
 		const char *progname = it->argv[0];
 		if (it->redir[0] != NULL || it->redir[1] != NULL ||
 				it->redir[2] != NULL) {

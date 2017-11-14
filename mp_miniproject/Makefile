@@ -13,13 +13,13 @@ myshell.o: myshell.cpp myshell.h
 proc.o: proc.cpp myshell.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-path.o: path.cpp myshell.h
+path.o: path.cpp myshell.h path.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-repl.o: repl.cpp myshell.h
+repl.o: repl.cpp myshell.h parse.h path.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-parse.o: parse.cpp myshell.h
+parse.o: parse.cpp myshell.h parse.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:

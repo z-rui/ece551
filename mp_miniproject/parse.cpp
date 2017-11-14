@@ -5,47 +5,44 @@
 /* Parser::parse parses one line.
  *
  */
-bool Parser::parse(const char *line, Parser::Command& cmd)
+bool Parser::parse(const char *line, Parser::Pipes& pipes)
 {
-	bad = false;
 	pos = line;
 
-	parseCommand(cmd);
-	if (!endOfLine()) {
-		bad = true;
-	}
-	return !bad;
+	return parsePipes(pipes) && endOfLine();
 }
 
-/* Parser::parseCommand parses a command.
+/* Parser::parsePipes parses piped commands.
+ * Pipes can be empty.  In this case no command is run.
  *
- * command ::= empty | command-core { '|' command-core }
+ * pipes ::= empty | command { '|' command }
  */
-void Parser::parseCommand(Parser::Command& cmd)
+bool Parser::parsePipes(Parser::Pipes& pipes)
 {
 	skipSpaces();
 	if (endOfLine()) { // empty
-		return;
+		return true;
 	}
 	for (;;) {
-		cmd.push_back(CommandCore());
-		parseCommandCore(cmd.back());
+		pipes.push_back(Command());
+		if (!parseCommand(pipes.back()))
+			return false; // failed
 
 		skipSpaces();
 		if (peek() == '|') {
 			next();
 		} else {
-			break;
+			return true;
 		}
 	}
 }
 
-/* Parser::parseCommandCore parses a command 'core' (i.e., without pipes).
+/* Parser::parseCommand parses a command (without pipes).
  *
- * command-core ::= command-term { command-term }
+ * command ::= command-term { command-term }
  * command-term ::= TERM | '<' TERM | '>' TERM | "2>" TERM
  */
-void Parser::parseCommandCore(Parser::CommandCore& core)
+bool Parser::parseCommand(Parser::Command& cmd)
 {
 	for (;;) {
 		char ch;
@@ -64,17 +61,20 @@ void Parser::parseCommandCore(Parser::CommandCore& core)
 			next(2);
 		}
 		const char *term = scanTerm();
+		if (term == NULL) { // failed
+			return false;
+		}
 		if (redir >= 0) {
-			core.redir[redir] = term;
+			cmd.redir[redir] = term;
 		} else {
-			core.argv.push_back(term);
+			cmd.argv.push_back(term);
 		}
 
 		skipSpaces();
 		if (endOfLine() || peek() == '|') {
 			// argv ends with a NULL
-			core.argv.push_back(NULL);
-			break;
+			cmd.argv.push_back(NULL);
+			return true;
 		}
 	}
 }
@@ -88,14 +88,12 @@ void Parser::parseCommandCore(Parser::CommandCore& core)
  */
 const char *Parser::scanTerm()
 {
-	const char *save;
-	bool terminate = false;
-
 	scannedTerms.push_back(std::string());
 	std::string& term = scannedTerms.back();
 
 	skipSpaces();
-	save = pos;
+	const char *save = pos;
+	bool terminate = false;
 	do {
 		char ch = peek();
 		switch (ch) {
@@ -118,14 +116,14 @@ const char *Parser::scanTerm()
 	} while (!terminate);
 
 	if (save == pos) { // no character consumed?
-		bad = true;
+		return NULL;
 	}
 	return term.c_str();
 }
 
 void Parser::skipSpaces()
 {
-	while (isspace(*pos)) {
-		pos++;
+	while (isspace(peek())) {
+		next();
 	}
 }
