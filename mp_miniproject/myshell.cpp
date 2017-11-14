@@ -6,7 +6,10 @@
  */
 MyShell::MyShell()
 {
-	pathSearcher.setPath(getenv("PATH"));
+	const char *path = getenv("PATH");
+	if (path != NULL) {
+		pathSearcher.setPath(path);
+	}
 }
 
 int main()
