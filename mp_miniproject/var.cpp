@@ -17,7 +17,7 @@ VarTab::~VarTab()
 	delete[] hashtab;
 }
 
-VarTab::HashSlot *VarTab::lookup(const char *key)
+VarTab::HashSlot *VarTab::lookup(const char *key) const
 {
 	size_t h = hashKey(key);
 	HashSlot *p, *end;
@@ -66,7 +66,7 @@ void VarTab::setVar(const char *key, const char *value)
 	}
 }
 
-const char *VarTab::getVar(const char *key)
+const char *VarTab::getVar(const char *key) const
 {
 	HashSlot *slot = lookup(key);
 	std::string *kvPair = slot->kvPair;
@@ -137,7 +137,7 @@ void VarTab::exportVar(const char *value)
 	exported.push_back(NULL);
 }
 
-const char *const *VarTab::getExported()
+const char *const *VarTab::getExported() const
 {
 	return &exported[0];
 }
