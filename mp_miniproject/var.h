@@ -9,6 +9,7 @@ class VarTab {
 	struct HashSlot {
 		size_t hash;
 		std::string *kvPair;
+		size_t vOffset;
 		size_t idxExported;
 	};
 	HashSlot *hashtab;

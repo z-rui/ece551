@@ -49,7 +49,7 @@ size_t VarTab::hashKey(const char *key)
 bool VarTab::equalKeyKvpair(const char *key, const char *kvPair)
 {
 	while (*key == *kvPair) {
-		assert(*key != '\0' && *key != '=');
+		assert(*key != '\0' && *key != '='); // not allowed in a key
 		key++;
 		kvPair++;
 	}
@@ -73,21 +73,21 @@ const char *VarTab::getVar(const char *key) const
 	if (kvPair == NULL) {
 		return NULL;
 	}
-	size_t pos = kvPair->find('=');
-	assert(pos != std::string::npos);
-	return kvPair->c_str() + pos + 1;
+	return kvPair->c_str() + slot->vOffset;
 }
 
 void VarTab::newVar(VarTab::HashSlot *slot, const char *key, const char *value)
 {
 	variables.push_back(std::string());
 	std::string *kvPair = &variables.back();
+
 	kvPair->assign(key);
 	kvPair->push_back('=');
+	slot->vOffset = kvPair->size();
 	kvPair->append(value);
-
 	slot->kvPair = kvPair;
 	slot->idxExported = NOT_EXPORTED;
+
 	--hashfree;
 	maybeRehash();
 }
@@ -119,10 +119,9 @@ void VarTab::maybeRehash()
 void VarTab::changeVar(VarTab::HashSlot *slot, const char *value)
 {
 	std::string *kvPair = slot->kvPair;
-	size_t pos = kvPair->find('=');
-	kvPair->replace(kvPair->begin() + pos + 1, kvPair->end(), value);
+	kvPair->replace(kvPair->begin() + slot->vOffset, kvPair->end(), value);
 
-	// pointer in exported may be invalidated
+	// pointer to the C string may be invalidated
 	if (slot->idxExported != NOT_EXPORTED)
 		exported[slot->idxExported] = kvPair->c_str();
 }
