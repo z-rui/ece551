@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+#include <string.h>
+
 #include "myshell.h"
 
 /* PS1 is the prompt string.
@@ -100,6 +102,9 @@ void MyShell::executeSet(const Parser::Command& cmd)
 	const char *name = cmd.argv[1];
 	const char *value = cmd.argv[2];
 	varTab.setVar(name, value);
+	if (strcmp(name, "PATH") == 0) {
+		pathSearcher.setPath(value);
+	}
 }
 
 void MyShell::executeExport(const Parser::Command& cmd)

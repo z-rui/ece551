@@ -8,6 +8,7 @@ MyShell::MyShell() : parser(varTab)
 {
 	const char *path = getenv("PATH");
 	if (path != NULL) {
+		varTab.setVar("PATH", path);
 		pathSearcher.setPath(path);
 	}
 }
