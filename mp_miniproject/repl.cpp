@@ -42,32 +42,68 @@ void MyShell::runREPL()
 		if (pipes.size() == 0) { // empty
 			continue;
 		}
-		if (pipes.size() > 1) {
-			std::cout << "Pipes are not implmented yet.\n";
-			continue;
-		}
 		Parser::Pipes::const_iterator it;
 		it = pipes.begin();
-		const char *progname = it->argv[0];
-		if (it->redir[0] != NULL || it->redir[1] != NULL ||
-				it->redir[2] != NULL) {
-			std::cout << "Redirections are not implemented yet.\n";
-			continue;
+		switch (it->type) {
+			case Parser::Command::SET:
+				executeSet(*it);
+				break;
+			case Parser::Command::EXPORT:
+				executeExport(*it);
+				break;
+			case Parser::Command::ORDINARY:
+				executePipes(pipes);
+				break;
+			default:
+				throw Bug("should have reported syntax error");
 		}
-		progname = pathSearcher.search(progname);
-		if (progname == NULL) {
-			std::cout << "Command " << it->argv[0] <<
-				" not found" << std::endl;
-			continue;
-		}
-		// No environment variables at the moment.
-		const char *envp[] = { NULL };
-		int status;
-		bool exited;
-		exited = runProgram(progname, &it->argv[0], envp, &status);
-		std::cout << "Program " <<
-			(exited ? "exited with status "
-				: "was killed by signal ") <<
-			status << std::endl;
 	}
+}
+
+void MyShell::executePipes(const Parser::Pipes& pipes)
+{
+	if (pipes.size() > 1) {
+		std::cout << "Pipes are not implemented yet.\n";
+		return;
+	}
+	Parser::Pipes::const_iterator it;
+	it = pipes.begin();
+	const char *progname = it->argv[0];
+	for (int i = 0; i <= 2; i++) {
+		if (it->redir[i] != NULL) {
+			std::cout << "Redirections are not implemented yet.\n";
+			return;
+		}
+	}
+
+	progname = pathSearcher.search(progname);
+	if (progname == NULL) {
+		std::cout << "Command " << it->argv[0] <<
+			" not found" << std::endl;
+		return;
+	}
+
+	int status;
+	bool exited;
+	exited = runProgram(progname,
+			&it->argv[0], // argv
+			varTab.getExported(), // envp
+			&status);
+	std::cout << "Program " <<
+		(exited ? "exited with status "
+			: "was killed by signal ") <<
+		status << std::endl;
+}
+
+void MyShell::executeSet(const Parser::Command& cmd)
+{
+	const char *name = cmd.argv[1];
+	const char *value = cmd.argv[2];
+	varTab.setVar(name, value);
+}
+
+void MyShell::executeExport(const Parser::Command& cmd)
+{
+	const char *name = cmd.argv[1];
+	varTab.exportVar(name);
 }

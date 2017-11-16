@@ -84,6 +84,7 @@ Parser::Command::Type Parser::parseCommand(Parser::Command& cmd)
 			first = false;
 			Command::Type builtin = parseBuiltin(term, cmd);
 			if (builtin != Command::INVALID) {
+				cmd.type = builtin;
 				return builtin;
 			}
 		}
@@ -92,6 +93,7 @@ Parser::Command::Type Parser::parseCommand(Parser::Command& cmd)
 		if (endOfLine() || peek() == '|') { // end of a command
 			// argv ends with a NULL
 			cmd.argv.push_back(NULL);
+			cmd.type = Command::ORDINARY;
 			return Command::ORDINARY;
 		}
 	}
@@ -112,6 +114,7 @@ Parser::Command::Type Parser::parseSetCommand(Parser::Command& cmd)
 {
 	const char *name, *value;
 
+	skipSpaces();
 	name = scanName();
 	if (name == NULL) {
 		return Command::INVALID;
@@ -120,7 +123,7 @@ Parser::Command::Type Parser::parseSetCommand(Parser::Command& cmd)
 	specials.redir = specials.space = 0;
 	value = scanTerm();
 	if (value == NULL) {
-		return Command::INVALID;
+		value = ""; // "set x" sets x to empty
 	}
 	cmd.argv.push_back(name);
 	cmd.argv.push_back(value);
@@ -131,6 +134,7 @@ Parser::Command::Type Parser::parseExportCommand(Parser::Command& cmd)
 {
 	const char *name;
 
+	skipSpaces();
 	name = scanName();
 	if (name == NULL) {
 		return Command::INVALID;
@@ -157,6 +161,7 @@ const char *Parser::scanTerm()
 	do {
 		unsigned char ch = peek();
 		const char *name;
+		bool skip = false;
 		switch (ch) {
 		case '\0':
 			terminate = true;
@@ -175,22 +180,24 @@ const char *Parser::scanTerm()
 			name = scanName();
 			if (name != NULL) {
 				enterExpansion(name);
-			} else { // a stray '$'
+			} else { // a stray $
 				term.push_back(ch);
 			}
+			skip = true;
 			break;
 		case '\\':
-			if (specials.escape) {
-				next(); // skip '\'
-				if ((ch = peek()) == '\0') {
-					break;
-				}
+			if (!specials.escape) {
+				break;
 			}
-			/* FALLTHROUGH */
-		default:
+			next(); // skip '\'
+			if ((ch = peek()) == '\0') {
+				skip = true;
+			}
+			break;
+		}
+		if (!terminate && !skip) {
 			term.push_back(ch);
 			next();
-			break;
 		}
 	} while (!terminate);
 
@@ -203,7 +210,7 @@ const char *Parser::scanTerm()
 const char *Parser::scanName()
 {
 	unsigned char ch = peek();
-	if (!isalpha(ch)) {
+	if (!isalnum(ch) && ch != '_') {
 		return NULL;
 	}
 	scannedTerms.push_back(std::string());
@@ -212,7 +219,7 @@ const char *Parser::scanName()
 		name.push_back(ch);
 		next();
 		ch = peek();
-	} while (isalnum(ch));
+	} while (isalnum(ch) || ch == '_');
 	return name.c_str();
 }
 

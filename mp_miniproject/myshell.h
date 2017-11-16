@@ -18,10 +18,14 @@ class MyShell {
 protected:
 	PathSearcher pathSearcher;
 	Parser parser;
+	VarTab varTab;
 	static bool runProgram(const char *progname,
 		const char *const *argv,
 		const char *const *envp,
 		int *status);
+	void executeSet(const Parser::Command&);
+	void executeExport(const Parser::Command&);
+	void executePipes(const Parser::Pipes&);
 public:
 	MyShell();
 	void runREPL();

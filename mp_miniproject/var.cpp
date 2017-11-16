@@ -58,6 +58,7 @@ bool VarTab::equalKeyKvpair(const char *key, const char *kvPair)
 
 void VarTab::setVar(const char *key, const char *value)
 {
+	assert(key != NULL && value != NULL);
 	HashSlot *slot = lookup(key);
 	if (slot->kvPair == NULL) {
 		newVar(slot, key, value);
@@ -68,6 +69,7 @@ void VarTab::setVar(const char *key, const char *value)
 
 const char *VarTab::getVar(const char *key) const
 {
+	assert(key != NULL);
 	HashSlot *slot = lookup(key);
 	std::string *kvPair = slot->kvPair;
 	if (kvPair == NULL) {
@@ -126,14 +128,18 @@ void VarTab::changeVar(VarTab::HashSlot *slot, const char *value)
 		exported[slot->idxExported] = kvPair->c_str();
 }
 
-void VarTab::exportVar(const char *value)
+void VarTab::exportVar(const char *key)
 {
-	HashSlot *slot = lookup(value);
-	if (slot->idxExported != NOT_EXPORTED) { // already exported
-		return;
+	HashSlot *slot = lookup(key);
+	if (slot->kvPair == NULL) { // var does not exist
+		newVar(slot, key, "");
+		slot = lookup(key); // slot may change after rehashing
+	}
+	if (slot->idxExported != NOT_EXPORTED) {
+		return; // don't export twice
 	}
 	exported.back() = slot->kvPair->c_str();
-	exported.push_back(NULL);
+	exported.push_back(NULL); // envp ends with NULL
 }
 
 const char *const *VarTab::getExported() const
