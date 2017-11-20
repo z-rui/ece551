@@ -1,4 +1,4 @@
-#include <stdlib.h> /* for getenv */
+#include <unistd.h> /* for environ */
 
 #include "myshell.h"
 
@@ -6,10 +6,10 @@
  */
 MyShell::MyShell() : parser(varTab)
 {
-	const char *path = getenv("PATH");
-	if (path != NULL) {
-		varTab.setVar("PATH", path);
-		pathSearcher.setPath(path);
+	varTab.importExported(environ);
+	const char *value = varTab.getVar("PATH");
+	if (value != NULL) {
+		pathSearcher.setPath(value);
 	}
 }
 

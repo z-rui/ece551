@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 #include "var.h"
 
@@ -44,12 +45,16 @@ VarTab::HashSlot *VarTab::lookup(const char *key) const
 }
 
 /* VarTab::hashKey is the hash function for a string.
+ *
+ * The key is terminated by either a '\0' or a '='.
+ * Thus the function can be applied to either a key
+ * or a key-value pair.
  */
 size_t VarTab::hashKey(const char *key)
 {
 	size_t h = 6549;
 	unsigned char ch;
-	while ((ch = *key) != '\0') {
+	while ((ch = *key) != '\0' && ch != '=') {
 		h = h * 1558 + (ch ^ 233);
 		key++;
 	}
@@ -64,12 +69,12 @@ size_t VarTab::hashKey(const char *key)
  */
 bool VarTab::equalKeyKvpair(const char *key, const char *kvPair)
 {
-	while (*key == *kvPair) {
-		assert(*key != '\0' && *key != '='); // not allowed in a key
+	while (*key == *kvPair && *key != '=') {
+		assert(*key != '\0'); // not allowed in a key
 		key++;
 		kvPair++;
 	}
-	return (*key == '\0' && *kvPair == '=');
+	return ((*key == '\0' || *key == '=') && *kvPair == '=');
 }
 
 /* VarTab::setVar sets the value of a variable.
@@ -182,6 +187,7 @@ void VarTab::exportVar(const char *key)
 		return; // don't export twice
 	}
 	exported.back() = slot->kvPair->c_str();
+	slot->idxExported = exported.size() - 1;
 	exported.push_back(NULL); // envp ends with NULL
 }
 
@@ -193,4 +199,30 @@ void VarTab::exportVar(const char *key)
 const char *const *VarTab::getExported() const
 {
 	return &exported[0];
+}
+
+/* VarTab::importExported imports several variables at once and exports them.
+ * Useful for initializing the environment variables.
+ *
+ * environ is an array whose elements are strings of the form "key=value",
+ * and is terminated by a NULL.
+ */
+void VarTab::importExported(const char *const *environ)
+{
+	for (; *environ != NULL; environ++) {
+		const char *p = strchr(*environ, '=');
+		if (p == NULL) {
+			// a weird entry that does not have a '='
+			continue;
+		}
+		HashSlot *slot = lookup(*environ);
+		assert(slot->kvPair == NULL);
+		// I won't implement importing an existing variable
+		variables.push_back(*environ);
+		slot->kvPair = &variables.back();
+		slot->vOffset = p - *environ + 1;
+		exported.back() = slot->kvPair->c_str();
+		slot->idxExported = exported.size() - 1;
+		exported.push_back(NULL);
+	}
 }

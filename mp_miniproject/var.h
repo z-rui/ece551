@@ -30,6 +30,7 @@ public:
 	const char *getVar(const char *) const;
 	void exportVar(const char *);
 	const char *const *getExported() const;
+	void importExported(const char *const *);
 };
 
 #endif /* VAR_H */
