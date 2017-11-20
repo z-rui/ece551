@@ -5,20 +5,14 @@
 
 #include "myshell.h"
 
-/* PS1 is the prompt string.
- * I don't see a need to make it modifiable at run time.
- * I believe a space after the dollar sign is correct.
- */
-#define PS1 "myShell $ "
-
 /* prompt_input first writes the prompt string,
  * then reads a logical line for the shell.
  *
  * It returns true if std::cin is still good.
  */
-static bool prompt_input(const char *prompt, std::string &line)
+bool MyShell::promptInput(std::string &line) const
 {
-	std::cout << prompt;
+	std::cout << "myShell:" << varTab.getVar("PWD") << " $ ";
 	// Currently a logical line is just a physical line
 	// (that is teminated by a '\n').
 	// But I can make extensions in the future.
@@ -31,7 +25,7 @@ static bool prompt_input(const char *prompt, std::string &line)
 void MyShell::runREPL()
 {
 	std::string line;
-	while (prompt_input(PS1, line)) {
+	while (promptInput(line)) {
 		if (line == "exit") {
 			break;
 		}
@@ -101,6 +95,11 @@ void MyShell::executeSet(const Parser::Command& cmd)
 {
 	const char *name = cmd.argv[1];
 	const char *value = cmd.argv[2];
+
+	if (strcmp(name, "PWD") == 0) {
+		if (chdir(value) != 0)
+			return; // chdir fails
+	}
 	varTab.setVar(name, value);
 	if (strcmp(name, "PATH") == 0) {
 		pathSearcher.setPath(value);

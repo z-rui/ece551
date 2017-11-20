@@ -26,6 +26,8 @@ protected:
 	void executeSet(const Parser::Command&);
 	void executeExport(const Parser::Command&);
 	void executePipes(const Parser::Pipes&);
+	bool promptInput(std::string &line) const;
+	int chdir(const char *) const;
 public:
 	MyShell();
 	void runREPL();
