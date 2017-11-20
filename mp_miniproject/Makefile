@@ -7,7 +7,7 @@ all: myshell
 myshell: myshell.o proc.o path.o repl.o parse.o var.o
 	$(CXX) $(LDFLAGS) -o $@ myshell.o proc.o path.o repl.o parse.o var.o
 
-myshell.o: myshell.cpp myshell.h var.h
+myshell.o: myshell.cpp repl.cpp myshell.h path.h parse.h var.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 proc.o: proc.cpp myshell.h

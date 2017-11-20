@@ -26,7 +26,7 @@ protected:
 	void executeSet(const Parser::Command&);
 	void executeExport(const Parser::Command&);
 	void executePipes(const Parser::Pipes&);
-	void executeCD(const Parser::Command&);
+	void executeCd(const Parser::Command&);
 	bool promptInput(std::string &line) const;
 	int chdir(const char *);
 	void updatePWD();

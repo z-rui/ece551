@@ -7,31 +7,33 @@ Parser::Parser(const VarTab &vtab) : vtab(vtab)
 {
 }
 
+void (Parser::*const Parser::parseBuiltins[])(Command&) = {
+	[Parser::Command::SET] = &Parser::parseSet,
+	[Parser::Command::EXPORT] = &Parser::parseExport,
+	[Parser::Command::CD] = &Parser::parseCd,
+};
+
 void Parser::reportSyntaxError(std::ostream& os) const
 {
 	unsigned char ch = peek();
 	os << "Syntax error: unexpected ";
-	if (isprint(ch)) {
-		if (ch == '\'') {
-			os << "<single quote>";
+	switch (ch) {
+	case '\0':
+	case '\n':
+		os << "<newline>";
+		break;
+	case '\t':
+		os << "<tab>";
+		break;
+	default:
+		os << '\'';
+		if (isprint(ch) && ch != '\'') {
+			os << ch;
 		} else {
-			os << '\'' << ch << '\'';
-		}
-	} else {
-		switch (ch) {
-		case '\n':
-			os << "<newline>";
-			break;
-		case '\t':
-			os << "<tab>";
-			break;
-		case '\0':
-			os << "<eol>";
-			break;
-		default:
 			os << '\\' << std::oct << (int) ch << std::dec;
-			break;
 		}
+		os << '\'';
+		break;
 	}
 	os << "\n";
 }
@@ -101,7 +103,7 @@ bool Parser::parseCommand(Parser::Command& cmd)
 		}
 		const char *term = scanTerm();
 		if (term == NULL) { // failed
-			return Command::INVALID;
+			return false;
 		}
 		if (redir >= 0) {
 			cmd.redir[redir] = term;
@@ -110,12 +112,12 @@ bool Parser::parseCommand(Parser::Command& cmd)
 		}
 		if (first) {
 			first = false;
-			cmd.type = Command::ORDINARY;
-			parseBuiltin(cmd);
-			if (cmd.type == Command::INVALID) {
-				return false;
-			}
-			if (cmd.type != Command::ORDINARY) {
+			cmd.type = commandType(term);
+			if (cmd.type < Command::ORDINARY) {
+				(this->*parseBuiltins[cmd.type])(cmd);
+				if (cmd.type == Command::INVALID) {
+					return false;
+				}
 				// Builtin commands parses
 				// arguments own their own
 				break;
@@ -133,19 +135,23 @@ bool Parser::parseCommand(Parser::Command& cmd)
 	return true;
 }
 
-void Parser::parseBuiltin(Parser::Command& cmd)
+Parser::Command::Type Parser::commandType(const char *name)
 {
-	const char *cmdname = cmd.argv[0];
-	if (strcmp(cmdname, "set") == 0) {
-		parseSetCommand(cmd);
-	} else if (strcmp(cmdname, "export") == 0) {
-		parseExportCommand(cmd);
-	} else if (strcmp(cmdname, "cd") == 0) {
-		parseCdCommand(cmd);
+	if (strcmp(name, "set") == 0) {
+		return Command::SET;
+	} else if (strcmp(name, "export") == 0) {
+		return Command::EXPORT;
+	} else if (strcmp(name, "cd") == 0) {
+		return Command::CD;
 	}
+	return Command::ORDINARY;
 }
 
-void Parser::parseSetCommand(Parser::Command& cmd)
+/* Parser::parseSet parses the set command.
+ *
+ * command ::= "set" NAME DEFINITION
+ */
+void Parser::parseSet(Parser::Command& cmd)
 {
 	const char *name, *value;
 
@@ -156,7 +162,17 @@ void Parser::parseSetCommand(Parser::Command& cmd)
 		return;
 	}
 	skipSpaces();
-	// redir and space are inactive inside variable definition
+
+	/* DEFINITION is similar to TERM (see Parser::scanTerm)
+	 * because expansions still take place,
+	 * so that a command like "set PATH $HOME/bin:$PATH"
+	 * will behave as expected.
+	 * Escaping is also in effect, in case the user
+	 * wants a true dollar sign in the definition.
+	 *
+	 * But '<', '|', '>' and spaces lose specialness
+	 * in this context.
+	 */
 	ls.redir = ls.space = 0;
 	value = scanTerm();
 	if (value == NULL) {
@@ -167,7 +183,11 @@ void Parser::parseSetCommand(Parser::Command& cmd)
 	cmd.type = Command::SET;
 }
 
-void Parser::parseExportCommand(Parser::Command& cmd)
+/* Parser::parseExport parses the export command.
+ *
+ * command ::= "export" NAME
+ */
+void Parser::parseExport(Parser::Command& cmd)
 {
 	const char *name;
 
@@ -181,7 +201,11 @@ void Parser::parseExportCommand(Parser::Command& cmd)
 	cmd.type = Command::EXPORT;
 }
 
-void Parser::parseCdCommand(Parser::Command& cmd)
+/* Parser::parseCd parses the cd command.
+ *
+ * command ::= "cd" TERM
+ */
+void Parser::parseCd(Parser::Command& cmd)
 {
 	const char *path;
 
@@ -194,12 +218,24 @@ void Parser::parseCdCommand(Parser::Command& cmd)
 	cmd.type = Command::CD;
 }
 
-/* Parser::scanTerm scans a term in a command.
+/* Parser::scanTerm scans a TERM in a command.
  *
- * A term is a sequence of normal characters.
- * Special characters ( <>|) can terminate a term.
- * A backslash (\) nullifies the specialness of whatever
- * character that follows, and itself does not go into the term.
+ * What goes into a term depends on the context.
+ * (See Parser::catcode).
+ *
+ * - Characters of catcode EOL (\0), REDIR0 (<),
+ *   REDIR1 (>), PIPE (|) and SPACE terminate a term.
+ * - Characters of catcode EXPAND ($) followed by
+ *   a NAME token is expanded to its definition,
+ *   in the expansion context.
+ * - Characters of catcode ESCAPE (\) ensures that
+ *   the next character (except \0) goes into the term,
+ *   regardless of its catcode.
+ *
+ * The characters '<', '|', '>', '$', '\' and spaces
+ * may lose specialness in certain contexts.
+ * In these contexts they will have catcode OTHER,
+ * and thus go into the term.
  */
 const char *Parser::scanTerm()
 {
@@ -230,6 +266,7 @@ const char *Parser::scanTerm()
 		case ESCAPE:
 			next(); // skip '\'
 			if ((ch = peek()) == '\0') {
+				// too bad, there's no "next character"
 				break;
 			}
 			/* FALL THROUGH */
@@ -246,10 +283,21 @@ const char *Parser::scanTerm()
 	return term.c_str();
 }
 
+/* Parser::scanName scans a NAME.
+ *
+ * A NAME consists of only characters of catcode LETTER.
+ * (See Parser::catcode).
+ * In this implmentation, they include characters
+ * determined by isalnum, plus the underscore (_).
+ *
+ * Several places require a valid NAME, such as:
+ * - the first argument of the set and export command;
+ * - after a '$' in order to trigger an expansion.
+ */
 const char *Parser::scanName()
 {
 	unsigned char ch = peek();
-	if (!isalnum(ch) && ch != '_') {
+	if (catcode(ch) != LETTER) {
 		return NULL;
 	}
 	scannedTerms.push_back(std::string());
@@ -258,7 +306,7 @@ const char *Parser::scanName()
 		name.push_back(ch);
 		next();
 		ch = peek();
-	} while (isalnum(ch) || ch == '_');
+	} while (catcode(ch) == LETTER);
 	return name.c_str();
 }
 
@@ -271,6 +319,14 @@ void Parser::enterExpansion(const char *name)
 	}
 	ls_backup = ls;
 	ls.pos = value;
+	/* Inside an expansion, '<', '|', '>', '$' and '\'
+	 * lose their specialness.
+	 * As a result, at most one level of expansion
+	 * can take place.
+	 *
+	 * Whether spaces terminates a term depends
+	 * on the context before entering the expansion.
+	 */
 	ls.redir = ls.expand = ls.escape = 0;
 }
 
@@ -280,6 +336,11 @@ void Parser::exitExpansion()
 	ls_backup.pos = NULL;
 }
 
+/* Parser::catcode return the "category code" of an character.
+ *
+ * This mechanism simplifies the rest of the parser,
+ * as it does not need to keep track of the context.
+ */
 Parser::Catcode Parser::catcode(unsigned char ch) const
 {
 	if (ch == '\0')

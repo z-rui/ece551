@@ -14,8 +14,8 @@ class Parser {
 public:
 	struct Command {
 		enum Type {
-			INVALID = -1,
-			ORDINARY, SET, EXPORT, CD,
+			SET, EXPORT, CD,
+			ORDINARY, INVALID,
 		};
 		Type type;
 		std::vector<const char *> argv;
@@ -28,7 +28,9 @@ public:
 	void reportSyntaxError(std::ostream&) const;
 private:
 	enum Catcode {
-		ESCAPE, EXPAND, SPACE, REDIR0, REDIR1, PIPE, LETTER, OTHER, EOL
+		ESCAPE, EXPAND, SPACE,
+		REDIR0, REDIR1, PIPE,
+		LETTER, OTHER, EOL
 	};
 	struct LexState {
 		const char *pos;
@@ -51,12 +53,14 @@ private:
 	const char *scanTerm();
 	const char *scanName();
 
-	bool parseCommand(Command&);
-	void parseBuiltin(Command&);
-	void parseSetCommand(Command&);
-	void parseExportCommand(Command&);
-	void parseCdCommand(Command&);
 	bool parsePipes(Pipes&);
+	bool parseCommand(Command&);
+
+	static Command::Type commandType(const char *);
+	static void (Parser::*const parseBuiltins[])(Command&);
+	void parseSet(Command&);
+	void parseExport(Command&);
+	void parseCd(Command&);
 };
 
 

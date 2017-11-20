@@ -52,7 +52,7 @@ void MyShell::runREPL()
 				executeExport(*it);
 				break;
 			case Parser::Command::CD:
-				executeCD(*it);
+				executeCd(*it);
 				break;
 			case Parser::Command::ORDINARY:
 				executePipes(pipes);
@@ -115,7 +115,7 @@ void MyShell::executeExport(const Parser::Command& cmd)
 	varTab.exportVar(name);
 }
 
-void MyShell::executeCD(const Parser::Command& cmd)
+void MyShell::executeCd(const Parser::Command& cmd)
 {
 	const char *path = cmd.argv[1];
 	chdir(path);
