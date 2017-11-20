@@ -9,15 +9,16 @@ Parser::Parser(const VarTab &vtab) : vtab(vtab)
 
 void Parser::reportSyntaxError(std::ostream& os) const
 {
+	unsigned char ch = peek();
 	os << "Syntax error: unexpected ";
-	if (isprint(*pos)) {
-		if (*pos == '\'') {
+	if (isprint(ch)) {
+		if (ch == '\'') {
 			os << "<single quote>";
 		} else {
-			os << '\'' << *pos << '\'';
+			os << '\'' << ch << '\'';
 		}
 	} else {
-		switch (*pos) {
+		switch (ch) {
 		case '\n':
 			os << "<newline>";
 			break;
@@ -28,7 +29,7 @@ void Parser::reportSyntaxError(std::ostream& os) const
 			os << "<eol>";
 			break;
 		default:
-			os << '\\' << std::oct << (int) *pos << std::dec;
+			os << '\\' << std::oct << (int) ch << std::dec;
 			break;
 		}
 	}
@@ -40,12 +41,11 @@ void Parser::reportSyntaxError(std::ostream& os) const
  */
 bool Parser::parse(const char *line, Parser::Pipes& pipes)
 {
-	pos = line;
-	pos_before_expansion = NULL;
+	ls.pos = line;
+	ls_backup.pos = NULL;
 
 	scannedTerms.clear();
-	specials.redir = specials.space =
-		specials.expand = specials.escape = 1;
+	ls.redir = ls.space = ls.expand = ls.escape = 1;
 
 	return parsePipes(pipes) && endOfLine();
 }
@@ -118,18 +118,19 @@ bool Parser::parseCommand(Parser::Command& cmd)
 			if (cmd.type != Command::ORDINARY) {
 				// Builtin commands parses
 				// arguments own their own
-				return true;
+				break;
 			}
 		}
 
 		skipSpaces();
 		if (endOfLine() || catcode(peek()) == PIPE) {
-			// end of a command
-			// argv ends with a NULL
-			cmd.argv.push_back(NULL);
-			return true;
+			break;
 		}
 	}
+	// end of a command
+	// argv ends with a NULL
+	cmd.argv.push_back(NULL);
+	return true;
 }
 
 void Parser::parseBuiltin(Parser::Command& cmd)
@@ -139,6 +140,8 @@ void Parser::parseBuiltin(Parser::Command& cmd)
 		parseSetCommand(cmd);
 	} else if (strcmp(cmdname, "export") == 0) {
 		parseExportCommand(cmd);
+	} else if (strcmp(cmdname, "cd") == 0) {
+		parseCdCommand(cmd);
 	}
 }
 
@@ -153,7 +156,7 @@ void Parser::parseSetCommand(Parser::Command& cmd)
 		return;
 	}
 	// redir and space are inactive inside variable definition
-	specials.redir = specials.space = 0;
+	ls.redir = ls.space = 0;
 	value = scanTerm();
 	if (value == NULL) {
 		value = ""; // "set x" sets x to empty
@@ -177,6 +180,19 @@ void Parser::parseExportCommand(Parser::Command& cmd)
 	cmd.type = Command::EXPORT;
 }
 
+void Parser::parseCdCommand(Parser::Command& cmd)
+{
+	const char *path;
+
+	path = scanTerm();
+	if (path == NULL) {
+		cmd.type = Command::INVALID;
+		return;
+	}
+	cmd.argv.push_back(path);
+	cmd.type = Command::CD;
+}
+
 /* Parser::scanTerm scans a term in a command.
  *
  * A term is a sequence of normal characters.
@@ -190,7 +206,7 @@ const char *Parser::scanTerm()
 	std::string& term = scannedTerms.back();
 
 	skipSpaces();
-	const char *save = pos;
+	const char *save = ls.pos;
 	bool terminate = false;
 	do {
 		unsigned char ch = peek();
@@ -223,7 +239,7 @@ const char *Parser::scanTerm()
 		}
 	} while (!terminate);
 
-	if (save == pos) { // no character consumed?
+	if (save == ls.pos) { // no character consumed?
 		return NULL;
 	}
 	return term.c_str();
@@ -252,17 +268,14 @@ void Parser::enterExpansion(const char *name)
 		// empty expansion; exit immediately
 		return;
 	}
-	pos_before_expansion = pos;
-	pos = value;
-	specials_before_expansion = specials;
-	specials.redir = specials.expand = specials.escape = 0;
+	ls_backup = ls;
+	ls.redir = ls.expand = ls.escape = 0;
 }
 
 void Parser::exitExpansion()
 {
-	pos = pos_before_expansion;
-	pos_before_expansion = NULL;
-	specials = specials_before_expansion;
+	ls = ls_backup;
+	ls_backup.pos = NULL;
 }
 
 Parser::Catcode Parser::catcode(unsigned char ch) const
@@ -270,19 +283,19 @@ Parser::Catcode Parser::catcode(unsigned char ch) const
 	if (ch == '\0')
 		return EOL;
 	if (isspace(ch)) {
-		return specials.space ? SPACE : OTHER;
+		return ls.space ? SPACE : OTHER;
 	}
 	switch (ch) {
 	case '<':
-		return specials.redir ? REDIR0 : OTHER;
+		return ls.redir ? REDIR0 : OTHER;
 	case '>':
-		return specials.redir ? REDIR1 : OTHER;
+		return ls.redir ? REDIR1 : OTHER;
 	case '|':
-		return specials.redir ? PIPE : OTHER;
+		return ls.redir ? PIPE : OTHER;
 	case '$':
-		return specials.expand ? EXPAND : OTHER;
+		return ls.expand ? EXPAND : OTHER;
 	case '\\':
-		return specials.escape ? ESCAPE : OTHER;
+		return ls.escape ? ESCAPE : OTHER;
 	}
 	if (isalnum(ch) || ch == '_') {
 		return LETTER;
@@ -292,15 +305,15 @@ Parser::Catcode Parser::catcode(unsigned char ch) const
 
 void Parser::skipSpaces()
 {
-	while (isspace(peek())) {
+	while (catcode(peek()) == SPACE) {
 		next();
 	}
 }
 
 void Parser::next(int n)
 {
-	pos += n;
-	if (*pos == '\0' && insideExpansion()) {
+	ls.pos += n;
+	if (*ls.pos == '\0' && insideExpansion()) {
 		// just finished an expansion
 		exitExpansion();
 	}

@@ -15,7 +15,7 @@ public:
 	struct Command {
 		enum Type {
 			INVALID = -1,
-			ORDINARY, SET, EXPORT,
+			ORDINARY, SET, EXPORT, CD,
 		};
 		Type type;
 		std::vector<const char *> argv;
@@ -30,30 +30,33 @@ private:
 	enum Catcode {
 		ESCAPE, EXPAND, SPACE, REDIR0, REDIR1, PIPE, LETTER, OTHER, EOL
 	};
-	Catcode catcode(unsigned char) const;
-	const VarTab& vtab;
-	std::list<std::string> scannedTerms;
-	const char *pos;
-	const char *pos_before_expansion;
-	struct Specials {
+	struct LexState {
+		const char *pos;
 		unsigned redir:1, space:1, expand:1, escape:1;
 	};
-	Specials specials, specials_before_expansion;
+	LexState ls, ls_backup;
 
-	bool insideExpansion() const { return pos_before_expansion != NULL; }
-	bool endOfLine() const { return *pos == '\0'; }
-	unsigned char peek(int n = 0) const { return pos[n]; }
+	const VarTab& vtab;
+	std::list<std::string> scannedTerms;
+
+	Catcode catcode(unsigned char) const;
+	void enterExpansion(const char *);
+	void exitExpansion();
+	bool insideExpansion() const { return ls_backup.pos != NULL; }
+	bool endOfLine() const { return *ls.pos == '\0'; }
+	unsigned char peek(int n = 0) const { return ls.pos[n]; }
 	void next(int n = 1);
 	void skipSpaces();
+
+	const char *scanTerm();
+	const char *scanName();
+
 	bool parseCommand(Command&);
 	void parseBuiltin(Command&);
 	void parseSetCommand(Command&);
 	void parseExportCommand(Command&);
+	void parseCdCommand(Command&);
 	bool parsePipes(Pipes&);
-	const char *scanTerm();
-	const char *scanName();
-	void enterExpansion(const char *);
-	void exitExpansion();
 };
 
 

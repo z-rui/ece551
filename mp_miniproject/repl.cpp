@@ -38,6 +38,10 @@ void MyShell::runREPL()
 		if (pipes.size() == 0) { // empty
 			continue;
 		}
+		if (pipes.size() > 1) {
+			std::cout << "Pipes are not implemented yet.\n";
+			continue;
+		}
 		Parser::Pipes::const_iterator it;
 		it = pipes.begin();
 		switch (it->type) {
@@ -46,6 +50,9 @@ void MyShell::runREPL()
 				break;
 			case Parser::Command::EXPORT:
 				executeExport(*it);
+				break;
+			case Parser::Command::CD:
+				executeCD(*it);
 				break;
 			case Parser::Command::ORDINARY:
 				executePipes(pipes);
@@ -58,10 +65,6 @@ void MyShell::runREPL()
 
 void MyShell::executePipes(const Parser::Pipes& pipes)
 {
-	if (pipes.size() > 1) {
-		std::cout << "Pipes are not implemented yet.\n";
-		return;
-	}
 	Parser::Pipes::const_iterator it;
 	it = pipes.begin();
 	const char *progname = it->argv[0];
@@ -110,4 +113,10 @@ void MyShell::executeExport(const Parser::Command& cmd)
 {
 	const char *name = cmd.argv[1];
 	varTab.exportVar(name);
+}
+
+void MyShell::executeCD(const Parser::Command& cmd)
+{
+	const char *path = cmd.argv[1];
+	chdir(path);
 }
