@@ -2,6 +2,7 @@
 #define PARSE_H
 
 #include <string>
+#include <iostream>
 #include <list>
 #include <vector>
 
@@ -24,7 +25,12 @@ public:
 
 	Parser(const VarTab&);
 	bool parse(const char *, Pipes&);
+	void reportSyntaxError(std::ostream&) const;
 private:
+	enum Catcode {
+		ESCAPE, EXPAND, SPACE, REDIR0, REDIR1, PIPE, LETTER, OTHER, EOL
+	};
+	Catcode catcode(unsigned char) const;
 	const VarTab& vtab;
 	std::list<std::string> scannedTerms;
 	const char *pos;
@@ -39,10 +45,10 @@ private:
 	unsigned char peek(int n = 0) const { return pos[n]; }
 	void next(int n = 1);
 	void skipSpaces();
-	Command::Type parseCommand(Command&);
-	Command::Type parseBuiltin(const char *, Command&);
-	Command::Type parseSetCommand(Command&);
-	Command::Type parseExportCommand(Command&);
+	bool parseCommand(Command&);
+	void parseBuiltin(Command&);
+	void parseSetCommand(Command&);
+	void parseExportCommand(Command&);
 	bool parsePipes(Pipes&);
 	const char *scanTerm();
 	const char *scanName();

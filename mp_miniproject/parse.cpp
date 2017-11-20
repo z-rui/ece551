@@ -7,6 +7,34 @@ Parser::Parser(const VarTab &vtab) : vtab(vtab)
 {
 }
 
+void Parser::reportSyntaxError(std::ostream& os) const
+{
+	os << "Syntax error: unexpected ";
+	if (isprint(*pos)) {
+		if (*pos == '\'') {
+			os << "<single quote>";
+		} else {
+			os << '\'' << *pos << '\'';
+		}
+	} else {
+		switch (*pos) {
+		case '\n':
+			os << "<newline>";
+			break;
+		case '\t':
+			os << "<tab>";
+			break;
+		case '\0':
+			os << "<eol>";
+			break;
+		default:
+			os << '\\' << std::oct << (int) *pos << std::dec;
+			break;
+		}
+	}
+	os << "\n";
+}
+
 /* Parser::parse parses one line.
  *
  */
@@ -35,11 +63,11 @@ bool Parser::parsePipes(Parser::Pipes& pipes)
 	}
 	for (;;) {
 		pipes.push_back(Command());
-		if (parseCommand(pipes.back()) == Command::INVALID)
+		if (!parseCommand(pipes.back()))
 			return false; // failed
 
 		skipSpaces();
-		if (peek() == '|') {
+		if (catcode(peek()) == PIPE) {
 			next();
 		} else {
 			return true;
@@ -52,7 +80,7 @@ bool Parser::parsePipes(Parser::Pipes& pipes)
  * command ::= command-term { command-term }
  * command-term ::= TERM | '<' TERM | '>' TERM | "2>" TERM
  */
-Parser::Command::Type Parser::parseCommand(Parser::Command& cmd)
+bool Parser::parseCommand(Parser::Command& cmd)
 {
 	bool first = true;
 	for (;;) {
@@ -61,13 +89,13 @@ Parser::Command::Type Parser::parseCommand(Parser::Command& cmd)
 
 		skipSpaces();
 		ch = peek();
-		if (ch == '<') {
+		if (catcode(ch) == REDIR0) {
 			redir = 0;
 			next();
-		} else if (ch == '>') {
+		} else if (catcode(ch) == REDIR1) {
 			redir = 1;
 			next();
-		} else if (ch == '2' && peek(1) == '>') {
+		} else if (ch == '2' && catcode(peek(1)) == REDIR1) {
 			redir = 2;
 			next(2);
 		}
@@ -82,42 +110,47 @@ Parser::Command::Type Parser::parseCommand(Parser::Command& cmd)
 		}
 		if (first) {
 			first = false;
-			Command::Type builtin = parseBuiltin(term, cmd);
-			if (builtin != Command::INVALID) {
-				cmd.type = builtin;
-				return builtin;
+			cmd.type = Command::ORDINARY;
+			parseBuiltin(cmd);
+			if (cmd.type == Command::INVALID) {
+				return false;
+			}
+			if (cmd.type != Command::ORDINARY) {
+				// Builtin commands parses
+				// arguments own their own
+				return true;
 			}
 		}
 
 		skipSpaces();
-		if (endOfLine() || peek() == '|') { // end of a command
+		if (endOfLine() || catcode(peek()) == PIPE) {
+			// end of a command
 			// argv ends with a NULL
 			cmd.argv.push_back(NULL);
-			cmd.type = Command::ORDINARY;
-			return Command::ORDINARY;
+			return true;
 		}
 	}
 }
 
-Parser::Command::Type Parser::parseBuiltin(const char *cmdname,
-		Parser::Command& cmd)
+void Parser::parseBuiltin(Parser::Command& cmd)
 {
+	const char *cmdname = cmd.argv[0];
 	if (strcmp(cmdname, "set") == 0) {
-		return parseSetCommand(cmd);
+		parseSetCommand(cmd);
 	} else if (strcmp(cmdname, "export") == 0) {
-		return parseExportCommand(cmd);
+		parseExportCommand(cmd);
 	}
-	return Command::INVALID;
 }
 
-Parser::Command::Type Parser::parseSetCommand(Parser::Command& cmd)
+void Parser::parseSetCommand(Parser::Command& cmd)
 {
 	const char *name, *value;
 
 	skipSpaces();
 	name = scanName();
 	if (name == NULL) {
-		return Command::INVALID;
+		cmd.type = Command::INVALID;
+		return;
 	}
 	// redir and space are inactive inside variable definition
 	specials.redir = specials.space = 0;
@@ -127,20 +160,21 @@ Parser::Command::Type Parser::parseSetCommand(Parser::Command& cmd)
 	}
 	cmd.argv.push_back(name);
 	cmd.argv.push_back(value);
-	return Command::SET;
+	cmd.type = Command::SET;
 }
 
-Parser::Command::Type Parser::parseExportCommand(Parser::Command& cmd)
+void Parser::parseExportCommand(Parser::Command& cmd)
 {
 	const char *name;
 
 	skipSpaces();
 	name = scanName();
 	if (name == NULL) {
-		return Command::INVALID;
+		cmd.type = Command::INVALID;
+		return;
 	}
 	cmd.argv.push_back(name);
-	return Command::EXPORT;
+	cmd.type = Command::EXPORT;
 }
 
 /* Parser::scanTerm scans a term in a command.
@@ -161,21 +195,13 @@ const char *Parser::scanTerm()
 	do {
 		unsigned char ch = peek();
 		const char *name;
-		bool skip = false;
-		switch (ch) {
-		case '\0':
+		switch (catcode(ch)) {
+		case EOL:
+		case REDIR0: case REDIR1: case PIPE:
+		case SPACE:
 			terminate = true;
 			break;
-		case '<': case '>': case '|':
-			terminate = specials.redir;
-			break;
-		case ' ': case '\t': case '\v': case '\f': case '\n':
-			terminate = specials.space;
-			break;
-		case '$':
-			if (!specials.expand) {
-				break; // expansion disabled
-			}
+		case EXPAND:
 			next(); // skip '$'
 			name = scanName();
 			if (name != NULL) {
@@ -183,21 +209,17 @@ const char *Parser::scanTerm()
 			} else { // a stray $
 				term.push_back(ch);
 			}
-			skip = true;
 			break;
-		case '\\':
-			if (!specials.escape) {
-				break;
-			}
+		case ESCAPE:
 			next(); // skip '\'
 			if ((ch = peek()) == '\0') {
-				skip = true;
+				break;
 			}
-			break;
-		}
-		if (!terminate && !skip) {
+			/* FALL THROUGH */
+		default:
 			term.push_back(ch);
 			next();
+			break;
 		}
 	} while (!terminate);
 
@@ -241,6 +263,31 @@ void Parser::exitExpansion()
 	pos = pos_before_expansion;
 	pos_before_expansion = NULL;
 	specials = specials_before_expansion;
+}
+
+Parser::Catcode Parser::catcode(unsigned char ch) const
+{
+	if (ch == '\0')
+		return EOL;
+	if (isspace(ch)) {
+		return specials.space ? SPACE : OTHER;
+	}
+	switch (ch) {
+	case '<':
+		return specials.redir ? REDIR0 : OTHER;
+	case '>':
+		return specials.redir ? REDIR1 : OTHER;
+	case '|':
+		return specials.redir ? PIPE : OTHER;
+	case '$':
+		return specials.expand ? EXPAND : OTHER;
+	case '\\':
+		return specials.escape ? ESCAPE : OTHER;
+	}
+	if (isalnum(ch) || ch == '_') {
+		return LETTER;
+	}
+	return OTHER;
 }
 
 void Parser::skipSpaces()

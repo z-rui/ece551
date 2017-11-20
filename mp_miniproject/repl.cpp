@@ -32,7 +32,7 @@ void MyShell::runREPL()
 		Parser::Pipes pipes;
 		bool ok = parser.parse(line.c_str(), pipes);
 		if (!ok) {
-			std::cout << "Syntax Error\n";
+			parser.reportSyntaxError(std::cout);
 			continue;
 		}
 		if (pipes.size() == 0) { // empty
