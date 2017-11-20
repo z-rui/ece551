@@ -5,36 +5,46 @@
 #define NOT_EXPORTED (~(size_t)0)
 
 #define HASH_INIT_SIZE 64
+/* Constructor
+ */
 VarTab::VarTab()
 {
-	hashtab = new HashSlot[HASH_INIT_SIZE]();
-	hashsize = hashfree = HASH_INIT_SIZE;
+	hashTab = new HashSlot[HASH_INIT_SIZE]();
+	hashSize = hashFree = HASH_INIT_SIZE;
 	exported.push_back(NULL);
 }
 
+/* Destructor
+ */
 VarTab::~VarTab()
 {
-	delete[] hashtab;
+	delete[] hashTab;
 }
 
+/* VarTab::lookup looks for a key in the hash table.
+ * 
+ * The hash table is open-addressing with linear probing.
+ */
 VarTab::HashSlot *VarTab::lookup(const char *key) const
 {
 	size_t h = hashKey(key);
 	HashSlot *p, *end;
-	p = hashtab + (h % hashsize);
-	end = hashtab + hashsize;
+	p = hashTab + (h % hashSize);
+	end = hashTab + hashSize;
 
 	while (p->kvPair != NULL && (p->hash != h ||
 				!equalKeyKvpair(key, p->kvPair->c_str()))) {
 		p++; // linear probing
 		if (p == end) {
-			p = hashtab; // wrap around
+			p = hashTab; // wrap around
 		}
 	}
 	p->hash = h;
 	return p;
 }
 
+/* VarTab::hashKey is the hash function for a string.
+ */
 size_t VarTab::hashKey(const char *key)
 {
 	size_t h = 6549;
@@ -46,6 +56,12 @@ size_t VarTab::hashKey(const char *key)
 	return h;
 }
 
+/* VarTab::equalKeyKvpair compares a key with a key-value pair.
+ *
+ * Since the key-value pair has the form "key=value",
+ * the character '=' is considered the terminator instead of '\0'
+ * for the key-value pair.
+ */
 bool VarTab::equalKeyKvpair(const char *key, const char *kvPair)
 {
 	while (*key == *kvPair) {
@@ -56,6 +72,11 @@ bool VarTab::equalKeyKvpair(const char *key, const char *kvPair)
 	return (*key == '\0' && *kvPair == '=');
 }
 
+/* VarTab::setVar sets the value of a variable.
+ *
+ * It either creates a new variable or changes the value of
+ * an existing one.
+ */
 void VarTab::setVar(const char *key, const char *value)
 {
 	assert(key != NULL && value != NULL);
@@ -67,6 +88,10 @@ void VarTab::setVar(const char *key, const char *value)
 	}
 }
 
+/* VarTab::getVar gets the value of a variable.
+ *
+ * If the variable does not exist, NULL is returned.
+ */
 const char *VarTab::getVar(const char *key) const
 {
 	assert(key != NULL);
@@ -78,6 +103,10 @@ const char *VarTab::getVar(const char *key) const
 	return kvPair->c_str() + slot->vOffset;
 }
 
+/* VarTab::newVar creates a new variable.
+ *
+ * It is called internally when the variable is found to be nonexistent.
+ */
 void VarTab::newVar(VarTab::HashSlot *slot, const char *key, const char *value)
 {
 	variables.push_back(std::string());
@@ -90,34 +119,43 @@ void VarTab::newVar(VarTab::HashSlot *slot, const char *key, const char *value)
 	slot->kvPair = kvPair;
 	slot->idxExported = NOT_EXPORTED;
 
-	--hashfree;
+	--hashFree;
 	maybeRehash();
 }
 
+/* VarTab::maybeRehash checks the load factor of the hash table and performs
+ * a rehash when necessary.
+ *
+ * It is called internally when a new element is inserted into the hash table.
+ */
 void VarTab::maybeRehash()
 {
-	if (hashfree < hashsize / 2) {
-		size_t newhashsize = hashsize * 2;
-		HashSlot *newhashtab = new HashSlot[newhashsize]();
-		HashSlot *newhashtabend = newhashtab + newhashsize;
-		for (size_t i = 0; i < hashsize; i++) {
-			HashSlot *p = &hashtab[i];
-			HashSlot *q = &newhashtab[p->hash % newhashsize];
+	if (hashFree < hashSize / 2) {
+		size_t newSize = hashSize * 2;
+		HashSlot *newTab = new HashSlot[newSize]();
+		HashSlot *newEnd = newTab + newSize;
+		for (size_t i = 0; i < hashSize; i++) {
+			HashSlot *p = &hashTab[i];
+			HashSlot *q = &newTab[p->hash % newSize];
 			while (q->kvPair != NULL) {
 				q++; // linear probing
-				if (q == newhashtabend) {
-					q = newhashtab; // wrap around
+				if (q == newEnd) {
+					q = newTab; // wrap around
 				}
 			}
 			*q = *p;
 		}
-		hashfree += (newhashsize - hashsize);
-		hashsize = newhashsize;
-		delete[] hashtab;
-		hashtab = newhashtab;
+		hashFree += (newSize - hashSize);
+		hashSize = newSize;
+		delete[] hashTab;
+		hashTab = newTab;
 	}
 }
 
+/* VarTab::changeVar changes the value of a key-value pair.
+ *
+ * It is called internally when the variable is found to be existent.
+ */
 void VarTab::changeVar(VarTab::HashSlot *slot, const char *value)
 {
 	std::string *kvPair = slot->kvPair;
@@ -128,6 +166,11 @@ void VarTab::changeVar(VarTab::HashSlot *slot, const char *value)
 		exported[slot->idxExported] = kvPair->c_str();
 }
 
+/* VarTab::exportVar exports a variable.
+ *
+ * The exported variable will be put into an array
+ * that can be retrieved by calling VarTab::getExported.
+ */
 void VarTab::exportVar(const char *key)
 {
 	HashSlot *slot = lookup(key);
@@ -142,6 +185,11 @@ void VarTab::exportVar(const char *key)
 	exported.push_back(NULL); // envp ends with NULL
 }
 
+/* VarTab::getExported returns an array that contains all exported variables.
+ *
+ * Each element in the array is a string of the form "key=value",
+ * except that the last one is NULL to indicate the end.
+ */
 const char *const *VarTab::getExported() const
 {
 	return &exported[0];

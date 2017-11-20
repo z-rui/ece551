@@ -12,8 +12,8 @@ class VarTab {
 		size_t vOffset;
 		size_t idxExported;
 	};
-	HashSlot *hashtab;
-	size_t hashsize, hashfree;
+	HashSlot *hashTab;
+	size_t hashSize, hashFree;
 	std::list<std::string> variables;
 	std::vector<const char *> exported;
 
@@ -29,7 +29,6 @@ public:
 	void setVar(const char *, const char *);
 	const char *getVar(const char *) const;
 	void exportVar(const char *);
-	// wanted to use 'export', but it seemed to be a keyword
 	const char *const *getExported() const;
 };
 
