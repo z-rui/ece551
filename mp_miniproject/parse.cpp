@@ -155,6 +155,7 @@ void Parser::parseSetCommand(Parser::Command& cmd)
 		cmd.type = Command::INVALID;
 		return;
 	}
+	skipSpaces();
 	// redir and space are inactive inside variable definition
 	ls.redir = ls.space = 0;
 	value = scanTerm();
@@ -269,6 +270,7 @@ void Parser::enterExpansion(const char *name)
 		return;
 	}
 	ls_backup = ls;
+	ls.pos = value;
 	ls.redir = ls.expand = ls.escape = 0;
 }
 
