@@ -97,8 +97,8 @@ void MyShell::executeSet(const Parser::Command& cmd)
 	const char *value = cmd.argv[2];
 
 	if (strcmp(name, "PWD") == 0) {
-		if (chdir(value) != 0)
-			return; // chdir fails
+		chdir(value);
+		return; // PWD is set in chdir()
 	}
 	varTab.setVar(name, value);
 	if (strcmp(name, "PATH") == 0) {
