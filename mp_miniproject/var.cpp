@@ -224,5 +224,6 @@ void VarTab::importExported(const char *const *environ)
 		exported.back() = slot->kvPair->c_str();
 		slot->idxExported = exported.size() - 1;
 		exported.push_back(NULL);
+		maybeRehash();
 	}
 }
