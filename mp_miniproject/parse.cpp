@@ -5,13 +5,13 @@
 
 Parser::Parser(const VarTab &vtab) : vtab(vtab)
 {
-	debug.os = &std::cerr;
+	debug.os = &std::cout;
 }
 
 void (Parser::*const Parser::parseBuiltins[])(Command&) = {
-	[Parser::Command::SET] = &Parser::parseSet,
-	[Parser::Command::EXPORT] = &Parser::parseExport,
-	[Parser::Command::CD] = &Parser::parseCd,
+	[Command::SET] = &Parser::parseSet,
+	[Command::EXPORT] = &Parser::parseExport,
+	[Command::CD] = &Parser::parseCd,
 };
 
 void Parser::reportSyntaxError(std::ostream& os) const
@@ -113,7 +113,6 @@ bool Parser::parseCommand(Parser::Command& cmd)
 			cmd.argv.push_back(term);
 		}
 		if (first) {
-			first = false;
 			cmd.type = commandType(term);
 			if (cmd.type < Command::ORDINARY) {
 				(this->*parseBuiltins[cmd.type])(cmd);
@@ -129,6 +128,7 @@ bool Parser::parseCommand(Parser::Command& cmd)
 		if (!first) {
 			debug << "command ";
 		}
+		first = false;
 
 		if (redir >= 0) {
 			debug << redir_str[redir] << ' ';
@@ -363,8 +363,9 @@ void Parser::doExpansion()
  */
 Parser::Catcode Parser::catcode(unsigned char ch) const
 {
-	if (ch == '\0')
+	if (ch == '\0') {
 		return EOL;
+	}
 	if (isspace(ch)) {
 		return ls.space ? SPACE : OTHER;
 	}

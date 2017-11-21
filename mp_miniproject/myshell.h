@@ -22,6 +22,7 @@ protected:
 	static bool runProgram(const char *progname,
 		const char *const *argv,
 		const char *const *envp,
+		const char *const redir[3],
 		int *status);
 	void executeSet(const Parser::Command&);
 	void executeExport(const Parser::Command&);

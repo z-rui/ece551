@@ -68,12 +68,6 @@ void MyShell::executePipes(const Parser::Pipes& pipes)
 	Parser::Pipes::const_iterator it;
 	it = pipes.begin();
 	const char *progname = it->argv[0];
-	for (int i = 0; i <= 2; i++) {
-		if (it->redir[i] != NULL) {
-			std::cout << "Redirections are not implemented yet.\n";
-			return;
-		}
-	}
 
 	progname = pathSearcher.search(progname);
 	if (progname == NULL) {
@@ -87,6 +81,7 @@ void MyShell::executePipes(const Parser::Pipes& pipes)
 	exited = runProgram(progname,
 			&it->argv[0], // argv
 			varTab.getExported(), // envp
+			it->redir,
 			&status);
 	std::cout << "Program " <<
 		(exited ? "exited with status "

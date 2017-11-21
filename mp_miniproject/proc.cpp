@@ -6,6 +6,26 @@
 
 #include "myshell.h"
 
+static void makeRedir(const char *const redir[3])
+{
+	for (int i = 0; i <= 2; i++) {
+		if (redir[i] == NULL) {
+			continue;
+		}
+		switch (i) {
+		case 0:
+			freopen(redir[0], "r", stdin);
+			break;
+		case 1:
+			freopen(redir[1], "w", stdout);
+			break;
+		case 2:
+			freopen(redir[2], "w", stderr);
+			break;
+		}
+	}
+}
+
 /* MyShell::runProgram runs the program specified by filename,
  * and passes to the program the arguments in argv
  * and environment variables in envp.
@@ -20,12 +40,14 @@ bool MyShell::runProgram(
 	const char *filename,
 	const char *const *argv,
 	const char *const *envp,
+	const char *const redir[3],
 	int *status)
 {
 	pid_t pid;
 
 	pid = fork();
 	if (pid == 0) { // in child process
+		makeRedir(redir);
 		// I believe execve is wrong about the const-ness.
 		// In fact both the characters and the pointers
 		// will not be modified.
