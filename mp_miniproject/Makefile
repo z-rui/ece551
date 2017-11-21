@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-Wall -Wextra -g
+CXXFLAGS=-Wall -Wextra -g -std=c++98 -ansi -pedantic
 LDFLAGS=
 
 all: myshell
@@ -7,7 +7,7 @@ all: myshell
 myshell: myshell.o proc.o path.o repl.o parse.o var.o
 	$(CXX) $(LDFLAGS) -o $@ myshell.o proc.o path.o repl.o parse.o var.o
 
-myshell.o: myshell.cpp repl.cpp myshell.h path.h parse.h var.h
+myshell.o: myshell.cpp repl.cpp myshell.h path.h parse.h var.h debug.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 proc.o: proc.cpp myshell.h

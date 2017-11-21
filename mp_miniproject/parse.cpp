@@ -5,6 +5,7 @@
 
 Parser::Parser(const VarTab &vtab) : vtab(vtab)
 {
+	debug.os = &std::cerr;
 }
 
 void (Parser::*const Parser::parseBuiltins[])(Command&) = {
@@ -61,15 +62,23 @@ bool Parser::parsePipes(Parser::Pipes& pipes)
 {
 	skipSpaces();
 	if (endOfLine()) { // empty
+		debug << "Parser: pipes ::= %empty\n";
 		return true;
 	}
 	for (;;) {
 		pipes.push_back(Command());
-		if (!parseCommand(pipes.back()))
+		if (!parseCommand(pipes.back())) {
 			return false; // failed
+		}
+		debug << "Parser: pipes ::= ";
+		if (pipes.size() > 1) {
+			debug << "pipes '|' ";
+		}
+		debug << "command\n";
 
 		skipSpaces();
 		if (catcode(peek()) == PIPE) {
+			debug << "Parser: PIPE '|'\n";
 			next();
 		} else {
 			return true;
@@ -86,20 +95,13 @@ bool Parser::parseCommand(Parser::Command& cmd)
 {
 	bool first = true;
 	for (;;) {
-		unsigned char ch;
-		int redir = -1; /* -1: no redir; 0,1,2: redir fd 0,1 or 2 */
-
+		static const char *const redir_str[] = { // for debugging
+			"'<'", "'>'", "\"2>\""
+		};
 		skipSpaces();
-		ch = peek();
-		if (catcode(ch) == REDIR0) {
-			redir = 0;
-			next();
-		} else if (catcode(ch) == REDIR1) {
-			redir = 1;
-			next();
-		} else if (ch == '2' && catcode(peek(1)) == REDIR1) {
-			redir = 2;
-			next(2);
+		int redir = scanRedir();
+		if (redir >= 0) {
+			debug << "Parser: REDIR " << redir_str[redir] << '\n';
 		}
 		const char *term = scanTerm();
 		if (term == NULL) { // failed
@@ -123,7 +125,15 @@ bool Parser::parseCommand(Parser::Command& cmd)
 				break;
 			}
 		}
+		debug << "Parser: command ::= ";
+		if (!first) {
+			debug << "command ";
+		}
 
+		if (redir >= 0) {
+			debug << redir_str[redir] << ' ';
+		}
+		debug << "TERM\n";
 		skipSpaces();
 		if (endOfLine() || catcode(peek()) == PIPE) {
 			break;
@@ -180,7 +190,7 @@ void Parser::parseSet(Parser::Command& cmd)
 	}
 	cmd.argv.push_back(name);
 	cmd.argv.push_back(value);
-	cmd.type = Command::SET;
+	debug << "Parser: command ::= \"set\" NAME TERM\n";
 }
 
 /* Parser::parseExport parses the export command.
@@ -198,7 +208,7 @@ void Parser::parseExport(Parser::Command& cmd)
 		return;
 	}
 	cmd.argv.push_back(name);
-	cmd.type = Command::EXPORT;
+	debug << "Parser: command ::= \"export\" NAME\n";
 }
 
 /* Parser::parseCd parses the cd command.
@@ -215,7 +225,7 @@ void Parser::parseCd(Parser::Command& cmd)
 		return;
 	}
 	cmd.argv.push_back(path);
-	cmd.type = Command::CD;
+	debug << "Parser: command ::= \"cd\" TERM\n";
 }
 
 /* Parser::scanTerm scans a TERM in a command.
@@ -244,43 +254,32 @@ const char *Parser::scanTerm()
 
 	skipSpaces();
 	const char *save = ls.pos;
-	bool terminate = false;
-	do {
-		unsigned char ch = peek();
-		const char *name;
-		switch (catcode(ch)) {
+	for (;;) {
+		switch (catcode(peek())) {
 		case EOL:
 		case REDIR0: case REDIR1: case PIPE:
 		case SPACE:
-			terminate = true;
-			break;
-		case EXPAND:
-			next(); // skip '$'
-			name = scanName();
-			if (name != NULL) {
-				enterExpansion(name);
-			} else { // a stray $
-				term.push_back(ch);
+			if (save == ls.pos) { // no character consumed?
+				return NULL;
 			}
+			debug << "Parser: TERM \"" << term << "\"\n";
+			return term.c_str();
+		case EXPAND:
+			doExpansion();
 			break;
 		case ESCAPE:
 			next(); // skip '\'
-			if ((ch = peek()) == '\0') {
+			if (catcode(peek()) == EOL) {
 				// too bad, there's no "next character"
-				break;
+				continue;
 			}
-			/* FALL THROUGH */
+			break;
 		default:
-			term.push_back(ch);
-			next();
 			break;
 		}
-	} while (!terminate);
-
-	if (save == ls.pos) { // no character consumed?
-		return NULL;
+		term.push_back(peek());
+		next();
 	}
-	return term.c_str();
 }
 
 /* Parser::scanName scans a NAME.
@@ -307,17 +306,44 @@ const char *Parser::scanName()
 		next();
 		ch = peek();
 	} while (catcode(ch) == LETTER);
+	debug << "Parser: NAME \"" << name << "\"\n";
 	return name.c_str();
 }
 
-void Parser::enterExpansion(const char *name)
+int Parser::scanRedir()
 {
-	const char *value = vtab.getVar(name);
-	if (value == NULL || value[0] == '\0') {
-		// empty expansion; exit immediately
+	unsigned ch = peek();
+	if (catcode(ch) == REDIR0) {
+		next();
+		return 0;
+	} else if (catcode(ch) == REDIR1) {
+		next();
+		return 1;
+	} else if (ch == '2' && catcode(peek(1)) == REDIR1) {
+		next(2);
+		return 2;
+	}
+	return -1;
+}
+
+void Parser::doExpansion()
+{
+	next(); // skip '$'
+	const char *name = scanName();
+	if (name == NULL) {
+		// '$' not followed by a NAME
+		next(-1); // back up
 		return;
 	}
-	ls_backup = ls;
+	const char *value = vtab.getVar(name);
+	debug << "Parser: -> ";
+	if (value == NULL || value[0] == '\0') {
+		// empty expansion; exit immediately
+		debug << '\n';
+		return;
+	}
+	debug << value << '\n';
+	ls_backup = ls; // save lex state
 	ls.pos = value;
 	/* Inside an expansion, '<', '|', '>', '$' and '\'
 	 * lose their specialness.
@@ -328,12 +354,6 @@ void Parser::enterExpansion(const char *name)
 	 * on the context before entering the expansion.
 	 */
 	ls.redir = ls.expand = ls.escape = 0;
-}
-
-void Parser::exitExpansion()
-{
-	ls = ls_backup;
-	ls_backup.pos = NULL;
 }
 
 /* Parser::catcode return the "category code" of an character.
@@ -368,8 +388,15 @@ Parser::Catcode Parser::catcode(unsigned char ch) const
 
 void Parser::skipSpaces()
 {
-	while (catcode(peek()) == SPACE) {
-		next();
+	for (;;) {
+		if (catcode(peek()) == EXPAND) {
+			doExpansion();
+		}
+		if (catcode(peek()) == SPACE) {
+			next();
+		} else {
+			break;
+		}
 	}
 }
 
@@ -377,7 +404,8 @@ void Parser::next(int n)
 {
 	ls.pos += n;
 	if (*ls.pos == '\0' && insideExpansion()) {
-		// just finished an expansion
-		exitExpansion();
+		// finished an expansion. restore lex state
+		ls = ls_backup;
+		ls_backup.pos = NULL;
 	}
 }

@@ -9,19 +9,21 @@
 #include <limits.h>
 
 #include "var.h"
+#include "debug.h"
 
 class Parser {
 public:
 	struct Command {
 		enum Type {
 			SET, EXPORT, CD,
-			ORDINARY, INVALID,
+			ORDINARY, INVALID
 		};
 		Type type;
 		std::vector<const char *> argv;
 		const char *redir[3];
 	};
 	typedef std::list<Command> Pipes;
+	DebugStream debug;
 
 	Parser(const VarTab&);
 	bool parse(const char *, Pipes&);
@@ -42,8 +44,7 @@ private:
 	std::list<std::string> scannedTerms;
 
 	Catcode catcode(unsigned char) const;
-	void enterExpansion(const char *);
-	void exitExpansion();
+	void doExpansion();
 	bool insideExpansion() const { return ls_backup.pos != NULL; }
 	bool endOfLine() const { return *ls.pos == '\0'; }
 	unsigned char peek(int n = 0) const { return ls.pos[n]; }
@@ -52,6 +53,7 @@ private:
 
 	const char *scanTerm();
 	const char *scanName();
+	int scanRedir();
 
 	bool parsePipes(Pipes&);
 	bool parseCommand(Command&);
