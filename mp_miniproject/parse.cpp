@@ -5,7 +5,6 @@
 
 Parser::Parser(const VarTab &vtab) : vtab(vtab)
 {
-	debug.os = &std::cout;
 }
 
 void (Parser::*const Parser::parseBuiltins[])(Command&) = {

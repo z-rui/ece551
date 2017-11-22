@@ -11,7 +11,6 @@
  */
 VarTab::VarTab()
 {
-	debug.os = &std::cout;
 	exported.push_back(NULL); // envp ends with NULL
 }
 

@@ -2,8 +2,10 @@
 #include <string>
 
 #include <string.h>
+#include <assert.h>
 
 #include "myshell.h"
+#include "hash.h"
 
 /* prompt_input first writes the prompt string,
  * then reads a logical line for the shell.
@@ -30,88 +32,53 @@ void MyShell::runREPL()
 			break;
 		}
 		Parser::Pipes pipes;
-		bool ok = parser.parse(line.c_str(), pipes);
-		if (!ok) {
+		if (parser.parse(line.c_str(), pipes)) {
+			executePipes(pipes);
+		} else {
 			parser.reportSyntaxError(std::cout);
-			continue;
-		}
-		if (pipes.size() == 0) { // empty
-			continue;
-		}
-		if (pipes.size() > 1) {
-			std::cout << "Pipes are not implemented yet.\n";
-			continue;
-		}
-		Parser::Pipes::const_iterator it;
-		it = pipes.begin();
-		switch (it->type) {
-			case Parser::Command::SET:
-				executeSet(*it);
-				break;
-			case Parser::Command::EXPORT:
-				executeExport(*it);
-				break;
-			case Parser::Command::CD:
-				executeCd(*it);
-				break;
-			case Parser::Command::ORDINARY:
-				executePipes(pipes);
-				break;
-			default:
-				throw Bug("should have reported syntax error");
 		}
 	}
 }
 
-void MyShell::executePipes(const Parser::Pipes& pipes)
+
+//////
+
+int (MyShell::*const MyShell::executeCommand[])(const Parser::Command&) = {
+	[Parser::Command::SET] = &MyShell::executeSet,
+	[Parser::Command::EXPORT] = &MyShell::executeExport,
+	[Parser::Command::CD] = &MyShell::executeCd,
+	[Parser::Command::ORDINARY] = &MyShell::runExternal,
+};
+
+int MyShell::executeSet(const Parser::Command& cmd)
 {
-	Parser::Pipes::const_iterator it;
-	it = pipes.begin();
-	const char *progname = it->argv[0];
-
-	progname = pathSearcher.search(progname);
-	if (progname == NULL) {
-		std::cout << "Command " << it->argv[0] <<
-			" not found" << std::endl;
-		return;
-	}
-
-	int status;
-	bool exited;
-	exited = runProgram(progname,
-			&it->argv[0], // argv
-			varTab.getExported(), // envp
-			it->redir,
-			&status);
-	std::cout << "Program " <<
-		(exited ? "exited with status "
-			: "was killed by signal ") <<
-		status << std::endl;
-}
-
-void MyShell::executeSet(const Parser::Command& cmd)
-{
+	assert(cmd.argv.size() == 4);
 	const char *name = cmd.argv[1];
 	const char *value = cmd.argv[2];
 
 	if (strcmp(name, "PWD") == 0) {
 		chdir(value);
-		return; // PWD is set in chdir()
+		return -1; // PWD is set in chdir()
 	}
 	varTab.setVar(name, value);
 	if (strcmp(name, "PATH") == 0) {
 		pathSearcher.setPath(value);
 	}
+	return -1;
 }
 
-void MyShell::executeExport(const Parser::Command& cmd)
+int MyShell::executeExport(const Parser::Command& cmd)
 {
+	assert(cmd.argv.size() == 3);
 	const char *name = cmd.argv[1];
 	varTab.exportVar(name);
+	return -1;
 }
 
-void MyShell::executeCd(const Parser::Command& cmd)
+int MyShell::executeCd(const Parser::Command& cmd)
 {
+	assert(cmd.argv.size() == 3);
 	const char *path = cmd.argv[1];
 	chdir(path);
+	return -1;
 }

@@ -1,78 +1,134 @@
 #include <sys/types.h> /* for pid_t */
 #include <sys/wait.h> /* for waitpid */
 #include <unistd.h> /* for fork */
+#include <fcntl.h>
+
+#include <vector>
+
 #include <stdio.h> /* for perror */
 #include <stdlib.h> /* for exit */
+#include <assert.h>
 
 #include "myshell.h"
 
-static void makeRedir(const char *const redir[3])
+static void dup2_or_die(int oldfd, int newfd)
 {
-	for (int i = 0; i <= 2; i++) {
-		if (redir[i] == NULL) {
-			continue;
-		}
-		switch (i) {
-		case 0:
-			freopen(redir[0], "r", stdin);
-			break;
-		case 1:
-			freopen(redir[1], "w", stdout);
-			break;
-		case 2:
-			freopen(redir[2], "w", stderr);
-			break;
-		}
+	if (dup2(oldfd, newfd) == -1) {
+		perror("dup2");
+		exit(EXIT_FAILURE);
 	}
 }
 
-/* MyShell::runProgram runs the program specified by filename,
- * and passes to the program the arguments in argv
- * and environment variables in envp.
- *
- * It returns true if the program exited,
- * or false if the program was signaled.
- *
- * The integer pointed to by status is either set to the exit status
- * or the signal that caused the program to terminate.
- */
-bool MyShell::runProgram(
-	const char *filename,
+static void setupChild(
+	const char *path,
 	const char *const *argv,
 	const char *const *envp,
 	const char *const redir[3],
-	int *status)
+	const int prevPipe[2],
+	const int nextPipe[2])
 {
-	pid_t pid;
+	if (prevPipe[0] != -1) {
+		close(prevPipe[1]);
+		dup2_or_die(prevPipe[0], 0);
+	}
+	if (nextPipe[0] != -1) {
+		close(nextPipe[0]);
+		dup2_or_die(nextPipe[1], 1);
+	}
+	for (int i = 0; i <= 2; i++) {
+		if (redir[i]) {
+			int flags = (i == 0)
+				? O_RDONLY
+				: O_CREAT|O_WRONLY|O_TRUNC;
+			int fd = open(redir[i], flags);
+			if (fd == -1) {
+				perror("open");
+				exit(EXIT_FAILURE);
+			}
+			dup2_or_die(fd, i);
+		}
+	}
+	// I believe execve is wrong about the const-ness.
+	// In fact both the characters and the pointers
+	// will not be modified.
+	execve(path,
+		const_cast<char *const *>(argv),
+		const_cast<char *const *>(envp));
+	// if execve does return, then there is an error
+	perror("execve");
+	exit(EXIT_FAILURE);
+}
 
-	pid = fork();
-	if (pid == 0) { // in child process
-		makeRedir(redir);
-		// I believe execve is wrong about the const-ness.
-		// In fact both the characters and the pointers
-		// will not be modified.
-		execve(filename,
-			const_cast<char *const *>(argv),
-			const_cast<char *const *>(envp));
-		// if execve does return, then there is an error
-		// CITE: happens to be the same as in the man page
-		perror("execve");
-		exit(EXIT_FAILURE);
-	} else { // in parent process
-		int s, w;
-		w = waitpid(pid, &s, 0);
-		if (w == -1) { // CITE: from the man page
+int MyShell::runExternal(const Parser::Command& cmd)
+{
+	const char *path = pathSearcher.search(cmd.argv[0]);
+	if (path == NULL) {
+		std::cout << "Command " << cmd.argv[0]
+			<< " not found\n";
+		return -1;
+	}
+	pid_t pid = fork();
+	if (pid == -1) {
+		perror("fork");
+		return -1;
+	}
+	if (pid == 0) {
+		setupChild(path, &cmd.argv[0], varTab.getExported(),
+			cmd.redir, pipefd[0], pipefd[1]);
+		// will not reach here
+	}
+	return pid;
+}
+
+void MyShell::executePipes(const Parser::Pipes& pipes)
+{
+	if (pipes.empty()) {
+		return;
+	}
+
+	Parser::Pipes::const_iterator it, nextit;
+	std::vector<int> children;
+
+	pipefd[0][0] = pipefd[0][1] = -1;
+	for (it = nextit = pipes.begin(); it != pipes.end(); it = nextit) {
+		++nextit;
+		bool run = true;
+		if (nextit == pipes.end()) {
+			pipefd[1][0] = pipefd[1][1] = -1;
+		} else if (pipe(pipefd[1]) == -1) {
+			perror("pipe");
+			run = false;
+		}
+		if (run) {
+			assert(it->type < Parser::Command::INVALID);
+			pid_t pid = (this->*executeCommand[it->type])(*it);
+			if (pid != -1) {
+				children.push_back(pid);
+			}
+		}
+		if (pipefd[0][0] != -1) {
+			close(pipefd[0][0]);
+			close(pipefd[0][1]);
+		}
+		pipefd[0][0] = pipefd[1][0];
+		pipefd[0][1] = pipefd[1][1];
+	}
+	for (size_t i = 0; i < children.size(); i++) {
+		int status;
+		if (waitpid(children[i], &status, 0) == -1) {
 			perror("waitpid");
-			exit(EXIT_FAILURE);
+			continue;
 		}
-		if (WIFEXITED(s)) {
-			*status = WEXITSTATUS(s);
-			return true;
-		} else if (WIFSIGNALED(s)) {
-			*status = WTERMSIG(s);
-			return false;
-		} else {
-			throw Bug("unknown status from waitpid()");
+		if (WIFEXITED(status)) {
+			std::cout << "Program exited with status "
+				<< WEXITSTATUS(status);
+		} else if (WIFSIGNALED(status)) {
+			std::cout << "Program was killed by signal "
+				<< WTERMSIG(status);
 		}
+		if (children.size() > 1) {
+			std::cout << " (PID = " << children[i] << ")";
+		}
+		std::cout << std::endl;
 	}
 }
