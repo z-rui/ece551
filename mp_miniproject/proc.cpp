@@ -19,6 +19,16 @@ static void dup2_or_die(int oldfd, int newfd)
 	}
 }
 
+static int open_or_die(const char *path, int flags)
+{
+	int fd = open(path, flags);
+	if (fd == -1) {
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
+	return fd;
+}
+
 static void setupChild(
 	const char *path,
 	const char *const *argv,
@@ -35,14 +45,15 @@ static void setupChild(
 		close(nextPipe[0]);
 		dup2_or_die(nextPipe[1], 1);
 	}
-	for (int i = 0; i <= 2; i++) {
+	if (redir[0]) {
+		int fd = open_or_die(redir[0], O_RDONLY);
+		dup2_or_die(fd, 0);
+	}
+	for (int i = 1; i <= 2; i++) {
 		if (redir[i]) {
-			int flags = (i == 0)
-				? O_RDONLY
-				: O_CREAT|O_WRONLY|O_TRUNC;
-			int fd = open(redir[i], flags);
+			int fd = creat(redir[i], 0666);
 			if (fd == -1) {
-				perror("open");
+				perror("creat");
 				exit(EXIT_FAILURE);
 			}
 			dup2_or_die(fd, i);
