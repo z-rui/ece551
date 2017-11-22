@@ -4,10 +4,10 @@ LDFLAGS=
 
 all: myshell
 
-myshell: myshell.o proc.o path.o repl.o parse.o var.o
-	$(CXX) $(LDFLAGS) -o $@ myshell.o proc.o path.o repl.o parse.o var.o
+myshell: myshell.o proc.o path.o repl.o parse.o var.o hash.o
+	$(CXX) $(LDFLAGS) -o $@ myshell.o proc.o path.o repl.o parse.o var.o hash.o
 
-myshell.o: myshell.cpp repl.cpp myshell.h path.h parse.h var.h debug.h
+myshell.o: myshell.cpp repl.cpp myshell.h path.h parse.h var.h debug.h hash.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 proc.o: proc.cpp myshell.h
@@ -19,10 +19,13 @@ path.o: path.cpp path.h
 repl.o: repl.cpp myshell.h parse.h path.h var.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-parse.o: parse.cpp myshell.h parse.h
+parse.o: parse.cpp myshell.h parse.h debug.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-var.o: var.cpp var.h
+var.o: var.cpp var.h hash.h debug.h
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+hash.o: hash.cpp hash.h
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:

@@ -4,28 +4,29 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <utility>
+
+#include "hash.h"
+#include "debug.h"
 
 class VarTab {
-	struct HashSlot {
-		size_t hash;
-		std::string *kvPair;
-		size_t vOffset;
-		size_t idxExported;
+	struct HashItem {
+		std::string *kvPair; // "key=value"
+		size_t vPos; // position of 'v' (after '=')
+		size_t idxExported; // index in exported
+		bool operator== (std::pair<const char *, size_t>) const;
 	};
-	HashSlot *hashTab;
-	size_t hashSize, hashFree;
-	std::list<std::string> variables;
+	HashTab<HashItem> hashTab;
+	std::list<std::string> variables; // list of all stored "key=value"
 	std::vector<const char *> exported;
 
-	static size_t hashKey(const char *);
-	static bool equalKeyKvpair(const char *, const char *);
-	HashSlot *lookup(const char *) const;
-	void maybeRehash();
-	void newVar(HashSlot *, const char *, const char *);
-	void changeVar(HashSlot *, const char *);
+	HashItem *setVar(const char *, size_t, const char *);
+	void exportVar(HashItem *);
+	void newVar(HashItem *, const char *, size_t, const char *);
 public:
+	DebugStream debug;
+
 	VarTab();
-	~VarTab();
 	void setVar(const char *, const char *);
 	const char *getVar(const char *) const;
 	void exportVar(const char *);
