@@ -2,6 +2,7 @@
 #define HASH_H
 
 #include <algorithm>
+#include <assert.h>
 
 /* A class template for an open address hash table.
  */
@@ -26,12 +27,11 @@ class HashTab {
 	}
 
 	/* Copy contents from another hash table.
-	 *
-	 * this == &that is not allowed.
-	 * this->size < that.size - that.free will cause an infinite loop.
 	 */
 	void copyFrom(const HashTab& that)
 	{
+		assert(this != &that);
+		assert(this->size >= that.size - that.free);
 		for (Slot *p = that.base; p < that.end; p++) {
 			if (!p->hash) {
 				continue;
@@ -57,11 +57,12 @@ class HashTab {
 		std::swap(this->free, that.free);
 	}
 
-	/* Check the load factor. If >= 0.75, run a rehash.
+	/* Check the load factor. Run a rehash when necessary.
 	 */
 	void maybeRehash()
 	{
-		if (free <= size / 4) {
+		assert(free > 0);
+		if (free-1 <= size / 4) {
 			HashTab newTab(size * 2);
 			newTab.copyFrom(*this);
 			swap(newTab);
@@ -72,14 +73,13 @@ class HashTab {
 	 *
 	 * It can either be a free slot (value does not exist)
 	 * or an occupied slot (otherwise).
-	 *
-	 * Running this when free == 0 will cause an infinite loop.
 	 */
 	template <typename U>
 	Slot *lookup(size_t hash, const U& value) const
 	{
 		Slot *p = base + (hash % size);
 
+		assert(free > 0);
 		if (hash == 0) {
 			hash++; // hash == 0 reserved for free slot
 		}
@@ -127,13 +127,13 @@ public:
 	/* HashTab::add tries to add value to the hash table.
 	 *
 	 * If value does not exist, it returns true,
-	 * and *out is set to pointing at a new T object.
+	 * and *out is set to point at a new T object.
 	 * In this case, the caller _must_ then change the T object
 	 * so that it compares equal with value.
 	 *
 	 * If value already exists, it returns false.
 	 * In this case, the caller can choose to modify
-	 * the T object as long as it compares equal with value.
+	 * the T object as long as it compares equal to value.
 	 */
 	template <typename U>
 	bool add(size_t hash, const U& value, T **out)

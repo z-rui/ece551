@@ -5,6 +5,7 @@ parse_test.o: parse_test.cpp parse.h var.h hash.h debug.h
 path.o: path.cpp path.h
 path_test.o: path_test.cpp path.h
 proc.o: proc.cpp myshell.h path.h parse.h var.h hash.h debug.h
+quickhash.o: quickhash.cpp hash.h
 repl.o: repl.cpp myshell.h path.h parse.h var.h hash.h debug.h
 var.o: var.cpp var.h hash.h debug.h
 var_test.o: var_test.cpp var.h hash.h debug.h
