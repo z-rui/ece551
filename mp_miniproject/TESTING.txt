@@ -1,0 +1,924 @@
+Please start myShell by running
+
+    ./myshell
+
+or
+
+    valgrind ./myshell
+
+if detecting memory errors is desired.
+
+You should see that myShell prints "myShell:...$", where "..." is
+the current working directory.
+
+If you simply hit the enter key without typing anything,
+you will see another prompt string.
+
+All the following commands are run inside myShell.
+
+
+(1) Run
+
+    /bin/ls
+
+You will see a list of files and directories in the current directory,
+followed by a line
+
+    Program exited with status 0
+
+(unless /bin/ls exited with errors for some strange reason).
+You will also see the prompt "myShell:...$" again.  (I will omit this
+description in the subsequent test cases.)
+
+This is correct because myShell runs the program /bin/ls, and that program
+does the listing.
+The exit status is captured and printed by myShell.  After the program exits,
+myShell prints another prompt string and waits for your input.
+
+(2) Run
+
+    /usr/bin/gcc
+
+You will see 
+
+    gcc: fatal error: no input files
+    compilation terminated.
+    Program exited with status 1
+
+This is correct because myShell runs the program /usr/bin/gcc, which is
+unhappy about the command line arguments, and exits with status 1.
+
+NOTE: the next test case uses a program called segfault.
+It is in the same directory as myshell.
+So please make sure you are in the same directory so that
+myShell can find it.
+
+(3) Run
+
+    ./segfault
+
+You will see 
+
+    Program was killed by signal 11
+
+This is correct because myShell runs the program ./segfault, which simply
+segfaults, and is killed by signal 11 (SIGSEGV).
+
+(4) Run
+
+    ls
+
+You will see the same output as in (1).
+(unless /bin was somehow removed from PATH).
+
+This is correct because "ls" does not contain a slash, so myShell searches for
+an executable named "ls" in the directories specified by the environment
+variable PATH.  Because /bin is in PATH, myShell eventually finds /bin/ls,
+and runs the program.
+
+(5) Run
+
+    myShell
+
+(can be any name that does not name an executable in PATH).
+
+You will see 
+
+    Command myShell not found
+
+This is correct because myShell searches for "myShell", and
+it cannot be found (unless there is an executable named myShell somewhere
+in PATH directories).  As a result, an error message is printed.
+
+(6) Run
+
+    ../bin/ls
+
+You will see 
+
+    Command ../bin/ls not found
+
+(unless the file ../bin/ls happens to exist, e.g, the working directory
+is /bin).
+
+This is correct because "../bin/ls" contains a slash, so myShell does not
+search in PATH, and therefore will not find a path like "/bin/../bin/ls"
+that actually names an executable.
+
+(7) Run
+
+    .
+
+You will see 
+
+    Command . not found
+
+This is correct because . is a directory, and myShell will not execute
+a directory.
+
+NOTE: the next test case uses a file named README.
+So please make sure myShell can find it.
+
+(8) Run
+
+    ./README
+
+You will see 
+
+    execve: Permission denied
+
+This is correct because ./README does not have the execution permission,
+so it cannot be executed.
+
+(9) Run
+
+    echo hello, world
+
+You will see 
+
+    hello, world
+    Program exited with status 0
+
+This is correct because /bin/echo is run, with two arguments:
+"hello," and "world".  echo prints the arguments and
+exits with status 0.
+
+(10) Run
+
+    echo  hello,    world
+
+(the spaces can also be replaced with tabs).
+
+You will see the same output as in (9).
+
+This is correct because consecutive spaces and tabs is equivalent to a single
+space when myShell parses the command line.
+
+(11) Run
+
+    echo  hello,\ \ world
+
+You will see 
+
+    hello,  world
+    Program exited with status 0
+
+This is correct because only one argument is passed to echo:
+"hello,  world".  The spaces are escaped, so they do not split
+arguments, and go into the argument as is.
+
+(12) Run
+
+    echo  hello,\      world
+
+You will see the same output as in (11).
+
+This is correct because two arguments are passed to echo:
+"hello, " and "world".  The backslash escapes the space that immediately
+follows, but the subsequent non-escaped spaces separate two arguments.
+There are two spaces in the output, between ',' and 'w',
+because one is from the first argument and the other is inserted by echo.
+
+(13) Run
+
+    echo \\
+
+You will see 
+
+    \
+
+(And the exit status, which I will omit in subsequent test cases
+if it's unimportant.)
+
+This is correct because in my implementation, a backslash followed by
+any character translates to the that character, with no special meaning
+attached to it.  (Same behavior as in other shells I have experimented with.)
+
+(14) Run
+
+    echo \
+
+(the backslash is the last character on the line).
+
+You will see a blank line is printed.
+
+This is correct because in my implementation, a backslash followed by nothing
+translates to nothing.
+
+(15) Run
+
+    cd  /bin
+
+You will see the current working directory as shown in the prompt
+string changes to /bin.
+
+This is correct because the cd command changes the working directory.
+The amount of spaces between cd and the directory does not matter.
+
+(16) Run
+
+    cd
+
+You will see 
+
+    Syntax error: unexpected <newline>
+
+This is correct because the cd command takes exactly one argument.
+Since no argument is given, myShell complains.
+
+(17) Run
+
+    cd a b c
+
+You will see 
+
+    Syntax error: unexpected 'b'
+
+This is correct because the cd command takes exactly one argument.
+Since three arguments are given, myShell complains.
+
+(18) Run
+
+    cd /root
+
+You will see 
+
+    chdir: Permission denied
+
+and the working directory is not changed (unless you have the permission
+to access /root).
+
+This is correct because when myShell fails to change the directory,
+it reports an error and stays where it was.
+
+(19) Run
+
+    set x world
+    echo hello, $x
+
+You will see the same output as in (9).
+
+This is correct because when executing "set x world", the value
+of x is set to "world".  When executing "echo hello, $x",
+$x is expanded to its value "world".
+Therefore it's essentially the same as (9).
+
+(20) Run
+
+    set x echo hello,
+    $x world
+
+You will see the same output as in (9).
+
+This is correct because in the first command, x is set to
+"echo hello,".  Note that the space also goes into the variable.
+In the second command, $x is first expanded to its value,
+then myShell reads "echo" as the program name, and "hello,"
+as the first argument for echo.  When the expansion finishes,
+"world" is read as the second argument for echo.
+Therefore it's essentially the same as (9).
+
+(21) Run
+
+    set  x   hello,    world
+    echo $x
+
+You will see the same output as in (9).
+
+This is correct because in the first command, x is set to
+"hello,    world".  Note that consecutive spaces are preserved.
+In the second command, $x is expanded to its value.
+Inside expansion, spaces still separate arguments, so $x expands
+to two arguments to echo, namely "hello," and "world".
+(Same behavior as in other shells I have experimented with.)
+Therefore it's essentially the same as (9).
+
+(22) Run
+
+    set x hello,\  world
+    echo $x
+
+You will see the same output as in (9).
+
+This is correct because in the first command, the escape sequence '\ ' is
+first translated to a single space (following the rule described in
+(13)), then x is set to "hello,  world".
+Note that there are two consecutive spaces.
+The remaining explanation is the same as in the last test case.
+
+(23) Run
+
+    set x x
+    set x $x$x
+    echo $x
+
+You will see 
+
+    xx
+
+This is correct because the first command sets x to "x".
+In the second command, each $x is expanded to its value "x".
+So it is the same as "set x xx".
+In the third command, $x is expanded to its value "xx".
+So it is the same as "echo xx".
+
+(24) Run
+
+    set x x
+    set $x $x$x
+    echo $x
+
+You will see the same output as in (23).
+
+This is correct because in the second command, each $x is expanded to "x".
+So the second command is the same as "set x xx".
+Therefore it's essentially the same as (23).
+
+(25) Run
+
+    set x x
+    set $x$x $x$x
+    echo $xx
+
+You will see 
+
+    xx
+
+This is correct because in the second command, each $x is expanded to "x".
+So the second command is the same as "set xx xx".
+In the third command $xx is expanded to its value "xx".
+
+(26) Run
+
+    set x y
+    set $x$x $x$x
+    echo $x$x
+
+You will see 
+
+    yy
+
+This is correct because in the second command, each $x is expanded to "y"
+(instead of: x$x -> "xy", then $xy -> "").
+So the second command is the same as "set yy yy".
+In the third command, each $x is expanded to its value "y",
+so it's the same as "echo yy".
+
+(27) Run
+
+    echo $y
+
+You will see a blank line is printed (assuming the variable y
+was not previously defined).
+
+This is correct because a non-existent variable expands to an empty string.
+
+(28) Run
+
+    set x
+    echo $x
+
+You will see a blank line is printed.
+
+This is correct because the command "set x" sets x to an empty string.
+
+(29) Run
+
+    set my_var hello, world
+    echo $my_var
+
+You will see the same output as in (9).
+
+This is correct because multi-character variable names work the same way
+as single-character ones.  Also, "my_var" is a valid variable name.
+
+(30) Run
+
+    set _myvar hello, world
+    echo $_myvar
+
+You will see the same output as in (9).
+
+This is correct because "_myvar" is also a valid variable name.
+
+(31) Run
+
+    set 42 hello, world
+    echo $42
+
+You will see the same output as in (9).
+
+This is correct because "42" is also a valid variable name.
+
+(32) Run
+
+    set 4.2
+
+You will see 
+
+    Syntax error: unexpected '.'
+
+This is correct because '.' is not a valid character in the variable name.
+
+(33) Run
+
+    set 4\2
+
+You will see 
+
+    Syntax error: unexpected '\'
+
+This is correct because the backslash is not a valid character
+in the variable name.  myShell does not translate \2 to 2 when parsing
+a variable name.
+
+(34) Run
+
+    set x y
+    echo $x...
+
+You will see 
+
+    y...
+
+This is correct because in the second command, the longest sequence
+following $ that can be a valid variable name is "x", so $x is expanded
+to its value "y", and the second command is the same as "echo y...".
+
+(35) Run
+
+    echo $...
+
+You will see 
+
+    $...
+
+This is correct because the characters following $ cannot compose
+a valid variable name, so $ is interpreted as a plain dollar sign,
+and no expansion takes place.
+
+(36) Run
+
+    echo $
+
+You will see 
+
+    $
+
+This is correct because of essentially the same reason for the last test case.
+
+(37) Run
+
+    set x $
+    echo $x
+
+You will see 
+
+    $
+
+This is correct because in the first command, the $ does not introduce
+an expansion, as no valid characters follow, so x is set to "$".
+
+(38) Run
+
+    set x y
+    set x \$x
+    echo $x
+
+You will see 
+
+    $x
+
+This is correct because in the second command, '\$' translates to a plain
+dollar sign, so x is set to "$x".  In the third command,
+$x is expanded to "$x", and is not further expanded,
+because in my implementation, there is only one-level expansion.
+(Same behavior as in other shells I have experimented with.)
+
+(39) Run
+
+    set x x
+    echo $$x
+
+You will see 
+
+    $x
+
+This is correct because the first $ does not introduce an expansion,
+and is translated to a plain dollar sign.  The $x that immediately follows
+is expanded to "x", but the resulting "$x" is not further expanded,
+because in my implementation, there is only one-level expansion.
+
+(40) Run
+
+    bash -c kill\ $$
+
+You will see 
+
+    Program was killed by signal 15
+
+This is correct because bash is run with two arguments: "-c" and 
+"kill $$".  When bash is running it kills itself.  Therefore myShell
+reports accordingly.
+
+(41) Run
+
+    set x x
+    env
+
+You will see a list of environment variables, but x is not in the list
+(assuming x was not in the environment when myShell started, and has not been
+exported).
+
+This is correct because variables that are not exported does not show up
+in the environment.
+
+(42) Run
+
+    set x x
+    export x
+    env
+
+You will see a list of environment variables, and x is in the list,
+and its value is "x".
+
+This is correct because the export command exports the variable
+to the environment.
+
+(43) Run
+
+    set x x
+    export x
+    set x xx
+    env
+
+You will see a list of environment variables, and x is in the list,
+and its value is "xx".
+
+This is correct because if the value of an exported variable is modified,
+its value is updated in the environment.
+
+(44) Run
+
+    export
+
+You will see 
+
+    Syntax error: unexpected <newline>
+
+This is correct because the export command takes exactly one argument.
+Since no argument is given, myShell complains.
+
+(45) Run
+
+    export x y z
+
+You will see 
+
+    Syntax error: unexpected 'y'
+
+This is correct because the export command takes exactly one argument.
+Since three arguments are given, myShell complains.
+
+(46) Run
+
+    export x...
+
+You will see 
+
+    Syntax error: unexpected '.'
+
+This is correct because '.' is not a valid character in a variable name.
+
+(47) Run
+
+    export x\y,
+
+You will see 
+
+    Syntax error: unexpected '\'
+
+This is correct because the backslash is not a valid character
+in a variable name.
+
+(48) Run
+
+    set PATH
+    ls
+
+You will see 
+
+    Command ls not found
+
+This is correct because the value of PATH determines where myShell searches
+for an executable.  When PATH is set to empty, it cannot find the executable
+named "ls".
+
+NOTE: please restore the PATH variable now.
+
+NOTE: the next test case, and a few others that follow,
+uses a file named README.  So please make sure myShell can find it.
+
+(49) Run
+
+    cat < README
+
+You will see the content of README.
+
+This is correct because when run with no arguments, cat copies from
+the standard input to the standard output.  In this case, the standard input
+is redirected so that cat will read the content of README, and write to
+the standard output.
+
+(50) Run
+
+    ls > ls_output
+    cat ls_output
+
+You will see only the exit status for the first command,
+and a list of files in the current directory for the second command.
+
+This is correct because the output of ls is redirected to the file
+"ls_output", so there is no output when running the first command.
+The second command shows the content of "ls_output".
+
+(51) Run
+
+    gcc > gcc_output
+
+You will see the same output as in (2).
+
+This is correct because only the standard output is redirected,
+but in this case gcc writes the error messages to the standard error,
+so they still shows up.
+
+(52) Run
+
+    gcc 2> gcc_output
+    cat gcc_output
+
+You will see only the exit status for the first command,
+and the error messages from gcc for the second command.
+
+This is correct because in the first command, the standard error is redirected
+to "gcc_output", so the error messages go to the file, and does not
+show up until the second command is run.
+
+(53) Run
+
+    wc -l < README > wc_output
+    cat wc_output
+
+You will see only the exit status for the first command, and
+
+    62
+
+(i.e., the number of lines in README) for the second command.
+
+This is correct because wc reads from README, and writes to "wc_output"
+due to the redirections.
+
+(54) Run
+
+    wc -l<README>wc_output
+    cat wc_output
+
+You will see the same output as in (53).
+
+This is correct because the spaces around '<' and '>' do not matter.
+
+(55) Run
+
+    wc -l > wc_output < README
+    cat wc_output
+
+You will see the same output as in (53).
+
+This is correct because the order of '<' and '>' does not matter.
+
+(56) Run
+
+    wc < README > wc_output -l
+    cat wc_output
+
+You will see the same output as in (53).
+
+This is correct because the order of redirections and the remaining part
+of the command does not matter.  (Same behavior as other shells I have
+experimented with.)
+
+(57) Run
+
+    < README > wc_output wc -l
+    cat wc_output
+
+You will see the same output as in (53).
+
+This is correct because of the same reason for the last test case.
+
+(58) Run
+
+    cat <
+
+You will see 
+
+    Syntax error: unexpected <newline>
+
+This is correct because the filename for input redirection is missing.
+
+(59) Run
+
+    ls >> ls_output
+
+You will see 
+
+    Syntax error: unexpected '>'
+
+This is correct because after the first '>', the filename for
+output redirection is missing. 
+
+(60) Run
+
+    echo 3> echo_output
+
+You will see only the exit status, but the content
+of the file "echo_output" is changed to "3".
+
+This is correct because the command is interpreted as:
+  program: echo
+  argument: 3
+  output: echo_output.
+
+(61) Run
+
+    < README
+
+You will see no output.
+
+This is correct because no program name is given, so myShell
+treats the input as an empty command.
+
+(62) Run
+
+    set x README
+    wc -l < $x > wc_output
+    cat wc_output
+
+You will see the same output as in (53).
+
+This is correct because in the second command, $x is expanded to "README".
+
+(63) Run
+
+    set x hello, world < /dev/null > /dev/null | cat
+    echo $x
+
+You will see 
+
+    hello, world < /dev/null > /dev/null | cat
+
+This is correct because the characters '<', '>' and '|' do not have their
+special meanings in the contexts of:
+(1) variable definition.  As a result, in the first command,
+    the entire part of the line after the variable name goes into
+    the variable x.  (i.e., the command is not interpreted as
+    "set x hello, world" and then redirected and piped.)
+(2) variable expansion.  As a result, there is no redirections or pipes here.
+    (Same behavior as in other shells I have experimented with.)
+
+(64) Run
+
+    echo 518518518 / 12345678 | bc
+
+You will see 
+
+    Program exited with status 0 (PID = ...)
+    42
+    Program exited with status 0 (PID = ...)
+
+("..." stand for the actual PIDs for "echo" and "bc").
+
+This is correct because "echo" writes a line "518518518 / 12345678",
+and the line of output is piped to "bc", which does the calculation.
+
+(65) Run
+
+    echo 518518518 / 12345678|bc
+
+You will see similar output as in (64).
+
+This is correct because the spaces around '|' do not matter.
+
+(66) Run
+
+    echo 518518518 / 12345678 | cat | bc
+
+You will see 
+
+    Program exited with status 0 (PID = ...)
+    Program exited with status 0 (PID = ...)
+    42
+    Program exited with status 0 (PID = ...)
+
+("..." stand for the actual PIDs for "echo", "cat" and "bc").
+
+This is correct because "echo" writes a line "518518518 / 12345678",
+and the line of output is piped to "cat", and then to "bc",
+which does the calculation.
+
+(67) Run
+
+    cat -u < README | cat | wc -l > wc_output
+
+You will see 
+
+    Program exited with status 0 (PID = ...)
+    Program exited with status 0 (PID = ...)
+    Program exited with status 0 (PID = ...)
+
+("..." stand for the actual PIDs for "cat", "cat" and "wc").
+
+This is correct because the content of README is read by the first cat,
+then piped to the second cat, then piped to wc.  Then wc writes its output
+to "wc_output".  If you check the content of "wc_output", it should be
+the number of lines of README.
+
+(68) Run
+
+    set x /dev/null
+    cat -u < README > $x | cat < $x > $x | wc -l < $x > wc_output
+
+You will see 
+
+    Program exited with status 0 (PID = ...)
+    Program exited with status 0 (PID = ...)
+    Program exited with status 0 (PID = ...)
+
+("..." stand for the actual PIDs for "cat", "cat" and "wc").
+
+This is correct because myShell silently accepts this nonsensical command
+and assumes redirections override the pipes.
+If you check the content of "wc_output", it should be 0.
+
+(69) Run
+
+    dd if=/dev/zero of=/dev/stdout bs=4096 count=4096 | cat | wc -c
+
+You will see 
+
+    4096+0 records in
+    4096+0 records out
+    16777216 bytes (17 MB, 16 MiB) copied, ...
+    Program exited with status 0 (PID = ...)
+    16777216
+    Program exited with status 0 (PID = ...)
+    Program exited with status 0 (PID = ...)
+
+("..." stand for output that may vary in different runs).
+
+This is correct because 16777216 bytes are piped from dd to cat and
+then piped to wc.
+
+(70) Run
+
+    cat /dev/zero | true
+
+You will see 
+
+    Program was killed by signal 13 (PID = ...)
+    Program exited with status 0 (PID = ...)
+
+("..." stand for the actual PIDs for "cat", and "true").
+
+This is correct because true exits before cat finishes reading the file.
+So the pipe is no longer valid, and cat is terminated by signal 13 (SIGPIPE).
+
+(71) Run
+
+    cat /dev/zero |
+
+You will see 
+
+    Syntax error: unexpected <newline>
+
+This is correct because the command after '|' is missing.
+
+(72) Run
+
+    cat /dev/zero |<README
+
+You will see 
+
+    Program was killed by signal 13
+
+This is correct because the right hand side of '|' is an empty command,
+no program is actually run.  cat receives a SIGPIPE because the pipe is closed.
+
+
+That's all.  Now please quit myShell by typing
+
+    exit
+
+or by hitting Ctrl-D to send an EOF.  The program will quit gracefully,
+and if valgrind was running, you will see messages that there is no
+leaked memory except the suppressed one.
