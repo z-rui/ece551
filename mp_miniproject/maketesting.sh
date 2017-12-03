@@ -316,6 +316,13 @@ Run 'set x y
 following \$ that can be a valid variable name is \"x\", so \$x is expanded
 to its value \"y\", and the second command is the same as \"echo y...\"."
 
+Run 'set x y
+    echo ...$x...' "\n
+    ...y..." \
+	"in the second command, the longest sequence
+following \$ that can be a valid variable name is \"x\", so \$x is expanded
+to its value \"y\", and the second command is the same as \"echo ...y...\"."
+
 Run 'echo $...' "\n
     $..." \
 	"the characters following \$ cannot compose
@@ -394,7 +401,7 @@ Run 'export x...' "\n
     Syntax error: unexpected '.'" \
 	"'.' is not a valid character in a variable name."
 
-Run 'export x\y', "\n
+Run 'export x\y' "\n
     Syntax error: unexpected '\\'" \
 	"the backslash is not a valid character
 in a variable name."
@@ -582,7 +589,7 @@ Run 'cat /dev/zero |' "\n
 
 Run 'cat /dev/zero |<README' "\n
     Program was killed by signal 13" \
-	"the right hand side of '|' is an empty command,
+	"the right hand side of '|' is an empty command;
 no program is actually run.  cat receives a SIGPIPE because the pipe is closed."
 
 ##### We are done! #####
