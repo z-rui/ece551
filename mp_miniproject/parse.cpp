@@ -170,6 +170,12 @@ void Parser::parseSet(Parser::Command& cmd)
 		cmd.type = Command::INVALID;
 		return;
 	}
+	if (peek() != '\0' && catcode(peek()) != SPACE) {
+		// a space is required to separate the name
+		// and the value
+		cmd.type = Command::INVALID;
+		return;
+	}
 	skipSpaces();
 
 	/* DEFINITION is similar to TERM (see Parser::scanTerm)

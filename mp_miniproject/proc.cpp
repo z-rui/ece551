@@ -72,9 +72,14 @@ static void setupChild(
 
 int MyShell::runExternal(const Parser::Command& cmd)
 {
-	const char *path = pathSearcher.search(cmd.argv[0]);
+	const char *progname = cmd.argv[0];
+	if (progname == NULL) {
+		// weird command like "<FILE" ?
+		return -1;
+	}
+	const char *path = pathSearcher.search(progname);
 	if (path == NULL) {
-		std::cout << "Command " << cmd.argv[0]
+		std::cout << "Command " << progname
 			<< " not found\n";
 		return -1;
 	}
