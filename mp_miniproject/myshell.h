@@ -12,6 +12,12 @@ class MyShell {
 	PathSearcher pathSearcher;
 	Parser parser;
 	VarTab varTab;
+	/* pipefd stores the fd of two pipes.
+	 * pipefd[0]: the pipe that precedes the command
+	 *            ({-1, -1} for the first command);
+	 * pipefd[1]: the pipe that follows the command.
+	 *            ({-1, -1} for the last command);
+	 */
 	int pipefd[2][2];
 
 	static int (MyShell::*const executeCommand[])(const Parser::Command&);

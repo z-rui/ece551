@@ -77,12 +77,11 @@ class HashTab {
 	template <typename U>
 	Slot *lookup(size_t hash, const U& value) const
 	{
-		Slot *p = base + (hash % size);
-
 		assert(free > 0);
 		if (hash == 0) {
 			hash++; // hash == 0 reserved for free slot
 		}
+		Slot *p = base + (hash % size);
 		while (p->hash && (p->hash != hash || !(p->value == value))) {
 			probe(p);
 		}
@@ -133,7 +132,7 @@ public:
 	 *
 	 * If value already exists, it returns false.
 	 * In this case, the caller can choose to modify
-	 * the T object as long as it compares equal to value.
+	 * the T object as long as it compares equal with value.
 	 */
 	template <typename U>
 	bool add(size_t hash, const U& value, T **out)

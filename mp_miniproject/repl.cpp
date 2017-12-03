@@ -16,7 +16,7 @@ bool MyShell::promptInput(std::string &line) const
 {
 	std::cout << "myShell:" << varTab.getVar("PWD") << " $ ";
 	// Currently a logical line is just a physical line
-	// (that is teminated by a '\n').
+	// (that is what std::getline gets).
 	// But I can make extensions in the future.
 	std::getline(std::cin, line);
 	return std::cin.good();
@@ -41,7 +41,10 @@ void MyShell::runREPL()
 }
 
 
-//////
+/* MyShell::executeCommand is the "jump table" for the shell
+ * so that it can call the appropriate method to execute
+ * a command, according to its type.
+ */
 
 int (MyShell::*const MyShell::executeCommand[])(const Parser::Command&) = {
 	[Parser::Command::SET] = &MyShell::executeSet,
@@ -50,6 +53,14 @@ int (MyShell::*const MyShell::executeCommand[])(const Parser::Command&) = {
 	[Parser::Command::ORDINARY] = &MyShell::runExternal,
 };
 
+/* A few methods to execute builtin commands follow.
+ * They all return -1 because no child process is created.
+ */
+
+/* MyShell::executeSet executes the set command.
+ *
+ * It also takes care of some special variables.
+ */
 int MyShell::executeSet(const Parser::Command& cmd)
 {
 	assert(cmd.argv.size() == 4);
@@ -57,8 +68,8 @@ int MyShell::executeSet(const Parser::Command& cmd)
 	const char *value = cmd.argv[2];
 
 	if (strcmp(name, "PWD") == 0) {
-		chdir(value);
-		return -1; // PWD is set in chdir()
+		chdir(value); // chdir() will update PWD, or fail
+		return -1;
 	}
 	varTab.setVar(name, value);
 	if (strcmp(name, "PATH") == 0) {
@@ -67,6 +78,8 @@ int MyShell::executeSet(const Parser::Command& cmd)
 	return -1;
 }
 
+/* MyShell::executeExport executes the export command.
+ */
 int MyShell::executeExport(const Parser::Command& cmd)
 {
 	assert(cmd.argv.size() == 3);
@@ -75,6 +88,8 @@ int MyShell::executeExport(const Parser::Command& cmd)
 	return -1;
 }
 
+/* MyShell::executeCd executes the cd command.
+ */
 int MyShell::executeCd(const Parser::Command& cmd)
 {
 	assert(cmd.argv.size() == 3);

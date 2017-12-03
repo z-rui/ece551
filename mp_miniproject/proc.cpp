@@ -7,9 +7,10 @@
 
 #include <stdio.h> /* for perror */
 #include <stdlib.h> /* for exit */
-#include <assert.h>
 
 #include "myshell.h"
+
+/* This file contains functions that deals with child processes. */
 
 static void dup2_or_die(int oldfd, int newfd)
 {
@@ -29,6 +30,8 @@ static int open_or_die(const char *path, int flags)
 	return fd;
 }
 
+/* Inside a child process, set up the redirections and the pipe.
+ */
 static void setupChild(
 	const char *path,
 	const char *const *argv,
@@ -70,17 +73,18 @@ static void setupChild(
 	exit(EXIT_FAILURE);
 }
 
+/* MyShell::runExternal runs an external program.
+ */
 int MyShell::runExternal(const Parser::Command& cmd)
 {
 	const char *progname = cmd.argv[0];
 	if (progname == NULL) {
 		// weird command like "<FILE" ?
-		return -1;
+		return -1; // treat as a no-op
 	}
 	const char *path = pathSearcher.search(progname);
 	if (path == NULL) {
-		std::cout << "Command " << progname
-			<< " not found\n";
+		std::cout << "Command " << progname << " not found\n";
 		return -1;
 	}
 	pid_t pid = fork();
@@ -96,39 +100,8 @@ int MyShell::runExternal(const Parser::Command& cmd)
 	return pid;
 }
 
-void MyShell::executePipes(const Parser::Pipes& pipes)
+static void waitChildren(const std::vector<int> children)
 {
-	if (pipes.empty()) {
-		return;
-	}
-
-	Parser::Pipes::const_iterator it, nextit;
-	std::vector<int> children;
-
-	pipefd[0][0] = pipefd[0][1] = -1;
-	for (it = nextit = pipes.begin(); it != pipes.end(); it = nextit) {
-		++nextit;
-		bool run = true;
-		if (nextit == pipes.end()) {
-			pipefd[1][0] = pipefd[1][1] = -1;
-		} else if (pipe(pipefd[1]) == -1) {
-			perror("pipe");
-			run = false;
-		}
-		if (run) {
-			assert(it->type < Parser::Command::INVALID);
-			pid_t pid = (this->*executeCommand[it->type])(*it);
-			if (pid != -1) {
-				children.push_back(pid);
-			}
-		}
-		if (pipefd[0][0] != -1) {
-			close(pipefd[0][0]);
-			close(pipefd[0][1]);
-		}
-		pipefd[0][0] = pipefd[1][0];
-		pipefd[0][1] = pipefd[1][1];
-	}
 	for (size_t i = 0; i < children.size(); i++) {
 		int status;
 		if (waitpid(children[i], &status, 0) == -1) {
@@ -147,4 +120,45 @@ void MyShell::executePipes(const Parser::Pipes& pipes)
 		}
 		std::cout << std::endl;
 	}
+}
+
+void MyShell::executePipes(const Parser::Pipes& pipes)
+{
+	if (pipes.empty()) {
+		return;
+	}
+
+	Parser::Pipes::const_iterator it, next;
+	std::vector<int> children;
+
+	// pipefd[0] set to {-1, -1} for the first command
+	pipefd[0][0] = pipefd[0][1] = -1;
+	for (it = next = pipes.begin(); it != pipes.end(); it = next) {
+		++next; // next is always the next iterator with respect to it
+		bool run = true;
+		if (next == pipes.end()) {
+			// pipefd[1] is set to {-1, -1} for the last command
+			pipefd[1][0] = pipefd[1][1] = -1;
+		} else if (pipe(pipefd[1]) == -1) {
+			perror("pipe");
+			run = false;
+		}
+		if (run) {
+			pid_t pid = (this->*executeCommand[it->type])(*it);
+			if (pid != -1) {
+				children.push_back(pid);
+			}
+		} // "run = false;" is equivalent to "goto" here.
+		// After the creation of the child,
+		// close the pipe in the parent.
+		if (pipefd[0][0] != -1) {
+			close(pipefd[0][0]);
+			close(pipefd[0][1]);
+		}
+		// next command's preceding pipe
+		// = this command's following pipe.
+		pipefd[0][0] = pipefd[1][0];
+		pipefd[0][1] = pipefd[1][1];
+	}
+	waitChildren(children);
 }

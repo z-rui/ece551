@@ -3,16 +3,33 @@
 
 #include "parse.h"
 
-Parser::Parser(const VarTab &vtab) : vtab(vtab)
+/* Parser::parse parses one line.
+ *
+ * It returns true on success and false on failure.
+ *
+ * If succeeded, pipes will contain several commands
+ * that should be piped in order.
+ * Otherwise, the content of pipes should not be used,
+ * and the caller can call Parser::reportSyntaxError to
+ * print an error message.
+ */
+bool Parser::parse(const char *line, Parser::Pipes& pipes)
 {
+	ls.pos = line;
+	ls_backup.pos = NULL;
+
+	savedStrings.clear();
+	ls.redir = ls.space = ls.expand = ls.escape = 1;
+
+	return parsePipes(pipes) && endOfLine();
 }
 
-void (Parser::*const Parser::parseBuiltins[])(Command&) = {
-	[Command::SET] = &Parser::parseSet,
-	[Command::EXPORT] = &Parser::parseExport,
-	[Command::CD] = &Parser::parseCd,
-};
-
+/* Parser::reportSyntaxError puts an error message to
+ * the given stream regarding the syntax error that happened
+ * when Parser::parse was called.
+ *
+ * Only call this after Parser::parse returned false.
+ */
 void Parser::reportSyntaxError(std::ostream& os) const
 {
 	unsigned char ch = peek();
@@ -27,7 +44,7 @@ void Parser::reportSyntaxError(std::ostream& os) const
 		break;
 	default:
 		os << '\'';
-		if (isprint(ch) && ch != '\'') {
+		if (isprint(ch)) {
 			os << ch;
 		} else {
 			os << '\\' << std::oct << (int) ch << std::dec;
@@ -38,24 +55,18 @@ void Parser::reportSyntaxError(std::ostream& os) const
 	os << "\n";
 }
 
-/* Parser::parse parses one line.
- *
+/* Parser::parseBuiltins is the "jump table" for the parser
+ * so that the parser can call the appropriate method
+ * when parsing builtin commands.
  */
-bool Parser::parse(const char *line, Parser::Pipes& pipes)
-{
-	ls.pos = line;
-	ls_backup.pos = NULL;
-
-	scannedTerms.clear();
-	ls.redir = ls.space = ls.expand = ls.escape = 1;
-
-	return parsePipes(pipes) && endOfLine();
-}
+bool (Parser::*const Parser::parseBuiltins[])(Command&) = {
+	[Command::SET] = &Parser::parseSet,
+	[Command::EXPORT] = &Parser::parseExport,
+	[Command::CD] = &Parser::parseCd,
+};
 
 /* Parser::parsePipes parses piped commands.
- * Pipes can be empty.  In this case no command is run.
- *
- * pipes ::= empty | command { '|' command }
+ * Pipes can be empty.  In this case it contains no command.
  */
 bool Parser::parsePipes(Parser::Pipes& pipes)
 {
@@ -69,11 +80,8 @@ bool Parser::parsePipes(Parser::Pipes& pipes)
 		if (!parseCommand(pipes.back())) {
 			return false; // failed
 		}
-		debug << "Parser: pipes ::= ";
-		if (pipes.size() > 1) {
-			debug << "pipes '|' ";
-		}
-		debug << "command\n";
+		debug << "Parser: pipes ::= "
+			<< ((pipes.size() > 1) ? "pipes '|' command\n" : "command\n");
 
 		skipSpaces();
 		if (catcode(peek()) == PIPE) {
@@ -86,9 +94,6 @@ bool Parser::parsePipes(Parser::Pipes& pipes)
 }
 
 /* Parser::parseCommand parses a command (without pipes).
- *
- * command ::= command-term { command-term }
- * command-term ::= TERM | '<' TERM | '>' TERM | "2>" TERM
  */
 bool Parser::parseCommand(Parser::Command& cmd)
 {
@@ -113,13 +118,15 @@ bool Parser::parseCommand(Parser::Command& cmd)
 		}
 		if (first) {
 			cmd.type = commandType(term);
+			// all builtin commands' type is smaller than
+			// Command::ORDINARY, so the following test is fine
 			if (cmd.type < Command::ORDINARY) {
-				(this->*parseBuiltins[cmd.type])(cmd);
-				if (cmd.type == Command::INVALID) {
+				if (!(this->*parseBuiltins[cmd.type])(cmd)) {
+					// failed to parse a builtin
 					return false;
 				}
-				// Builtin commands parses
-				// arguments own their own
+				// Builtin commands parses arguments
+				// own their own; no need to proceed
 				break;
 			}
 		}
@@ -157,36 +164,31 @@ Parser::Command::Type Parser::commandType(const char *name)
 }
 
 /* Parser::parseSet parses the set command.
- *
- * command ::= "set" NAME DEFINITION
  */
-void Parser::parseSet(Parser::Command& cmd)
+bool Parser::parseSet(Parser::Command& cmd)
 {
 	const char *name, *value;
 
 	skipSpaces();
 	name = scanName();
 	if (name == NULL) {
-		cmd.type = Command::INVALID;
-		return;
+		return false;
 	}
-	if (peek() != '\0' && catcode(peek()) != SPACE) {
+	unsigned char ch = peek();
+	if (ch != '\0' && catcode(ch) != SPACE) {
 		// a space is required to separate the name
 		// and the value
-		cmd.type = Command::INVALID;
-		return;
+		return false;
 	}
 	skipSpaces();
 
-	/* DEFINITION is similar to TERM (see Parser::scanTerm)
-	 * because expansions still take place,
+	/* Inside the definition of a variable,
+	 * '<', '|', '>' and spaces lose specialness.
+	 * However, expansions still take place,
 	 * so that a command like "set PATH $HOME/bin:$PATH"
 	 * will behave as expected.
 	 * Escaping is also in effect, in case the user
 	 * wants a true dollar sign in the definition.
-	 *
-	 * But '<', '|', '>' and spaces lose specialness
-	 * in this context.
 	 */
 	ls.redir = ls.space = 0;
 	value = scanTerm();
@@ -196,41 +198,38 @@ void Parser::parseSet(Parser::Command& cmd)
 	cmd.argv.push_back(name);
 	cmd.argv.push_back(value);
 	debug << "Parser: command ::= \"set\" NAME TERM\n";
+	return true;
 }
 
 /* Parser::parseExport parses the export command.
- *
- * command ::= "export" NAME
  */
-void Parser::parseExport(Parser::Command& cmd)
+bool Parser::parseExport(Parser::Command& cmd)
 {
 	const char *name;
 
 	skipSpaces();
 	name = scanName();
 	if (name == NULL) {
-		cmd.type = Command::INVALID;
-		return;
+		return false;
 	}
 	cmd.argv.push_back(name);
 	debug << "Parser: command ::= \"export\" NAME\n";
+	return true;
 }
 
 /* Parser::parseCd parses the cd command.
- *
- * command ::= "cd" TERM
  */
-void Parser::parseCd(Parser::Command& cmd)
+bool Parser::parseCd(Parser::Command& cmd)
 {
 	const char *path;
 
 	path = scanTerm();
 	if (path == NULL) {
-		cmd.type = Command::INVALID;
-		return;
+		return false;
 	}
 	cmd.argv.push_back(path);
 	debug << "Parser: command ::= \"cd\" TERM\n";
+	return true;
 }
 
 /* Parser::scanTerm scans a TERM in a command.
@@ -249,13 +248,12 @@ void Parser::parseCd(Parser::Command& cmd)
  *
  * The characters '<', '|', '>', '$', '\' and spaces
  * may lose specialness in certain contexts.
- * In these contexts they will have catcode OTHER,
- * and thus go into the term.
+ * In these contexts they will have catcode OTHER.
  */
 const char *Parser::scanTerm()
 {
-	scannedTerms.push_back(std::string());
-	std::string& term = scannedTerms.back();
+	savedStrings.push_back(std::string());
+	std::string& term = savedStrings.back();
 
 	skipSpaces();
 	const char *save = ls.pos;
@@ -291,12 +289,13 @@ const char *Parser::scanTerm()
  *
  * A NAME consists of only characters of catcode LETTER.
  * (See Parser::catcode).
- * In this implmentation, they include characters
- * determined by isalnum, plus the underscore (_).
  *
  * Several places require a valid NAME, such as:
  * - the first argument of the set and export command;
  * - after a '$' in order to trigger an expansion.
+ *
+ * This function stops at the first character that does not has
+ * catcode LETTER.
  */
 const char *Parser::scanName()
 {
@@ -304,17 +303,27 @@ const char *Parser::scanName()
 	if (catcode(ch) != LETTER) {
 		return NULL;
 	}
-	scannedTerms.push_back(std::string());
-	std::string& name = scannedTerms.back();
+	savedStrings.push_back(std::string());
+	std::string& name = savedStrings.back();
 	do {
 		name.push_back(ch);
 		next();
 		ch = peek();
+		if (catcode(ch) == EXPAND) {
+			// "set x$x y" ?
+			doExpansion();
+			ch = peek();
+		}
 	} while (catcode(ch) == LETTER);
 	debug << "Parser: NAME \"" << name << "\"\n";
 	return name.c_str();
 }
 
+/* Parser::scanRedir scans '<', '>', or "2>",
+ * and returns 0, 1 or 2 respectively.
+ *
+ * -1 is returned if it cannot scan anything.
+ */
 int Parser::scanRedir()
 {
 	unsigned ch = peek();
@@ -331,16 +340,30 @@ int Parser::scanRedir()
 	return -1;
 }
 
+/* Parser::doExpansion is called when the current character is '$',
+ * and it will try to expand the dollar.
+ *
+ * $var will be expanded to its value. Before all the characters
+ * in the expansion are consumed, the parser is in the expansion
+ * context.
+ */
 void Parser::doExpansion()
 {
 	next(); // skip '$'
+	/* When scanning for the variable name after a $,
+	 * do not expand another $ (i.e., $$x is not a valid expansion
+	 * even if $x expands to a valid name).
+	 * Otherwise multiple levels of expansion may happen.
+	 */
+	ls.expand = 0;
 	const char *name = scanName();
+	ls.expand = 1;
 	if (name == NULL) {
 		// '$' not followed by a NAME
 		next(-1); // back up
 		return;
 	}
-	const char *value = vtab.getVar(name);
+	const char *value = varTab.getVar(name);
 	debug << "Parser: -> ";
 	if (value == NULL || value[0] == '\0') {
 		// empty expansion; exit immediately
@@ -348,8 +371,8 @@ void Parser::doExpansion()
 		return;
 	}
 	debug << value << '\n';
-	ls_backup = ls; // save lex state
-	ls.pos = value;
+	ls_backup = ls; // save lexical state
+	ls.pos = value; // let the cursor points to the expansion
 	/* Inside an expansion, '<', '|', '>', '$' and '\'
 	 * lose their specialness.
 	 * As a result, at most one level of expansion
@@ -363,8 +386,9 @@ void Parser::doExpansion()
 
 /* Parser::catcode return the "category code" of an character.
  *
- * This mechanism simplifies the rest of the parser,
- * as it does not need to keep track of the context.
+ * This is the only function that reads the context variables
+ * in the lexical state.  All other functions will rely on
+ * the catcode to determine whether a character is special.
  */
 Parser::Catcode Parser::catcode(unsigned char ch) const
 {
@@ -387,11 +411,14 @@ Parser::Catcode Parser::catcode(unsigned char ch) const
 		return ls.escape ? ESCAPE : OTHER;
 	}
 	if (isalnum(ch) || ch == '_') {
+		// LETTER is actually letters, digits, and _
 		return LETTER;
 	}
 	return OTHER;
 }
 
+/* Parser::skipSpaces skips spaces in the input.
+ */
 void Parser::skipSpaces()
 {
 	for (;;) {
@@ -406,6 +433,12 @@ void Parser::skipSpaces()
 	}
 }
 
+/* Parser::next shifts the reading cursor.
+ *
+ * By default, it shifts by one character.
+ * The caller can choose to shift by other amount
+ * if it will not go out of bound.
+ */
 void Parser::next(int n)
 {
 	ls.pos += n;

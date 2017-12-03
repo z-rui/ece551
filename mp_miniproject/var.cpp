@@ -57,7 +57,7 @@ void VarTab::exportVar(const char *key)
 	size_t hash = hashStr(key, key_len);
 	HashItem *it;
 	if (hashTab.add(hash, std::make_pair(key, key_len), &it)) {
-		// var did not exist
+		// var did not exist; create an empty one
 		newVar(it, key, key_len, "");
 	} // otherwise keep the old value
 	exportVar(it);
@@ -93,16 +93,13 @@ void VarTab::importExported(const char *const *environ)
 }
 
 
-//////
-
-
 /* Internal version of VarTab::setVar.
  *
  * It requires the length of the key.
  * This is useful for VarTab::importExported.
  * Because the strings in environ array are like "key=value",
- * It's fine to pass that string with length = 3 (length of "key")
- * instead of the length of the whole string.
+ * It's fine to pass that string with length = (length of "key")
+ * and thus avoids a copy.
  *
  * It also returns the HashItem pointer.
  * Because new variables are unexported, importExported
@@ -121,21 +118,20 @@ VarTab::HashItem *VarTab::setVar(const char *key, size_t key_len,
 		debug << "VarTab: set: \"" << kv;
 		kv.replace(kv.begin() + it->vPos, kv.end(), value);
 		debug << "\" changed to \"" << kv << "\"\n";
+		if (it->idxExported != NOT_EXPORTED) {
+			// pointer may be invalidated
+			exported[it->idxExported] = kv.c_str();
+		}
 	}
 	return it;
 }
 
-/* VarTab::newVar initializes an HashItem after it is inserted.
- *
- * All memory for storing "key=value" strings
- * are owned by variables list.
- * The memory will be freed when VarTab is destructed.
- * In HashItem or exported there are only pointers
- * to the string object or C-style strings.
+/* VarTab::newVar initializes an HashItem.
  */
 void VarTab::newVar(HashItem *it, const char *key, size_t key_len,
 		const char *value)
 {
+	// "variables" owns all the memory of the strings
 	variables.push_back(std::string());
 	std::string& kv = variables.back();
 	kv.assign(key, key_len);
